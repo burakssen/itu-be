@@ -1,0 +1,15 @@
+from flask import Flask
+import view
+import os
+
+def create_app():
+    app = Flask(__name__)
+    app.add_url_rule("/",view_func=view.auth_page,methods=["GET", "POST"])
+    app.add_url_rule("/account+create+page",view_func=view.account_create_page,methods=["GET", "POST"])
+    return app
+
+
+if __name__ == "__main__":
+    app = create_app()
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0',port=port)
