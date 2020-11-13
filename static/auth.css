@@ -1,6 +1,7 @@
 html{
    
-    background: url("./Celestial.png")
+    background: url("./background.jpg");
+    background-size: 100%;
 }
 
 body::-webkit-scrollbar{
