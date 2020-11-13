@@ -2,6 +2,5 @@
 /venv
 #Files
 /static/accountcreatepage.css
-/static/*.jpg
-/static/*.png
+
 /templates/accountcreate.html
