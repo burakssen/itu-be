@@ -1,0 +1,74 @@
+{% extends "layout.html" %}
+{% block css %}
+    <link rel="stylesheet" href="../static/auth.css" />
+{% endblock %}
+{% block title %}Create Account{% endblock %}
+{% block content %}
+{% set faculties = ["Civil Engineering", "Computer and Informatics Engineering", "Electrical and Electronic Engineering"] %}
+<div class="logo">
+    <img src="./static/logo_transparent.png">
+</div>
+<div class="create-form-field">
+    <form action="" method="POST" class="form">
+        <div class="columns">
+            <div class="column">
+                <label title="Username">
+                    Username
+                    <br>
+                    <input type="text" name="username">
+                </label>
+                <label title="ID">
+                    <br>
+                    ID Number
+                    <br>
+                    <input type="number" name="id-number" min="0" max="999999999">
+                </label>
+                <label title="Password">
+                    <br>
+                    Password
+                    <br>
+                    <input type="password" name="password">
+                </label>
+                <label title="mail">
+                    <br>
+                    School Mail
+                    <br>
+                    <input type="mail" name="mail">
+                </label>
+            </div>
+            
+            <br/>
+            <div class="column">
+                <div class="field">
+                    <label class="label">Account Type</label>
+                    <div class="control">
+                    <div class="select">
+                        <select name="accounttype">
+                        <option value="student">Student</option>
+                        <option value="tutor">Tutor</option>
+                        </select>
+                    </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Faculty</label>
+                    <div class="control">
+                    <div class="select">
+                        <select name="faculty">
+                            {% for faculty in faculties %}
+                                <option value={{faculty}}>{{faculty}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    </div>
+                </div>
+            </div>
+        
+            
+        </div>
+        <button class="button" type="submit">Log in</button>
+    </form>
+</div>
+
+
+{% endblock %}
