@@ -5,6 +5,9 @@
 {% endblock %}
 {% block title %} Welcome to ITUBE {% endblock %}
 {% block content %}
+{% if popup == true %}
+{{msg}}
+{% endif %}
 
 <div class="form-field">
     <div class="logo">
