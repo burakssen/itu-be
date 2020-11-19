@@ -1,6 +1,3 @@
 #Directories
 /venv
 #Files
-/static/accountcreatepage.css
-
-/templates/accountcreate.html
