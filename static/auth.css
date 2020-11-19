@@ -4,6 +4,18 @@ html{
     background-size: 100%;
 }
 
+html::after{
+    content: "";
+    background: rgb(0,69,124,200);
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;         
+}
+
 body::-webkit-scrollbar{
     display: none;
 }
@@ -12,6 +24,17 @@ body::-webkit-scrollbar{
     position: absolute;
     transform: translate(-50%, -50%);
     width: 400px;
+    height: 400px;
+    top: 50%;
+    left: 50%;
+    background-color:rgba(255,255,255,0.6);
+    border-radius: 20px;
+}
+
+.create-form-field{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 700px;
     height: 400px;
     top: 50%;
     left: 50%;
@@ -34,7 +57,10 @@ input{
     width: 250px;
     height: 40px;
     padding: 10px;
-    background-color: lightgrey;
+    background-color: rgb(0,69,124,0.5);
+    color: black;
+    font-size: medium;
+    font-weight: 500;
 }
 
 .logo{
