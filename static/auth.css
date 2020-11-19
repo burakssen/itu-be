@@ -24,8 +24,8 @@ body::-webkit-scrollbar{
     position: absolute;
     transform: translate(-50%, -50%);
     width: 400px;
-    height: 400px;
-    top: 50%;
+    height: 300px;
+    top: 62%;
     left: 50%;
     background-color:rgba(255,255,255,0.6);
     border-radius: 20px;
@@ -36,7 +36,7 @@ body::-webkit-scrollbar{
     transform: translate(-50%, -50%);
     width: 700px;
     height: 400px;
-    top: 50%;
+    top: 60%;
     left: 50%;
     background-color:rgba(255,255,255,0.6);
     border-radius: 20px;
@@ -66,8 +66,8 @@ input{
 .logo{
     position: absolute;
     transform: translate(-50%,-50%);
-    width: 500px;
-    top: 10%;
+    width: 400px;
+    top: 20%;
     left: 50%;
     user-select: none;
 }
