@@ -3,8 +3,10 @@ from objects.person import *
 from tools.hash import hash_password, hash_control
 
 persons = []
+logged_person = ""
 
 def auth_page(info=False):
+    global logged_person
     if request.method == "GET":
         if info == "info":
             flash("Your account created successfully!","info")
@@ -13,16 +15,19 @@ def auth_page(info=False):
         username = request.form.get("username")
         password = request.form.get("password")
         
-        for person in persons:
-            if person.username == username:
-                if hash_control(password, person.password):
-                    return redirect(url_for("profile_page",username=username))
-                else:
-                    return render_template("auth.html")
-            else:
-                return render_template("auth.html")      
         
-        return render_template("auth.html")  
+        if username == "" or password == "":
+            flash("You can not leave blank space.","error")
+            return render_template("auth.html")
+
+        for person in persons:
+            if person.username == username and hash_control(password, person.password):
+                logged_person = username
+                return redirect(url_for("profile_page",username=username))
+                  
+        
+        flash("Your Log In informations are incorrect","error")
+        return render_template("auth.html")      
 
 
 def account_create_page():
@@ -48,8 +53,16 @@ def account_create_page():
         return redirect(url_for("auth_page",info="info"))
 
 def profile_page():
+    
     username = request.args['username']
-    if request.method == "GET":
-        return render_template("profile.html", username=username)
-    else:
-        return render_template("profile.html", username=username)
+    for person in persons:
+        if person.username == username:
+            if username == logged_person:
+                if request.method == "GET":
+                    return render_template("profile.html", username=username)
+                else:
+                    return render_template("profile.html")
+    
+    return render_template("auth.html")
+    
+    
