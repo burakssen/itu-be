@@ -5,10 +5,10 @@
 {% endblock %}
 {% block title %} Welcome to ITUBE {% endblock %}
 {% block content %}
-{% if popup == true %}
-{{msg}}
-{% endif %}
 
+{% for category, message in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{category}}">Info: {{ message }}</div>
+{% endfor %}
 <div class="logo">
     <br/>
     <br/>
@@ -16,6 +16,7 @@
 </div>
 
 <div class="form-field">
+    
     <form action="" method="POST" class="form">
         <label title="Username">
             Username

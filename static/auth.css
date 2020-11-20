@@ -36,7 +36,7 @@ body::-webkit-scrollbar{
     transform: translate(-50%, -50%);
     width: 700px;
     height: 400px;
-    top: 60%;
+    top: 64%;
     left: 50%;
     background-color:rgba(255,255,255,0.6);
     border-radius: 20px;
@@ -67,7 +67,29 @@ input{
     position: absolute;
     transform: translate(-50%,-50%);
     width: 400px;
-    top: 20%;
+    top: 25%;
     left: 50%;
     user-select: none;
+}
+
+.alert {
+    position: absolute;
+    transform: translate(-50%,0%);
+    left:50%;
+    top:0%;
+    width: 30%;
+    margin-top: 5px; 
+    border-radius: 10px;
+}
+
+.alert-error {
+    background-color: red;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.alert-info {
+    background-color: yellow;
+    color: black;
+    text-align: center;
 }

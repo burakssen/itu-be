@@ -6,6 +6,9 @@
 {% block content %}
 {% set faculties = [["Civil Engineering", "CE"], ["Computer and Informatics Engineering", "CIE"], ["Electrical and Electronic Engineering", "EEE"]] %}
 
+{% for category, message in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{category}}">Error: {{ message }}</div>
+{% endfor %}
 <div class="logo">
     <img src="./static/logo_transparent.png">
 </div>
