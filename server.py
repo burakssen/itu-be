@@ -2,14 +2,17 @@ from flask import Flask, request
 import view
 import os
 
+
 def create_app():
     app = Flask(__name__)
     app.secret_key = 'super secret key'
     app.config['SESSION_TYPE'] = 'filesystem'
+    app.config.from_object('settings')
     app.add_url_rule("/",view_func=view.auth_page,methods=["GET", "POST"])
     app.add_url_rule("/<string:info>",view_func=view.auth_page,methods=["GET", "POST"])
     app.add_url_rule("/account+create+page",view_func=view.account_create_page,methods=["GET", "POST"])
     app.add_url_rule("/profile",view_func=view.profile_page,methods=["GET", "POST"])
+    
     return app
 
 

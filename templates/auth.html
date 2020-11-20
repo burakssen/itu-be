@@ -7,7 +7,7 @@
 {% block content %}
 
 {% for category, message in get_flashed_messages(with_categories=True) %}
-  <div class="alert alert-{{category}}">Info: {{ message }}</div>
+  <div class="alert alert-{{category}}">{{category.capitalize()}}: {{ message }}</div>
 {% endfor %}
 <div class="logo">
     <br/>

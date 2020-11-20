@@ -4,7 +4,7 @@
 {% endblock %}
 {% block title %}Create Account{% endblock %}
 {% block content %}
-{% set faculties = [["Civil Engineering", "CE"], ["Computer and Informatics Engineering", "CIE"], ["Electrical and Electronic Engineering", "EEE"]] %}
+
 
 {% for category, message in get_flashed_messages(with_categories=True) %}
   <div class="alert alert-{{category}}">Error: {{ message }}</div>
@@ -13,31 +13,36 @@
     <img src="./static/logo_transparent.png">
 </div>
 <div class="create-form-field">
-    <form action="" method="POST" class="form">
+    <form action="" method="POST" class="form" name="accountcreate">
+        {{ form.csrf_token }}
         <div class="columns">
             <div class="column">
                 <label title="Username">
                     Username
                     <br>
-                    <input type="text" name="username">
+                    <!--<input type="text" name="username">-->
+                    {{form.username(require=True, autofocus=False)}}
                 </label>
                 <label title="ID">
                     <br>
                     ID Number
                     <br>
-                    <input type="number" name="id-number" min="0" max="999999999">
+                    <!--<input type="number" name="id-number" min="0" max="999999999">-->
+                    {{form.id_number(require=True, autofocus=False)}}
                 </label>
                 <label title="Password">
                     <br>
                     Password
                     <br>
-                    <input type="password" name="password">
+                    <!--<input type="password" name="password">-->
+                    {{form.password(require=True, autofocus=False)}}
                 </label>
                 <label title="mail">
                     <br>
                     School Mail
                     <br>
-                    <input type="mail" name="mail">
+                    <!--<input type="mail" name="mail">-->
+                    {{form.mail(require=True, autofocus=False)}}
                 </label>
             </div>
             
@@ -46,23 +51,25 @@
                 <div class="field">
                     <label class="label">Account Type</label>
                     <div class="control">
-                    <div class="select">
-                        <select name="accounttype">
+                        <div class="select">
+                        <!--<select name="accounttype">
                             <option value="student">Student</option>
                             <option value="tutor">Tutor</option>
-                        </select>
-                    </div>
+                        </select>-->
+                            {{form.account_type(require=True, autofocus=False)}}
+                        </div>
                     </div>
                 </div>
                 <div class="field">
                     <label class="label">Faculty</label>
                     <div class="control">
                     <div class="select">
-                        <select name="faculty">
+                        <!--<select name="faculty">
                             {% for faculty in faculties %}
                                 <option value={{faculty[1]}}>{{faculty[0]}}</option>
                             {% endfor %}
-                        </select>
+                        </select>-->
+                        {{form.faculty(require=True, autofocus=False)}}
                     </div>
                     </div>
                 </div>
