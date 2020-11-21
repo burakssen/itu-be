@@ -35,7 +35,7 @@ def account_create_page():
 
 
 def profile_page():
-    return render_template("profile.html",username="burak")
+    return render_template("profile.html")
     #TODO
     #username = request.args['username']
     #for user in users:
