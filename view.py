@@ -2,9 +2,10 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from tools.hash import hash_password, hash_control
 from flask_login import login_user, login_required
 from forms import CreateAccountForm
+
 def auth_page(info=False):
     if request.method == "GET":
-        if info == "info":
+        if info == "#/SignUpSuccess":
             flash("Your account created successfully!","info")
         return render_template("auth.html")
     else:
@@ -52,8 +53,8 @@ def account_create_page():
     if form.validate_on_submit():
         username = form.data["username"]
         password = form.data["password"]
-        print(username)
-        return redirect(url_for("auth_page"))
+        
+        return redirect(url_for("auth_page", info="#/SignUpSuccess"))
 
     return render_template("accountcreate.html",form=form)
 
