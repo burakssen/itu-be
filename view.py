@@ -23,31 +23,6 @@ def auth_page(info=False):
         flash("Your Log In informations are incorrect","error")
         return render_template("auth.html")      
 
-"""
-def account_create_page():
-    if request.method == "GET":
-        return render_template("accountcreate.html")
-    else:
-        username = request.form.get("username")
-        id_number = request.form.get("id-number")
-        password = request.form.get("password")
-        mail = request.form.get("mail")
-        account_type = request.form.get("accounttype")
-        faculty = request.form.get("faculty")
-
-        if username == "" or id_number == "" or password == "" or mail == "" or account_type == "" or faculty == "":
-            flash("You can't leave any blank spaces","error")
-            return redirect(url_for("account_create_page"))
-
-        password = hash_password(password)
-
-        #TODO user = User(username,id_number,password,mail,account_type,faculty)
-        #current_app.config['PASSWORDS'] = [username, password]
-        #users.append(user)
-        
-        return redirect(url_for("auth_page",info="info"))
-"""
-
 def account_create_page():
     form = CreateAccountForm()
     if form.validate_on_submit():
@@ -60,7 +35,7 @@ def account_create_page():
 
 
 def profile_page():
-    pass
+    return render_template("profile.html",username="burak")
     #TODO
     #username = request.args['username']
     #for user in users:
@@ -71,6 +46,6 @@ def profile_page():
     #            else:
     #                return render_template("profile.html")
     
-    #return render_template("auth.html")
+   
     
     
