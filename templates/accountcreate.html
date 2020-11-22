@@ -52,23 +52,22 @@
                     <label class="label">Account Type</label>
                     <div class="control">
                         <div class="select">
-                        <!--<select name="accounttype">
-                            <option value="student">Student</option>
-                            <option value="tutor">Tutor</option>
-                        </select>-->
                             {{form.account_type(require=True, autofocus=False)}}
                         </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Gender</label>
+                    <div class="control">
+                    <div class="select">
+                        {{form.gender(require=True, autofocus=False)}}
+                    </div>
                     </div>
                 </div>
                 <div class="field">
                     <label class="label">Faculty</label>
                     <div class="control">
                     <div class="select">
-                        <!--<select name="faculty">
-                            {% for faculty in faculties %}
-                                <option value={{faculty[1]}}>{{faculty[0]}}</option>
-                            {% endfor %}
-                        </select>-->
                         {{form.faculty(require=True, autofocus=False)}}
                     </div>
                     </div>

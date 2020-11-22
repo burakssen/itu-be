@@ -10,7 +10,7 @@ def create_app():
     app.config.from_object('settings')
     app.add_url_rule("/",view_func=view.auth_page,methods=["GET", "POST"])
     app.add_url_rule("/<string:info>",view_func=view.auth_page,methods=["GET", "POST"])
-    app.add_url_rule("/account+create+page",view_func=view.account_create_page,methods=["GET", "POST"])
+    app.add_url_rule("/SignUp",view_func=view.account_create_page,methods=["GET", "POST"])
     app.add_url_rule("/profile",view_func=view.profile_page,methods=["GET", "POST"])
     
     return app

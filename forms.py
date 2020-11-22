@@ -4,20 +4,22 @@ from wtforms.validators import DataRequired, NumberRange, Optional
 from wtforms_components import IntegerField
 
 class CreateAccountForm(FlaskForm):
-    username = StringField("username", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired()])
 
-    id_number = IntegerField("id", validators=[DataRequired(), NumberRange(min=99999999, max=999999999)])
+    id_number = IntegerField("Id", validators=[DataRequired(), NumberRange(min=99999999, max=999999999)])
 
-    password = PasswordField("password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
 
-    mail = StringField("mail", validators=[DataRequired()])
+    mail = StringField("Mail", validators=[DataRequired()])
 
-    account_type = SelectField("account_type",validators=[DataRequired()],choices=["Student", "Tutor"])
+    account_type = SelectField("Account Type",validators=[DataRequired()],choices=["Student", "Tutor"])
 
-    faculty = SelectField("faculty", validators=[DataRequired()],
+    faculty = SelectField("Faculty", validators=[DataRequired()],
         choices=["Civil Engineering", "Computer and Informatics Engineering","Electrical and Electronic Engineering"],
         validate_choice=["CE","CIE","EEE"]
     )
+    
+    gender = SelectField("Gender", choices=["Male","Female"])
 
 #TODO
 class LoginForm(FlaskForm):

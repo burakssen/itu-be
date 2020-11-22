@@ -10,9 +10,8 @@
     <a href="#">
       <img class="logo" src="../static/mini_logo.png" width="224" height="82" style="margin: 10px">
     </a>
-
     <div id="custom-navbar" class="navbar-menu">
-      
+
       <div class="navbar-start">
         <a class="navbar-item">
           Tutors
@@ -23,27 +22,9 @@
         <a class="navbar-item">
           Tutors
         </a>
-
-        <div class="navbar-item has-dropdown is-hoverable">
-          <a class="navbar-link">
-            More
-          </a>
-  
-          <div class="navbar-dropdown">
-            <a class="navbar-item">
-              About
-            </a>
-            <a class="navbar-item">
-              Contact
-            </a>
-            <hr class="navbar-divider">
-            <a class="navbar-item">
-              Report an issue
-            </a>
-          </div>
-        </div>
       </div>
   
+      
       <div class="navbar-end">
         <div class="navbar-item">
           <a class="navbar-item">
@@ -53,26 +34,77 @@
       </div>
     </div>
   </nav>
-  
-<div class="tile is-ancestor" style="margin-top: 10px; margin-left:5px;">
-    <div class="tile is-vertical is-12">
-      <div class="tile is-parent card is-2">
-        <div class="tile is-child" style="height: 600px;">
-          <img class="profile-image" src="https://via.placeholder.com/200"/>
-          <hr>
-          <div class="profile-menu">
-            <a class="button text-center">
-              Profile Edit
-            </a>
-            <a class="button text-center">
-              Favorite Videos
-            </a>
-            <a class="button text-center">
-              Profile Edit
-            </a>
+
+  <div class="columns is-12 " style="margin-left: 10px; margin-top: 10px; padding: 0px;">
+    <div class="column is-2 container">
+      <div class="tile is-ancestor">
+        <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
+          <div class="tile is-child">
+            <div>
+              <img class="profile-image" src="../static/boy.png"/>
+            </div>
+            <p class="title is-5 text-center" style="margin-top: 20px;">Profile Name</p>
+            <hr>
+            <div class="profile-menu">
+              <a class="button text-center">
+                Profile Edit
+              </a>
+              <a class="button text-center">
+                Favorite Videos
+              </a>
+              <a class="button text-center">
+                Messages
+              </a>
+            </div>
           </div>
-        </div>          
+        </div>
+      </div>   
+    </div>
+
+    <div class="column is-10" style="margin-left: 50px">
+      <div class="tile is-ancestor">
+        <div class="tile is-parent is-11 card" style="height: 600px;">
+          <div class="tile is-vertical notification " style="border: 1px solid black;">
+            <div class="tile is-child profile-name title">Profile Name</div>
+            <div class="tile is-child is-11 profile-table">
+              <table class="table notification" style="background: none;">
+                <tbody>
+                  <tr>
+                    <th>Name :</th>
+                    <td>Burak</td>
+                  </tr>
+                  <tr>
+                    <th>ID :</th>
+                    <td>150170063</td>
+                  </tr>
+                  <tr>
+                    <th>Gender :</th>
+                    <td>Male</td>
+                  </tr>
+                  <tr>
+                    <th>Mail :</th>
+                    <td>senbur17@itu.edu.tr</td>
+                  </tr>
+                  <tr>
+                    <th>Account Type :</th>
+                    <td>Student</td>
+                  </tr>
+                  <tr>
+                    <th>Faculty :</th>
+                    <td>Computer And Information Engineering</td>
+                  </tr>
+                </tbody>
+              </table>
+              <div>
+                <a class="button">Update Profile Information</a>
+              </div>
+            </div>
+            
+          </div>
+        </div>
       </div>
     </div>
+  </div>
 </div>
+
 {% endblock %}

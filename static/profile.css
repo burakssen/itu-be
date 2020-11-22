@@ -6,15 +6,38 @@ body::-webkit-scrollbar{
 }
 
 .profile-image{
+    padding-top: 5px;
     position: relative;
     transform: translateX(-50%);
     left:50%;
     margin-top: 10px;
-    border-radius: 200px;
+    border-radius: 250px;
+    user-select: none;
+    width: 80%;
+    box-shadow: 0px 0px 10px 0px;
 }
 
 .text-center{
     margin-top:10px;
     width:100%;
     text-align: center;
+}
+
+.profile-name{
+    position: absolute;
+    transform: translate(-50%,0%);
+    left: 50%;
+    top: 5%;
+    border: 1px solid black;
+    padding:10px;
+    padding-left: 100px;
+    padding-right: 100px;
+    border-radius: 20px;
+}
+
+.profile-table{
+    position:absolute; 
+    transform: translate(-50%,-50%);
+    top:50%; 
+    left:50%;
 }
