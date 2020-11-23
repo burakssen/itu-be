@@ -48,7 +48,7 @@ def profile_page():
 
         if request.form["update"] == "Save Changes":
             image = form.image.data
-            image_name = uploadImage(image)
+            image_name = uploadImage(image,"temp")
             print(image_name)
             return render_template("profile.html", form=form, update=False, profileimage=image_name)      
     
