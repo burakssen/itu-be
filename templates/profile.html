@@ -44,15 +44,7 @@
         <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
           <div class="tile is-child">
             <div>
-              <img class="profile-image" src="../static/boy.png"/>
-              {% if update is true %}
-                <form action="" method="post">
-                  {{ form.csrf_token }}
-                  
-                  {{form.profile_picture(class="file")}}
-                  
-                </form>
-              {% endif %}
+              <img class="profile-image" src="{{profileimage}}"/>
             </div>
             <p class="title is-5 text-center" style="margin-top: 20px;">Profile Name</p>
             <hr>
@@ -78,7 +70,7 @@
             {% else %}
               <div class="tile is-child profile-name title text-center-50">Profile Information Update</div>
             {% endif %}
-            <form action="" method="post">
+            <form action="" method="post" enctype="multipart/form-data">
               {{ form.csrf_token }}
               <div class="tile is-child is-11 profile-table" {% if update is true %} style="padding-top: 50px;" {% endif %}>
                 <table class="table notification" style="background: none;">
@@ -90,30 +82,35 @@
                       {% else %}
                         <td>{{form.username(autofocus=False, value=Burak, type="text")}}</td>
                       {% endif %}
+                      {% if update is true %}
+                        <td style="border: none;">
+                          {{form.image(autofocus=False)}}
+                        </td>
+                      {% endif %}
                     </tr>
                     <tr>
                       <th>ID :</th>
                       {% if update is not true %}
                         <td>150170063</td>
                       {% else %}
-                        <td>{{form.id_number(autofocus=False, value=Burak, disabled=True)}}</td>
+                        <td>{{form.id_number(autofocus=False, value=150170063, disabled=True)}}</td>
                       {% endif %}
                     </tr>
                     <tr>
-                      <th>Gender :</th>
-                      {% if update is not true %}
-                        <td>Male</td>
-                      {% else %}
-                        <td>{{form.gender()}}</td>
+                      {% if update is true %}
+                        <tr>
+                          <th>Password:</th>
+                          <td>{{form.password(autofocus=False, value=Burak)}}</td> 
+                        </tr>
                       {% endif %}
                     </tr>
                     <tr>
                       <th>Mail :</th>
-                      {% if update is not true %}
-                        <td>senbur17@itu.edu.tr</td>
-                      {% else %}
-                        <td> {{form.mail(autofocus=False, value=Burak)}}</td>
-                      {% endif %}
+                        {% if update is not true %}
+                          <td>senbur17@itu.edu.tr</td>
+                        {% else %}
+                          <td> {{form.mail(autofocus=False, value=Burak)}}</td>
+                        {% endif %}
                     </tr>
                     <tr>
                       <th>Account Type :</th>
@@ -131,12 +128,12 @@
                         <td>{{form.faculty(autofocus=False, value=Burak)}}</td> 
                       {% endif %}
                     </tr>
-                    {% if update is true %}
-                    <tr>
-                        <th>Password:</th>
-                        <td>{{form.password(autofocus=False, value=Burak)}}</td> 
-                    </tr>
-                    {% endif %}
+                    <th>Gender :</th>
+                      {% if update is not true %}
+                        <td>Male</td>
+                      {% else %}
+                        <td>{{form.gender()}}</td>
+                      {% endif %}
                   </tbody>
                 </table>
                 <div>

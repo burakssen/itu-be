@@ -1,5 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, SelectFieldBase, FileField
+from flask_wtf.file import FileAllowed, FileField
+from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField
 from wtforms.validators import DataRequired, NumberRange, Optional
 from wtforms_components import IntegerField
 
@@ -26,16 +27,19 @@ class LoginForm(FlaskForm):
     pass
 
 class ProfileUpdateForm(FlaskForm):
-    update = SubmitField("Username")
+    update = SubmitField("Update")
 
     username = StringField("Username")
+
     password = PasswordField("Password")
 
     id_number = IntegerField("Id Number")
-    gender = SelectField("Gender", choices=["Male","Female"],validate_choice=["M,F"],validators=[Optional()])
-    mail = StringField("Mail")
     
-    profile_picture = FileField("Profile Picture")
+    gender = SelectField("Gender", choices=["Male","Female"],validate_choice=["M,F"],validators=[Optional()])
+    
+    mail = StringField("Mail")
+
+    image = FileField("image",validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!')])
 
     account_type = SelectField("Account Type",choices=["Student", "Tutor"],validators=[Optional()])
 
@@ -44,3 +48,5 @@ class ProfileUpdateForm(FlaskForm):
         validate_choice=["CE","CIE","EEE"],
         validators=[Optional()]
     )
+
+    

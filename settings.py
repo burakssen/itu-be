@@ -1,3 +1,5 @@
 DEBUG = True
 SECRET_KEY = "secret"
 WTF_CSRF_ENABLED = True
+SESSION_TYPE = "filesystem"
+MAX_CONTENT_LENGTH = 4 * 1024 * 1024
