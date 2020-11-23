@@ -1,6 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort, current_app
 from flask_login import login_user, login_required
 from io import BytesIO
+from werkzeug.utils import secure_filename
+
 
 
 from tools.uploadimage import uploadImage
@@ -49,7 +51,8 @@ def profile_page():
 
         if request.form["update"] == "Save Changes":
             image_name = form.image.data
-            image = uploadImage(BytesIO(image_name.read()),image_name.filename)
+            image_name = secure_filename(image_name.filename)
+            image = uploadImage(BytesIO(image_name.read()),image_name)
             print(image)
             return render_template("profile.html", form=form, update=False, profileimage=image)      
     
