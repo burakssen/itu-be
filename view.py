@@ -1,12 +1,13 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort, current_app
 from flask_login import login_user, login_required
+from io import BytesIO
 
 
 from tools.uploadimage import uploadImage
 from forms import CreateAccountForm, ProfileUpdateForm
 from tools.hash import hash_password, hash_control
 
-image_name = " "
+image = ""
 
 def auth_page(info=False):
     if request.method == "GET":
@@ -39,20 +40,20 @@ def account_create_page():
     return render_template("accountcreate.html",form=form)
 
 def profile_page():
-    global image_name
+    global image
     form = ProfileUpdateForm()
 
     if form.validate_on_submit():
         if request.form["update"] == "Update Profile Information":
-            return render_template("profile.html", form=form, update=True,profileimage=image_name)
+            return render_template("profile.html", form=form, update=True,profileimage=image)
 
         if request.form["update"] == "Save Changes":
-            image = form.image.data
-            image_name = uploadImage(image,"temp")
-            print(image_name)
-            return render_template("profile.html", form=form, update=False, profileimage=image_name)      
+            image_name = form.image.data
+            image = uploadImage(BytesIO(image_name.read()),image_name.filename)
+            print(image)
+            return render_template("profile.html", form=form, update=False, profileimage=image)      
     
-    return render_template("profile.html", update=False, form=form, profileimage=image_name)
+    return render_template("profile.html", update=False, form=form, profileimage=image)
     #TODO
     #username = request.args['username']
     #for user in users:

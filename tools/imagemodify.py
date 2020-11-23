@@ -25,7 +25,8 @@ def modifyImage(img,width):
         return resized
 
 
-def squareImage(src,width,newImageName, savePath):
+def squareImage(src, width, newImageName, savePath):
     img = Image.open(src)
     path = f"{savePath}/{newImageName}.{img.format.lower()}"
-    return modifyImage(img,width), path
+    modifyImage(img,width).save("." + path, quality=512)
+    return path
