@@ -1,7 +1,7 @@
 from flask import Flask, render_template, request, redirect, url_for, flash, session, abort, current_app
 from tools.hash import hash_password, hash_control
 from flask_login import login_user, login_required
-from forms import CreateAccountForm
+from forms import CreateAccountForm, ProfileUpdateForm
 
 def auth_page(info=False):
     if request.method == "GET":
@@ -33,9 +33,15 @@ def account_create_page():
 
     return render_template("accountcreate.html",form=form)
 
-
 def profile_page():
-    return render_template("profile.html")
+    form = ProfileUpdateForm()
+
+    if form.validate_on_submit():
+
+        if request.form["update"] == "Update Profile Information":
+            return render_template("profile.html", form=form, update=True)
+    
+    return render_template("profile.html", update=False, form=form)
     #TODO
     #username = request.args['username']
     #for user in users:

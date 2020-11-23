@@ -1,5 +1,5 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SelectField
+from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, SelectFieldBase, FileField
 from wtforms.validators import DataRequired, NumberRange, Optional
 from wtforms_components import IntegerField
 
@@ -24,3 +24,23 @@ class CreateAccountForm(FlaskForm):
 #TODO
 class LoginForm(FlaskForm):
     pass
+
+class ProfileUpdateForm(FlaskForm):
+    update = SubmitField("Username")
+
+    username = StringField("Username")
+    password = PasswordField("Password")
+
+    id_number = IntegerField("Id Number")
+    gender = SelectField("Gender", choices=["Male","Female"],validate_choice=["M,F"],validators=[Optional()])
+    mail = StringField("Mail")
+    
+    profile_picture = FileField("Profile Picture")
+
+    account_type = SelectField("Account Type",choices=["Student", "Tutor"],validators=[Optional()])
+
+    faculty = SelectField("Faculty",
+        choices=["Civil Engineering", "Computer and Informatics Engineering","Electrical and Electronic Engineering"],
+        validate_choice=["CE","CIE","EEE"],
+        validators=[Optional()]
+    )
