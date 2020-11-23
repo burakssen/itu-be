@@ -51,7 +51,7 @@ def profile_page():
 
         if request.form["update"] == "Save Changes":
             image_file = form.image.data
-            image_name = secure_filename(image_name.filename)
+            image_name = secure_filename(image_file.filename)
             image = uploadImage(BytesIO(image_file.read()),image_name)
             print(image)
             return render_template("profile.html", form=form, update=False, profileimage=image)      
