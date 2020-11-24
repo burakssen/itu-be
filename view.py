@@ -3,13 +3,12 @@ from flask_login import login_user, login_required
 from io import BytesIO
 from werkzeug.utils import secure_filename
 
-
-
 from tools.uploadimage import uploadImage
 from forms import CreateAccountForm, ProfileUpdateForm
 from tools.hash import hash_password, hash_control
 
 image = ""
+id = 0
 
 def auth_page(info=False):
     if request.method == "GET":
@@ -43,6 +42,7 @@ def account_create_page():
 
 def profile_page():
     global image
+    global id
     form = ProfileUpdateForm()
 
     if form.validate_on_submit():
@@ -51,8 +51,9 @@ def profile_page():
 
         if request.form["update"] == "Save Changes":
             image_file = form.image.data
-            image_name = secure_filename(image_file.filename)
-            image = uploadImage(BytesIO(image_file.read()),image_name)
+            
+            image = uploadImage(BytesIO(image_file.read()),id)
+            id+=1
             print(image)
             return render_template("profile.html", form=form, update=False, profileimage=image)      
     
