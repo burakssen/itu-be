@@ -52,9 +52,10 @@ def profile_page():
         if request.form["update"] == "Save Changes":
             image_file = form.image.data
             
-            image = uploadImage(BytesIO(image_file.read()),id)
-            id+=1
-            print(image)
+            if image_file != None:
+                image = uploadImage(BytesIO(image_file.read()),id)
+                id+=1
+            
             return render_template("profile.html", form=form, update=False, profileimage=image)      
     
     return render_template("profile.html", update=False, form=form, profileimage=image)
