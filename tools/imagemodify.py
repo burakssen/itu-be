@@ -19,6 +19,7 @@ def modifyImage(img,width):
         resized = result.resize((width,width), Image.LANCZOS)
         return resized
     else:
+
         result = Image.new(img.mode, (o_height, o_height), (0, 0, 0, 0))
         result.paste(img, ((o_height - o_width) // 2, 0))
         resized = result.resize((width,width), Image.LANCZOS)

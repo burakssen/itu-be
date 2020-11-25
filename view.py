@@ -46,10 +46,7 @@ def profile_page():
     form = ProfileUpdateForm()
     
     if form.validate_on_submit():
-        print("help")
-        if form.image.data:
-            print("Help")
-
+        
         if request.form["update"] == "Update Profile Information":
             return render_template("profile.html", form=form, update=True,profileimage=image)
 
