@@ -1,0 +1,36 @@
+{% macro profilebanner(account_type) %}
+<div class="column is-2 container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
+        <div class="tile is-child">
+          <div>
+            <img class="profile-image" src="{{profileimage}}"/>
+          </div>
+          <p class="title is-5 text-center" style="margin-top: 20px;">{{user.username}}</p>
+          <hr>
+          <div class="profile-menu">
+                {% if user.account_type == "admin" %}
+                {% elif user.account_type == "student" %}
+                    <a class="button text-center">
+                        Favorite Videos
+                    </a>
+                    <a class="button text-center">
+                        Messages
+                    </a>
+                {% else %}
+                    <a class="button text-center">
+                        My Videos
+                    </a>
+                    <a class="button text-center">
+                        Messages
+                    </a>
+                    <a class="button text-center">
+                        Video Upload
+                    </a>
+                {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>   
+  </div>
+{% endmacro %}

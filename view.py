@@ -6,6 +6,7 @@ from werkzeug.utils import secure_filename
 from tools.uploadimage import uploadImage
 from forms import CreateAccountForm, ProfileUpdateForm
 from tools.hash import hash_password, hash_control
+from entities.person import Person
 
 image = ""
 id = 0
@@ -36,19 +37,20 @@ def account_create_page():
         username = form.data["username"]
         password = form.data["password"]
         
-        return redirect(url_for("auth_page", info="#/SignUpSuccess"))
+        return redirect(url_for("profile_page", username=username))
 
     return render_template("accountcreate.html",form=form)
 
-def profile_page():
+def profile_page(user):
     global image
     global id
     form = ProfileUpdateForm()
+    user = Person(user,"admin")
     
     if form.validate_on_submit():
-        
+
         if request.form["update"] == "Update Profile Information":
-            return render_template("profile.html", form=form, update=True,profileimage=image)
+            return render_template("profile.html", user=user, form=form, update=True,profileimage=image)
 
         if request.form["update"] == "Save Changes":
             image_file = form.image.data
@@ -58,9 +60,11 @@ def profile_page():
                 print(image)
                 id+=1
             
-            return render_template("profile.html", form=form, update=False, profileimage=image)      
+            return render_template("profile.html", user=user, form=form, update=False, profileimage=image)
+ 
+        return render_template("profile.html", user=user, form=form, update=False, profileimage=image)  
     
-    return render_template("profile.html", update=False, form=form, profileimage=image)
+    return render_template("profile.html", user=user, form=form, update=False, profileimage=image)
     #TODO
     #username = request.args['username']
     #for user in users:

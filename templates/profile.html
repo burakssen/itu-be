@@ -24,11 +24,10 @@
         </a>
       </div>
   
-      
       <div class="navbar-end">
         <div class="navbar-item">
-          <a class="navbar-item" href="{{url_for('profile_page')}}">
-            Profile Name
+          <a class="navbar-item" href="{{url_for('profile_page',user=user)}}">
+            {{user.username}}
           </a>
           <a class="navbar-item">
             Log Out
@@ -39,7 +38,15 @@
 </nav>
 
 <div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
-  {{studentprofile("burakssen")}}
+  
+  {% if user.account_type == "admin" %}
+  Admin
+  {% elif user.account_type == "student" %}
+  {{profilebanner(user)}}
+  {{studentprofilemain(user)}}
+  {% else %}
+  Tutor
+  {% endif %}
 </div>
 
 {% endblock %}
