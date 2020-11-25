@@ -36,121 +36,121 @@
         </div>
       </div>
     </div>
-  </nav>
+</nav>
 
-  <div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
-    <div class="column is-2 container">
-      <div class="tile is-ancestor">
-        <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
-          <div class="tile is-child">
-            <div>
-              <img class="profile-image" src="{{profileimage}}"/>
-            </div>
-            <p class="title is-5 text-center" style="margin-top: 20px;">Profile Name</p>
-            <hr>
-            <div class="profile-menu">
-              <a class="button text-center">
-                Favorite Videos
-              </a>
-              <a class="button text-center">
-                Messages
-              </a>
-            </div>
+<div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
+  <div class="column is-2 container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
+        <div class="tile is-child">
+          <div>
+            <img class="profile-image" src="{{profileimage}}"/>
+          </div>
+          <p class="title is-5 text-center" style="margin-top: 20px;">Profile Name</p>
+          <hr>
+          <div class="profile-menu">
+            <a class="button text-center">
+              Favorite Videos
+            </a>
+            <a class="button text-center">
+              Messages
+            </a>
           </div>
         </div>
-      </div>   
-    </div>
-    
-    <div class="column is-10" style="margin-left: 50px">
-      <div class="tile is-ancestor">
-        <div class="tile is-parent is-11 card" style="height: 600px;">
-          <div class="tile is-vertical notification " style="border: 1px solid black;">
-            {% if update is not true %}
-              <div class="tile is-child profile-name title">Profile Information</div>
-            {% else %}
-              <div class="tile is-child profile-name title text-center-50">Profile Information Update</div>
-            {% endif %}
-            <form action="" method="post" enctype="multipart/form-data">
-              {{ form.csrf_token }}
-              <div class="tile is-child is-11 profile-table" {% if update is true %} style="padding-top: 50px;" {% endif %}>
-                <table class="table notification" style="background: none;">
-                  <tbody>
-                    <tr>
-                      <th>Name :</th>
-                      {% if update is not true %}
-                        <td>Burak</td>
-                      {% else %}
-                        <td>{{form.username(autofocus=False, value=Burak, type="text")}}</td>
-                      {% endif %}
-                      {% if update is true %}
-                        <td style="border: none;">
-                          {{form.image(autofocus=False)}}
-                        </td>
-                      {% endif %}
-                    </tr>
-                    <tr>
-                      <th>ID :</th>
-                      {% if update is not true %}
-                        <td>150170063</td>
-                      {% else %}
-                        <td>{{form.id_number(autofocus=False, value=150170063, disabled=True)}}</td>
-                      {% endif %}
-                    </tr>
-                    <tr>
-                      {% if update is true %}
-                        <tr>
-                          <th>Password:</th>
-                          <td>{{form.password(autofocus=False, value=Burak)}}</td> 
-                        </tr>
-                      {% endif %}
-                    </tr>
-                    <tr>
-                      <th>Mail :</th>
-                        {% if update is not true %}
-                          <td>senbur17@itu.edu.tr</td>
-                        {% else %}
-                          <td> {{form.mail(autofocus=False, value=Burak)}}</td>
-                        {% endif %}
-                    </tr>
-                    <tr>
-                      <th>Account Type :</th>
-                      {% if update is not true %}
-                        <td>Student</td>
-                      {% else %}
-                        <td> {{form.account_type(autofocus=False, value=Burak, disabled=True)}}</td> 
-                      {% endif %}
-                    </tr>
-                    <tr>
-                      <th>Faculty :</th>
-                      {% if update is not true %}
-                        <td>Computer and Information Engineering</td>
-                      {% else %}
-                        <td>{{form.faculty(autofocus=False, value=Burak)}}</td> 
-                      {% endif %}
-                    </tr>
-                    <th>Gender :</th>
-                      {% if update is not true %}
-                        <td>Male</td>
-                      {% else %}
-                        <td>{{form.gender()}}</td>
-                      {% endif %}
-                  </tbody>
-                </table>
-                <div>
-                    {{form.csrf_token}}
+      </div>
+    </div>   
+  </div>
+  
+  <div class="column is-10" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="border: 1px solid black;">
+          {% if update is not true %}
+            <div class="tile is-child profile-name title">Profile Information</div>
+          {% else %}
+            <div class="tile is-child profile-name title text-center-50">Profile Information Update</div>
+          {% endif %}
+          <form action="" method="post" enctype="multipart/form-data">
+            {{ form.csrf_token }}
+            <div class="tile is-child is-11 profile-table" {% if update is true %} style="padding-top: 50px;" {% endif %}>
+              <table class="table notification" style="background: none;">
+                <tbody>
+                  <tr>
+                    <th>Name :</th>
                     {% if update is not true %}
-                      {{form.update(class="button", value="Update Profile Information")}}
+                      <td>Burak</td>
                     {% else %}
-                      {{form.update(class="button", value="Save Changes")}}
+                      <td>{{form.username(autofocus=False, value=Burak, type="text")}}</td>
                     {% endif %}
-                </div>
+                    {% if update is true %}
+                      <td style="border: none;">
+                        {{form.image(autofocus=False)}}
+                      </td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <th>ID :</th>
+                    {% if update is not true %}
+                      <td>150170063</td>
+                    {% else %}
+                      <td>{{form.id_number(autofocus=False, value=150170063, disabled=True)}}</td>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    {% if update is true %}
+                      <tr>
+                        <th>Password:</th>
+                        <td>{{form.password(autofocus=False, value=Burak)}}</td> 
+                      </tr>
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <th>Mail :</th>
+                      {% if update is not true %}
+                        <td>senbur17@itu.edu.tr</td>
+                      {% else %}
+                        <td> {{form.mail(autofocus=False, value=Burak)}}</td>
+                      {% endif %}
+                  </tr>
+                  <tr>
+                    <th>Account Type :</th>
+                    {% if update is not true %}
+                      <td>Student</td>
+                    {% else %}
+                      <td> {{form.account_type(autofocus=False, value=Burak, disabled=True)}}</td> 
+                    {% endif %}
+                  </tr>
+                  <tr>
+                    <th>Faculty :</th>
+                    {% if update is not true %}
+                      <td>Computer and Information Engineering</td>
+                    {% else %}
+                      <td>{{form.faculty(autofocus=False, value=Burak)}}</td> 
+                    {% endif %}
+                  </tr>
+                  <th>Gender :</th>
+                    {% if update is not true %}
+                      <td>Male</td>
+                    {% else %}
+                      <td>{{form.gender()}}</td>
+                    {% endif %}
+                </tbody>
+              </table>
+              <div>
+                  {{form.csrf_token}}
+                  {% if update is not true %}
+                    {{form.update(class="button", value="Update Profile Information")}}
+                  {% else %}
+                    {{form.update(class="button", value="Save Changes")}}
+                  {% endif %}
               </div>
-            </form>
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
   </div>
+</div>
 </div>
 
 {% endblock %}

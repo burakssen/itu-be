@@ -44,8 +44,12 @@ def profile_page():
     global image
     global id
     form = ProfileUpdateForm()
-
+    
     if form.validate_on_submit():
+        print("help")
+        if form.image.data:
+            print("Help")
+
         if request.form["update"] == "Update Profile Information":
             return render_template("profile.html", form=form, update=True,profileimage=image)
 
@@ -54,6 +58,7 @@ def profile_page():
             
             if image_file != None:
                 image = uploadImage(BytesIO(image_file.read()),id)
+                print(image)
                 id+=1
             
             return render_template("profile.html", form=form, update=False, profileimage=image)      
