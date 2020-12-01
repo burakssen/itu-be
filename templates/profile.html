@@ -3,7 +3,7 @@
     <link rel="stylesheet" href="../static/profile.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
 {% endblock %}
-{% block title %}{{user.username.capitalize()}}'s Profile{% endblock %}
+{% block title %}{{user.username}}'s Profile{% endblock %}
 {% block content %}
 
 <nav class="navbar card" role="navigation" aria-label="main navigation">
@@ -38,14 +38,15 @@
 </nav>
 
 <div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
-  
   {% if user.account_type == "admin" %}
-  Admin
+  {{profilebanner("admin")}}
+    {{userinfo(user)}}
   {% elif user.account_type == "student" %}
   {{profilebanner(user)}}
-  {{studentprofilemain(user)}}
+    {{userinfo(user)}}
   {% else %}
-  Tutor
+  {{profilebanner(user)}}
+    {{userinfo(user)}}
   {% endif %}
 </div>
 

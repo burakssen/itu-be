@@ -41,11 +41,10 @@ class ProfileUpdateForm(FlaskForm):
 
     image = FileField("image",validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!')])
 
-    account_type = SelectField("Account Type",choices=["Student", "Tutor"],validators=[Optional()])
+    account_type = SelectField("Account Type",choices=["Admin", "Tutor", "Student"],validators=[Optional()])
 
     faculty = SelectField("Faculty",
-        choices=["Civil Engineering", "Computer and Informatics Engineering","Electrical and Electronic Engineering"],
-        validate_choice=["CE","CIE","EEE"],
+        choices=[("CE","Civil Engineering"), ("CIE","Computer and Informatics Engineering"),("EEE","Electrical and Electronic Engineering")],
         validators=[Optional()]
     )
 

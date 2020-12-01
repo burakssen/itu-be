@@ -1,6 +1,5 @@
-{% macro studentprofilemain(user) %}
+{% macro userinfo(user) %}
 
-  
   <div class="column is-10" style="margin-left: 50px">
     <div class="tile is-ancestor">
       <div class="tile is-parent is-11 card" style="height: 600px;">
@@ -16,7 +15,7 @@
               <table class="table notification" style="background: none;">
                 <tbody>
                   <tr>
-                    <th>Name :</th>
+                    <th>Username :</th>
                     {% if update is not true %}
                       <td>{{user.username}}</td>
                     {% else %}
@@ -55,22 +54,22 @@
                   <tr>
                     <th>Account Type :</th>
                     {% if update is not true %}
-                      <td>Student</td>
+                      <td>{{user.account_type.capitalize()}}</td>
                     {% else %}
-                      <td> {{form.account_type(autofocus=False, value=Burak, disabled=True)}}</td> 
+                      <td> {{form.account_type(autofocus=False, selected=True, disabled=True)}}</td> 
                     {% endif %}
                   </tr>
                   <tr>
                     <th>Faculty :</th>
                     {% if update is not true %}
-                      <td>Computer and Information Engineering</td>
+                      <td>{{user.faculty}}</td>
                     {% else %}
                       <td>{{form.faculty(autofocus=False, value=Burak)}}</td> 
                     {% endif %}
                   </tr>
                   <th>Gender :</th>
                     {% if update is not true %}
-                      <td>Male</td>
+                      <td>{{user.gender}}</td>
                     {% else %}
                       <td>{{form.gender()}}</td>
                     {% endif %}

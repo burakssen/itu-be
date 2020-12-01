@@ -45,26 +45,30 @@ def profile_page(user):
     global image
     global id
     form = ProfileUpdateForm()
-    user = Person(user,"admin")
-    
+    user = Person(user,"admin","Male","Computer and Informatics Engineering")
+    form.account_type.default = user.account_type
+    form.process
     if form.validate_on_submit():
 
         if request.form["update"] == "Update Profile Information":
-            return render_template("profile.html", user=user, form=form, update=True,profileimage=image)
+            return render_template("profile.html", user=user, form=form, update=True)
 
         if request.form["update"] == "Save Changes":
             image_file = form.image.data
-            
+            gender = request.form.get("gender")
+            val = request.form.get("faculty")
+            faculty = dict(form.faculty.choices).get(val)
+            user.set_user(gender=gender,faculty=faculty)
             if image_file != None:
-                image = uploadImage(BytesIO(image_file.read()),id)
+                user.profileimage = uploadImage(BytesIO(image_file.read()),id)
                 print(image)
                 id+=1
             
-            return render_template("profile.html", user=user, form=form, update=False, profileimage=image)
+            return render_template("profile.html", user=user, form=form, update=False)
  
-        return render_template("profile.html", user=user, form=form, update=False, profileimage=image)  
+        return render_template("profile.html", user=user, form=form, update=False)  
     
-    return render_template("profile.html", user=user, form=form, update=False, profileimage=image)
+    return render_template("profile.html", user=user, form=form, update=False)
     #TODO
     #username = request.args['username']
     #for user in users:
