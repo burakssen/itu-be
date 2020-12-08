@@ -21,7 +21,22 @@
               <br>
               <div>
                 <label><p>Video</p></label>
-                {{form.video(autofocus=False, id="video")}}
+                <div class="file has-name is-fullwidth">
+                  <label class="file-label">
+                    {{form.video(autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
+                    <span class="file-cta">
+                      <span class="file-icon">
+                        <i class="fas fa-upload"></i>
+                      </span>
+                      <span class="file-label">
+                        Choose a file…
+                      </span>
+                    </span>
+                    <span class="file-name" style="background-color:white;">
+                      No File Choosen!
+                    </span>
+                  </label>
+                </div>
               </div>
               <br>
               
@@ -29,14 +44,21 @@
             <div class="column">
               <div>
                 <label>Video Class</label>
-                {{form.video_class(autofocus=False, id="video")}}
+                {{form.video_class(autofocus=False, id="video", )}}
               </div>
               <br>
               <div>
                 <label><p>Video Comments</p></label>
                 <label>Available</label>
                 {{form.video_comments_available(autofocus=False, id="comments_available")}}
-                
+              </div>
+              <br>
+              <div>
+                <label><p>Video Descriptions</p></label>
+                {{form.video_descriptions(autofocus=False,style="margin-top: 10px" )}}
+              </div>
+              <div>
+                <input class="button" type="submit" value="Upload Video">
               </div>
             </div>
           </div>

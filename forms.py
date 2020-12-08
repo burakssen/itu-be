@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
-from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField
+from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, TextAreaField
 from wtforms.validators import DataRequired, NumberRange, Optional
 from wtforms_components import IntegerField
 
@@ -62,5 +62,7 @@ class VideoUploadForm(FlaskForm):
     video_class = SelectField()
 
     video_comments_available = BooleanField("Available")
+
+    video_descriptions = TextAreaField("Descriptions", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
     
     
