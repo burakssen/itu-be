@@ -4,7 +4,7 @@ from io import BytesIO
 from werkzeug.utils import secure_filename
 
 from tools.uploadimage import uploadImage
-from forms import CreateAccountForm, ProfileUpdateForm
+from forms import CreateAccountForm, ProfileUpdateForm, LoginForm, VideoUploadForm
 from tools.hash import hash_password, hash_control
 from entities.person import Person
 
@@ -12,24 +12,27 @@ image = ""
 id = 0
 
 def auth_page(info=False):
-    if request.method == "GET":
-        if info == "#/SignUpSuccess":
-            flash("Your account created successfully!","info")
-        return render_template("auth.html")
-    else:
-        username = request.form.get("username")
-        password = request.form.get("password")
+    form = LoginForm()
+    if form.validate_on_submit():
+        if request.method == "GET":
+            if info == "#/SignUpSuccess":
+                flash("Your account created successfully!","info")
+            return render_template("auth.html",form=form)
+        else:
+            username = request.form.get("username")
+            password = request.form.get("password")
         
         
-        if username == "" or password == "":
-            flash("You can not leave blank space.","error")
-            return render_template("auth.html")
+            if username == "" or password == "":
+                flash("You can not leave blank space.","error")
+                return render_template("auth.html",form=form)
                 
-            #TODO return redirect(next or url_for("profile_page",username=username))
-                  
-        
+                #TODO return redirect(next or url_for("profile_page",username=username))
+
         flash("Your Log In informations are incorrect","error")
-        return render_template("auth.html")      
+        return render_template("auth.html",form=form)
+    
+    return render_template("auth.html", form=form)
 
 def account_create_page():
     form = CreateAccountForm()
@@ -62,22 +65,25 @@ def profile_page(user):
             if image_file != None:
                 user.profileimage = uploadImage(BytesIO(image_file.read()),id)
                 print(image)
-                id+=1
-            
-            return render_template("profile.html", user=user, form=form, update=False)
- 
-        return render_template("profile.html", user=user, form=form, update=False)  
+                id+=1  
     
     return render_template("profile.html", user=user, form=form, update=False)
-    #TODO
-    #username = request.args['username']
-    #for user in users:
-    #    if user.username == username:
-    #        if username == logged_user:
-    #            if request.method == "GET":
-    #                return render_template("profile.html", username=username)
-    #            else:
-    #                return render_template("profile.html")
+   
+
+def upload_video_page(user):
+    form = VideoUploadForm()
+    user = Person(user,"admin","Male","Computer and Informatics Engineering")
+
+    if form.validate_on_submit():
+        if request.method == "POST":
+            uploaded_file = request.files['file']
+            if uploaded_file.filename != '':
+                uploaded_file.save(uploaded_file.filename)
+                return redirect(url_for('videupload'), form=form, user=user)
+
+        render_template("videoupload.html",form=form, user=user)
+
+    return render_template("videoupload.html",form=form, user=user)
     
    
     

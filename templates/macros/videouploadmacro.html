@@ -1,0 +1,50 @@
+{% macro videouploadmacro(user) %}
+
+<form action="" method="post" enctype="multipart/form-data">
+  {{ form.csrf_token }}
+  <div class="column is-12" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="border: 1px solid black;">
+          <div class="columns">
+            <div class="column is-4">
+              <div>
+                <label><p>Video Title</p></label>
+                {{form.video_title(autofocus=False, is="video_title", style="width: 100%")}}
+              </div>
+              <br>
+              <div class="card" style="border: 1px solid black">
+                <img id="video-image-placeholder" src="https://via.placeholder.com/1024x720.png" >
+                <label style="text-align: center;"><p>Video Thumbnail</p></label>
+                {{form.video_thumbnail(autofocus=False, id="video-thumbnail", onChange="previewFile()")}}
+              </div>
+              <br>
+              <div>
+                <label><p>Video</p></label>
+                {{form.video(autofocus=False, id="video")}}
+              </div>
+              <br>
+              
+            </div>
+            <div class="column">
+              <div>
+                <label>Video Class</label>
+                {{form.video_class(autofocus=False, id="video")}}
+              </div>
+              <br>
+              <div>
+                <label><p>Video Comments</p></label>
+                <label>Available</label>
+                {{form.video_comments_available(autofocus=False, id="comments_available")}}
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+{% endmacro %}

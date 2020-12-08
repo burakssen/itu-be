@@ -23,7 +23,7 @@
                     {% endif %}
                     {% if update is true %}
                       <td style="border: none;">
-                        {{form.image(autofocus=False)}}
+                        {{form.image(autofocus=False, accept="image/*")}}
                       </td>
                     {% endif %}
                   </tr>

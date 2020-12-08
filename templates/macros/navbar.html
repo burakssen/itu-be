@@ -1,0 +1,32 @@
+{% macro navbar(context) %}
+<nav class="navbar card" role="navigation" aria-label="main navigation">
+    <a href="#">
+      <img class="logo" src="../../../static/mini_logo.png" width="224" height="82" style="margin: 10px">
+    </a>
+    <div id="custom-navbar" class="navbar-menu">
+
+      <div class="navbar-start">
+        <a class="navbar-item">
+          Tutors
+        </a>
+        <a class="navbar-item">
+          Classes
+        </a>  
+        <a class="navbar-item">
+          Tutors
+        </a>
+      </div>
+  
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <a class="navbar-item" href="{{url_for('profile_page', user=user.username)}}">
+            {{user.username}}
+          </a>
+          <a class="navbar-item">
+            Log Out
+          </a>
+        </div>
+      </div>
+    </div>
+</nav>
+{% endmacro %}

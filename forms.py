@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
-from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField
+from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField
 from wtforms.validators import DataRequired, NumberRange, Optional
 from wtforms_components import IntegerField
 
@@ -22,9 +22,12 @@ class CreateAccountForm(FlaskForm):
     
     gender = SelectField("Gender", choices=["Male","Female"])
 
-#TODO
 class LoginForm(FlaskForm):
-    pass
+    username = StringField("Username")
+
+    password = PasswordField("Password")
+
+    loginbutton = SubmitField("Log In")
 
 class ProfileUpdateForm(FlaskForm):
     update = SubmitField("Update")
@@ -48,4 +51,16 @@ class ProfileUpdateForm(FlaskForm):
         validators=[Optional()]
     )
 
+
+class VideoUploadForm(FlaskForm):
+    video_thumbnail = FileField("image",validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!')])
+    
+    video = FileField("video", validators=[FileAllowed(['mp4', '3gp', 'mkv'], 'Only mp4, 3gp and mkv Allowed!')])
+
+    video_title = StringField("Video Title")
+
+    video_class = SelectField()
+
+    video_comments_available = BooleanField("Available")
+    
     

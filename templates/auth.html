@@ -16,25 +16,24 @@
 </div>
 
 <div class="form-field">
-    
     <form action="" method="POST" class="form">
+        {{ form.csrf_token }}
         <label title="Username">
             Username
             <br>
-            <input type="text" name="username">
+            {{form.username(autofocus=False)}}
         </label>
         <label title="Password">
             <br>
             Password
             <br>
-            <input type="password" name="password">
-            <a href="#">Forgot Password!</a>
+            {{form.password(autofocus=False)}}
         </label>
         <br/>
 
-        <div>
-            <button class="button" type="submit">Log in</button>
-            <a class="button" href="{{url_for('account_create_page')}}" style="width:165px;"> Create Account! </a>
+        <div id="wrapper">
+            {{form.loginbutton(autofocus=False, class="button", id="left" , style="width: 100px")}}
+            <a class="button" id="right" href="{{url_for('account_create_page')}}" style="width:150px;"> Create Account! </a>
         </div>
     </form>
 </div>

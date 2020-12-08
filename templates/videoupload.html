@@ -1,7 +1,9 @@
+{% from "./macros/videouploadmacro.html" import videouploadmacro with context %}
 {% extends "layout.html" %}
 {% block css %}
-    <link rel="stylesheet" href="../static/profile.css" />
+    <link rel="stylesheet" href="../../../static/profile.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+    
 {% endblock %}
 {% block title %}{{user.username}}'s Profile{% endblock %}
 {% block content %}
@@ -9,8 +11,12 @@
 {{navbar(user)}}
 
 <div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
-  {{profilebanner(user)}}
-  {{userinfo(user)}}
+    {{profilebanner("tutor")}}
+
+    {{videouploadmacro(user)}}
 </div>
+<script type="text/javascript" src="../../../static/js/videoupload.js"></script>
+
+
 
 {% endblock %}

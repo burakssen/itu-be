@@ -1,10 +1,10 @@
-{% macro profilebanner(account_type) %}
+{% macro profilebanner(context) %}
 <div class="column is-2 container">
     <div class="tile is-ancestor">
       <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
         <div class="tile is-child">
           <div>
-            <img class="profile-image" src="{{user.profileimage}}"/>
+            <img class="profile-image" src="../../../{{user.profileimage}}"/>
           </div>
           <p class="title is-5 text-center" style="margin-top: 20px;">{{user.username}}</p>
           <hr>

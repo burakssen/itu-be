@@ -5,6 +5,17 @@ body::-webkit-scrollbar{
     display: none;
 }
 
+#wrapper{
+    display: flex;
+}
+
+#left{
+    flex: 0 0 65%;
+}
+#right{
+    flex: 1;
+}
+
 .profile-image{
     position: relative;
     transform: translateX(-50%);
@@ -21,6 +32,7 @@ body::-webkit-scrollbar{
     width:100%;
     text-align: center;
 }
+
 .text-center-50{
     margin-top:10px;
     width:50%;
