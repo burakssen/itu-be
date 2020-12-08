@@ -10,7 +10,7 @@ function previewFile() {
   if (file) {
     reader.readAsDataURL(file);
   } else {
-    preview.src = "";
+    preview.src = "https://via.placeholder.com/1024x720.png";
   }
 } 
   

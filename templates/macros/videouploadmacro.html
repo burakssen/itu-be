@@ -7,41 +7,47 @@
       <div class="tile is-parent is-11 card" style="height: 600px;">
         <div class="tile is-vertical notification " style="border: 1px solid black;">
           <div class="columns">
-            <div class="column is-4">
-              <div>
-                <label><p>Video Title</p></label>
-                {{form.video_title(autofocus=False, is="video_title", style="width: 100%")}}
-              </div>
-              <br>
-              <div class="card" style="border: 1px solid black">
-                <img id="video-image-placeholder" src="https://via.placeholder.com/1024x720.png" >
-                <label style="text-align: center;"><p>Video Thumbnail</p></label>
-                {{form.video_thumbnail(autofocus=False, id="video-thumbnail", onChange="previewFile()")}}
-              </div>
-              <br>
-              <div>
-                <label><p>Video</p></label>
-                <div class="file has-name is-fullwidth">
-                  <label class="file-label">
-                    {{form.video(autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
-                    <span class="file-cta">
-                      <span class="file-icon">
-                        <i class="fas fa-upload"></i>
-                      </span>
-                      <span class="file-label">
-                        Choose a file…
-                      </span>
-                    </span>
-                    <span class="file-name" style="background-color:white;">
-                      No File Choosen!
-                    </span>
-                  </label>
+            <div class="column is-6">
+              <div style="width: 70%;">
+                <div>
+                  <label><p>Video Title</p></label>
+                  {{form.video_title(autofocus=False, is="video_title", style="width: 100%")}}
                 </div>
+                <br>
+                <div class="card" style="border: 1px solid black">
+                  <img id="video-image-placeholder" src="https://via.placeholder.com/1024x720.png" >
+                  <label style="text-align: center;"><p>Video Thumbnail</p></label>
+                  <p style="text-align: center;">
+                    {{form.video_thumbnail(autofocus=False, id="video-thumbnail", onChange="previewFile()")}}
+                  </p>
+                  
+                </div>
+                <br>
+                <div>
+                  <label><p>Video</p></label>
+                  <div class="file has-name is-fullwidth">
+                    <label class="file-label">
+                      
+                      {{form.video(autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                      <span class="file-name" style="background-color:white;">
+                        No File Choosen!
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <br>
+                
               </div>
-              <br>
-              
-            </div>
-            <div class="column">
+              </div>
+            <div class="column is-6">
               <div>
                 <label>Video Class</label>
                 {{form.video_class(autofocus=False, id="video", )}}
