@@ -7,6 +7,8 @@ from tools.uploadimage import uploadImage
 from forms import CreateAccountForm, ProfileUpdateForm, LoginForm, VideoUploadForm, ClassSearchForm
 from tools.hash import hash_password, hash_control
 from entities.person import Person
+from entities.Class import Class
+
 
 image = ""
 id = 0
@@ -89,8 +91,13 @@ def upload_video_page(user):
 def classes_page():
     form = ClassSearchForm()
     user = Person("burakssen","admin","Male","Computer and Informatics Engineering")
+    classList = []
+    for i in range(10):
+        cs = Class(i*i,i,i+i+i+i,"!!!!","a"*i,5)
+        classList.append(cs)
+
     if form.validate_on_submit():
-        return render_template("classes.html", form=form, user=user)
+        return render_template("classes.html", form=form, user=user, classList=classList)
     
-    return render_template("classes.html", form=form, user=user)
+    return render_template("classes.html", form=form, user=user, classList=classList)
     

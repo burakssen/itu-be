@@ -25,12 +25,15 @@
                 <label>Stars</label>
                 <p>
                     {% for star in form.stars %}
-                        {{star(id="stars")}}
-                        <div id="{{star.id}}">
+                      <div class="columns">
+                        {{star(id="stars", class="column", style="position:absolute; margin-top:17px; left:5%;")}}
+                        <div class="column" id="{{star.id}}" style="position: relative; left: 15%" >
                         </div>
-                        <script type="text/javascript">
-                            create_stars("{{star.id}}");
-                        </script> 
+                      </div>
+                        
+                      <script type="text/javascript">
+                          create_stars("{{star.id}}");
+                      </script> 
                     {% endfor %}
                 </p>               
             </div>
