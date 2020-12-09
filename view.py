@@ -4,7 +4,7 @@ from io import BytesIO
 from werkzeug.utils import secure_filename
 
 from tools.uploadimage import uploadImage
-from forms import CreateAccountForm, ProfileUpdateForm, LoginForm, VideoUploadForm
+from forms import CreateAccountForm, ProfileUpdateForm, LoginForm, VideoUploadForm, ClassSearchForm
 from tools.hash import hash_password, hash_control
 from entities.person import Person
 
@@ -86,5 +86,11 @@ def upload_video_page(user):
     return render_template("videoupload.html",form=form, user=user)
     
    
+def classes_page():
+    form = ClassSearchForm()
+    user = Person("burakssen","admin","Male","Computer and Informatics Engineering")
+    if form.validate_on_submit():
+        return render_template("classes.html", form=form, user=user)
     
+    return render_template("classes.html", form=form, user=user)
     

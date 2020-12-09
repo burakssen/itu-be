@@ -1,0 +1,42 @@
+{% macro classSearch(context) %}
+<script src="../../static/js/classsearch.js"></script>
+<div class="column is-2 container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
+        <div class="tile is-child">
+          <form action="" method="post">
+            {{ form.csrf_token }}
+            <div>
+                <label>Class Name</label>
+                {{form.class_name(autofocus=False)}}
+            </div>
+            <br>
+            <div>
+                <label>Class Code</label>
+                {{form.class_code(autofocus=False)}}
+            </div>
+            <br>
+            <div>
+                <label>Tutor</label>
+                {{form.tutor(autofocus=False)}}
+            </div>
+            <br>
+            <div>
+                <label>Stars</label>
+                <p>
+                    {% for star in form.stars %}
+                        {{star(id="stars")}}
+                        <div id="{{star.id}}">
+                        </div>
+                        <script type="text/javascript">
+                            create_stars("{{star.id}}");
+                        </script> 
+                    {% endfor %}
+                </p>               
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>   
+  </div>
+{% endmacro %}
