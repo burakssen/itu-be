@@ -1,0 +1,49 @@
+{% macro getVideos(context) %}
+
+<div class="column is-10" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
+            <div class="columns is-12">
+                <div class="column is-3" style="margin: 5px; text-align: center;">
+                    <p>Class Name</p>
+                </div>
+                <div class="column"  style="margin: 5px; text-align: center;">
+                    <p>Class Code</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p>Tutor</p>
+                </div>
+                <div class="column is-4" style="margin: 5px; text-align: center;">
+                    <p >Department</p>
+                </div>
+                <div class="column" style="margin: 5px">
+                    <p >Review Points</p>
+                </div>
+            </div>
+          {% for cl in classList %}
+            <div class="columns is-12", style="border: 1px solid black; border-radius: 10px; margin: 10px">
+                <div class="column is-3" style="padding: 10px">
+                    <a class="button" style="width: 100%; height: 100%">{{cl.className}}</a>
+                </div>
+                <div class="column"  style="margin: 5px; text-align: center;">
+                    <p >{{cl.classCode}}</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p >{{cl.tutor}}</p>
+                </div>
+                <div class="column is-4" style="margin: 5px; text-align: center;">
+                    <p >{{cl.department}}</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p >{{cl.review_point}}</p>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+</div>
+
+
+{% endmacro %}

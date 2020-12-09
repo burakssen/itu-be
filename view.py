@@ -93,11 +93,17 @@ def classes_page():
     user = Person("burakssen","admin","Male","Computer and Informatics Engineering")
     classList = []
     for i in range(10):
-        cs = Class(i*i,i,i+i+i+i,"!!!!","a"*i,5)
+        cs = Class("Database Systems","BLG 317E","Ali Çakmak","Computer Science and Informatics","Computer Science and Informatics",5)
         classList.append(cs)
 
     if form.validate_on_submit():
         return render_template("classes.html", form=form, user=user, classList=classList)
     
     return render_template("classes.html", form=form, user=user, classList=classList)
+
+def class_page(classCode):
+
+    user = Person("burakssen","admin","Male","Computer and Informatics Engineering")
+    classList = []
     
+    return render_template("classpage.html", user=user)

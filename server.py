@@ -16,6 +16,7 @@ def create_app():
     app.add_url_rule("/profile/<string:user>",view_func=view.profile_page,methods=["GET", "POST"])
     app.add_url_rule("/profile/<string:user>/uploadvideo/",view_func=view.upload_video_page,methods=["GET","POST"])
     app.add_url_rule("/classes/",view_func=view.classes_page,methods=["GET","POST"])
+    app.add_url_rule("/classes/<string:classCode>",view_func=view.class_page,methods=["GET","POST"])
     csrf.init_app(app)
     return app
 

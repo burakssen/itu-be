@@ -1,0 +1,43 @@
+{% macro classInfo(context) %}
+<script src="../../static/js/classsearch.js"></script>
+<div class="column is-2 container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
+        <div class="tile is-child" style="padding-left: 10px; padding-right: 10px;">
+            <h1 style="padding-top:10px; text-align:center; font-size:x-large;">Class Name</h1>
+            <br>
+            <div style="text-align:start; font-size:x-large;">Tutor</div>
+            <article class="media" style="padding-top: 10px; ">
+                <figure class="media-left">
+                  <p class="image is-64x64">
+                    <img style="border-radius: 50%;" src="{{user.profileimage}}">
+                  </p>
+                </figure>
+                <div class="media-content" style="padding-left: 10px; font-size: 15px">
+                  <div>
+                    <b>Burak Şen</b>
+                  </div>
+                  <div>
+                    Asistant Professor Of Computer Engineering Department
+                  </div>
+                </div>
+              </article>
+              <hr>
+              <div class="classInfo">
+                <div>
+                    <b>Class Code</b> : BLG-317E
+                    <hr>
+                </div>
+                <div>
+                    <b>Department</b> : Computer Engineering
+                    <hr>
+                </div>
+                <div style="text-align:center; padding:50px;">
+                    <a class="button">Discussion Table</a>
+                </div>
+              </div>
+        </div>
+      </div>
+    </div>   
+  </div>
+{% endmacro %}
