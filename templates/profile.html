@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 {% extends "layout.html" %}
 {% block css %}
     
@@ -14,21 +13,4 @@
   {{userinfo(user)}}
 </div>
 
-=======
-{% extends "layout.html" %}
-{% block css %}
-    <link rel="stylesheet" href="../static/profile.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
-{% endblock %}
-{% block title %}{{user.username}}'s Profile{% endblock %}
-{% block content %}
-
-{{navbar(user)}}
-
-<div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
-  {{profilebanner(user)}}
-  {{userinfo(user)}}
-</div>
-
->>>>>>> caff39109f269eb0aef996fa34fc65fd8c5b9c9b
 {% endblock %}

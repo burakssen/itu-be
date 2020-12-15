@@ -1,7 +1,3 @@
-<<<<<<< HEAD
-function create_stars(temp){
-   
-=======
 function create_stars(temp){
    var index = Number(String(temp).replace("stars-",""));
 
@@ -35,5 +31,4 @@ function create_stars(temp){
    
 
    
->>>>>>> caff39109f269eb0aef996fa34fc65fd8c5b9c9b
 }
