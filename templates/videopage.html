@@ -1,0 +1,38 @@
+{% extends "layout.html" %}
+{% block css %}
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+    <link rel="stylesheet" href="../../static/profile.css">
+    <link rel="stylesheet" href="../../static/video.css">
+{% endblock %}
+{% block title %}{{user.username}}'s Profile{% endblock %}
+{% block content %}
+
+{{navbar(user)}}
+
+<div style="margin-left: 5px; margin-top: 10px; padding: 0px;">
+    <div class="column is-12">
+        <div class="tile is-ancestor">
+            <div class="tile is-parent is-12 card" style="height: 600px;">
+                <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
+                    <div class="tile is-parent columns is-12">
+                        <div class="tile column is-vertical" style="padding:10px">
+                            <div class="tile is-child container is-12">
+                                <video src="../../static/videos/olasilik.mp4"></video>
+                            </div>
+                            <div  >
+                                hekp
+                            </div>
+                        </div>   
+                        <div class="column is-4" style="margin-left: 10px;border: 1px green solid; display: flex; flex-wrap: wrap; padding:10px">
+                            Hello
+                        </div>   
+                    </div>
+                    
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../../static/js/video.js"></script>
+{% endblock %}

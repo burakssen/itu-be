@@ -2,5 +2,5 @@
 /venv
 #Files
 /__pycache__
-/objects/__pycache__
+/entities/__pycache__
 /tools/__pycache__

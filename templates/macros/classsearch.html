@@ -1,3 +1,53 @@
+<<<<<<< HEAD
+{% macro classSearch(context) %}
+<script src="../../static/js/class.js"></script>
+
+<div class="column is-2 container">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-vertical is-12 card" style="height: 600px;">
+        <div class="tile is-child">
+          <form action="" method="post">
+            {{ form.csrf_token }}
+            <div>
+                <label>Class Name</label>
+                {{form.class_name(autofocus=False)}}
+            </div>
+            <br>
+            <div>
+                <label>Class Code</label>
+                {{form.class_code(autofocus=False)}}
+            </div>
+            <br>
+            <div>
+                <label>Tutor</label>
+                {{form.tutor(autofocus=False)}}
+            </div>
+            <br>
+            <div>
+                <label>Stars</label>
+                <p>
+                    {% for star in form.stars %}
+                      <div class="columns">
+                        {{star(id="stars", class="column", style="position:absolute; margin-top:17px; left:5%;")}}
+                        <div class="column" id="{{star.id}}" style="position: relative; left: 15%" >
+                        </div>
+                      </div>
+                        
+                      <script type="text/javascript">
+                          create_stars("{{star.id}}");
+                      </script> 
+                    {% endfor %}
+                </p>               
+            </div>
+            <div>
+              <button class="button" type="submit">Submit</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>   
+  </div>
+=======
 {% macro classSearch(context) %}
 <script src="../../static/js/classsearch.js"></script>
 <div class="column is-2 container">
@@ -45,4 +95,5 @@
       </div>
     </div>   
   </div>
+>>>>>>> caff39109f269eb0aef996fa34fc65fd8c5b9c9b
 {% endmacro %}

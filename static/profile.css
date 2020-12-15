@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 *{
     box-sizing: border-box;
 }
@@ -65,3 +66,72 @@ body::-webkit-scrollbar{
 .profile-update-text:focus{
     border:none;
 }
+=======
+*{
+    box-sizing: border-box;
+}
+body::-webkit-scrollbar{
+    display: none;
+}
+
+#wrapper{
+    display: flex;
+}
+
+#left{
+    flex: 0 0 65%;
+}
+#right{
+    flex: 1;
+}
+
+.profile-image{
+    position: relative;
+    transform: translateX(-50%);
+    left:50%;
+    margin-top: 10px;
+    border-radius: 250px;
+    user-select: none;
+    width: 80%;
+    box-shadow: 0px 0px 10px 0px;
+}
+
+.text-center{
+    margin-top:10px;
+    width:100%;
+    text-align: center;
+}
+
+.text-center-50{
+    margin-top:10px;
+    width:50%;
+    text-align: center;
+}
+
+.profile-name{
+    position: absolute;
+    transform: translate(-50%,0%);
+    left: 50%;
+    top: 5%;
+    border: 1px solid black;
+    padding:10px;
+    padding-left: 100px;
+    padding-right: 100px;
+    border-radius: 20px;
+}
+
+.profile-table{
+    position:absolute; 
+    transform: translate(-50%,-50%);
+    top:50%; 
+    left:50%;
+}
+
+.profile-update-text{
+    border: none;
+}
+
+.profile-update-text:focus{
+    border:none;
+}
+>>>>>>> caff39109f269eb0aef996fa34fc65fd8c5b9c9b

@@ -1,0 +1,22 @@
+.video-image{
+    opacity: 0.5;
+}
+
+.play{
+    display: inline-block;
+    position: relative;
+}
+
+.play::after{
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    bottom: 0; left: 0;
+    background: url("../static/play.png");
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+}
+.play:hover::after{
+    background-size: 70%;
+}
