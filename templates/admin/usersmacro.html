@@ -1,0 +1,49 @@
+{% macro getUsers(context) %}
+
+<div class="column is-10" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
+            <div class="columns is-12 is-vcentered", style="border: 1px solid ; border-radius: 10px; margin-left: 10px; margin-right: 10px;">
+                <div class="column is-2" style="width:12vh; margin-left: 10px;">
+                    
+                </div>
+                <div class="column " style="text-align: center;">
+                    User Name
+                </div>
+                <div class="column" style="text-align: center;">
+                    <p >Department</p>
+                </div>
+                <div class="column" style="text-align: center;">
+                    <p >Gender</p>
+                </div>
+                <div class="column is-2">
+                   
+                </div>
+            </div>
+          {% for users in Users %}
+            <div class="columns is-12 is-vcentered", style="border: 1px solid black; border-radius: 10px; margin: 10px">
+                <div class="column is-2" style="width:12vh;height:12vh; margin-left: 10px;">
+                    <img src="https://via.placeholder.com/150" style="border: 1px; border-radius:50%;">
+                </div>
+                <div class="column " style="text-align: center;">
+                    Burak Şen
+                </div>
+                <div class="column" style="text-align: center;">
+                    <p >Computer</p>
+                </div>
+                <div class="column" style="text-align: center;">
+                    <p >Male</p>
+                </div>
+                <div class="column is-2">
+                    <button class="button" type="submit" style="color:red" value="user_id">Delete</button>
+                </div>
+            </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+</div>
+
+
+{% endmacro %}

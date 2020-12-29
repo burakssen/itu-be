@@ -10,8 +10,8 @@
           <hr>
           <div class="profile-menu">
                 {% if user.account_type == "admin" %}
-                    <a class="button text-center">
-                        All Videos
+                    <a class="button text-center" href="{{url_for('admin_users_page')}}">
+                        All Users
                     </a>
                     <a class="button text-center">
                         Admin Panel

@@ -3,8 +3,17 @@ from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, TextAreaField, RadioField
 from wtforms.validators import DataRequired, NumberRange, Optional
 from wtforms_components import IntegerField
+from flask import current_app
 
 class CreateAccountForm(FlaskForm):
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = current_app.config["db"]
+        self.department.choices = [
+           (department.department_code, department.department_name) for department in self.db.get_departments()
+        ]
+    
     username = StringField("Username", validators=[DataRequired()])
 
     id_number = IntegerField("Id", validators=[DataRequired(), NumberRange(min=99999999, max=999999999)])
@@ -15,12 +24,13 @@ class CreateAccountForm(FlaskForm):
 
     account_type = SelectField("Account Type",validators=[DataRequired()],choices=["Student", "Tutor"])
 
-    faculty = SelectField("Faculty", validators=[DataRequired()],
-        choices=["Civil Engineering", "Computer and Informatics Engineering","Electrical and Electronic Engineering"],
-        validate_choice=["CE","CIE","EEE"]
+    department = SelectField("department", validators=[DataRequired()],
+        choices=[],
+        validate_choice=[]
     )
     
     gender = SelectField("Gender", choices=["Male","Female"])
+
 
 class LoginForm(FlaskForm):
     username = StringField("Username")

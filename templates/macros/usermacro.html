@@ -48,7 +48,7 @@
                       {% if update is not true %}
                         <td>senbur17@itu.edu.tr</td>
                       {% else %}
-                        <td> {{form.mail(autofocus=False, value=Burak)}}</td>
+                        <td> {{form.mail(autofocus=False)}}</td>
                       {% endif %}
                   </tr>
                   <tr>
@@ -60,11 +60,11 @@
                     {% endif %}
                   </tr>
                   <tr>
-                    <th>Faculty :</th>
+                    <th>Department :</th>
                     {% if update is not true %}
-                      <td>{{user.faculty}}</td>
+                      <td>{{department_name}}</td>
                     {% else %}
-                      <td>{{form.faculty(autofocus=False, value=Burak)}}</td> 
+                      <td>{{form.department(autofocus=False)}}</td> 
                     {% endif %}
                   </tr>
                   <th>Gender :</th>
