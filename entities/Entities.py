@@ -81,8 +81,10 @@ class Video():
     
 class DataBase():
 
-    def __init__(self, url):
-        self.url = url
+    def __init__(self, database, user, password):
+        self.database = database
+        self.user = user
+        self.password = password
 
     def CheckIfDataExists(self,data,check):
         with dbapi2.connect(self.url) as connection:
@@ -201,7 +203,7 @@ class DataBase():
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor() 
             try:
-                cursor.execute("""INSERT INTO USERS (user_id, user_name, password, profile_image_path, department, account_type, gender, mail) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                cursor.execute("""INSERT INTO USERS (user_id, user_name, password, profile_image_path, department, account_type, gender, mail) VALUES (%s, %s, %s, %s, %s, %s, %s, %s) RETURNS user_id""",
                     (int(User.id_number), User.username, User.password, User.profileimage ,User.department, User.account_type, User.gender, User.mail))
                 connection.commit()
             except dbapi2.Error as e:
