@@ -28,11 +28,12 @@ def create_app():
     app.add_url_rule("/adminpanel/",view_func=view.admin_panel_page, methods=["GET","POST"])
     app.add_url_rule("/adminpanel/users/",view_func=view.admin_users_page, methods=["GET","POST"])
     app.add_url_rule("/logout",view_func=view.log_out, methods=["GET","POST"])
+    app.config['UPLOAD_PATH'] = './itube/static/profile_images'
 
     lm.init_app(app)
     lm.login_view = "auth_page"
-
-    db = DataBase("Itu-be","burakssen", "18Kalemlik09.")
+    DATABASE_URL = os.getenv("DATABASE_URL")
+    db = DataBase(DATABASE_URL)
     app.config["db"] = db
 
     csrf.init_app(app)

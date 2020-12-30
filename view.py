@@ -1,6 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, flash, current_app,abort
+from flask import Flask, render_template, request, redirect, url_for, flash, current_app
 from flask_login import LoginManager, login_user, logout_user, login_required, current_user
 from io import BytesIO
+from werkzeug.utils import secure_filename
+
 
 from tools.uploadimage import uploadImage
 from forms import CreateAccountForm, ProfileUpdateForm, LoginForm, VideoUploadForm, ClassSearchForm
@@ -13,9 +15,9 @@ def auth_page(info=False):
     
     if form.validate_on_submit():
         if request.method == "GET":
-            if info == "#/SignUpSuccess":
+            if info == "/SignUpSuccess":
                 flash("Your account created successfully!","info")
-            elif info=="#/AccountCreateFailed":
+            elif info=="/AccountCreateFailed":
                 flash("Account Create Failed","error")
 
             return render_template("auth.html",form=form)
@@ -45,48 +47,97 @@ def log_out():
     return redirect(url_for("auth_page"))
 
 def account_create_page():
-    db = DataBase("Itu-be","burakssen", "18Kalemlik09.")
+    db = current_app.config["db"]
     form = CreateAccountForm()
     if form.validate_on_submit():
+
         username = form.data["username"]
+
+        if db.CheckIfDataExists(username,"User"):
+            flash("Username is already taken","error")
+            return redirect(url_for("account_create_page"))
+
         password = form.data["password"]
         password = hasher.hash(password)
         id_number = form.data["id_number"]
+
+        if db.CheckIfDataExists(id_number,"User_id"):
+            flash("Id number in use by one user", "error")
+            return redirect(url_for("account_create_page"))
+
         mail = form.data["mail"]
-        account_type = "admin"
+
+        if db.CheckIfDataExists(mail,"mail"):
+            flash("Email is already taken", "error")
+            return redirect(url_for("account_create_page"))
+
+        account_type = form.data["account_type"]
         gender = form.data["gender"]
         department = form.data["department"]
-        print(department)
-        try:
-            user = Person(username, id_number, mail, account_type, gender, department, password)
-            db.create_user(user)
-        except:
-            return redirect(url_for("auth_page", ))
 
-    return render_template("accountcreate.html",form=form)
+        try:
+            user = Person(
+                id_number=id_number,
+                username=username,
+                password=password,
+                department=department,
+                account_type=account_type,
+                gender=gender,
+                mail=mail
+            )
+            db.create_user(user)
+            return redirect(url_for("auth_page"))
+        except:
+            return render_template("accountcreate.html", form=form)
+    return render_template("accountcreate.html", form=form)
+
+
 
 @login_required
 def profile_page(user):
     form = ProfileUpdateForm()
-    user = current_user
+
+    user = get_User(user)
+    print(user.profileimage)
     form.account_type.default = user.account_type
+    form.gender.default = user.gender
+    form.department.default = user.department
 
     form.process()
+    db = current_app.config["db"]
     if form.validate_on_submit():
 
         if request.form["update"] == "Update Profile Information":
             return render_template("profile.html", user=user, form=form, update=True)
 
         if request.form["update"] == "Save Changes":
-            image_file = form.image.data
+            image_file = request.files["image"]
             gender = request.form.get("gender")
-            val = request.form.get("faculty")
-            faculty = dict(form.faculty.choices).get(val)
-            user.set_user(gender=gender,faculty=faculty)
-            if image_file != None:
-                user.profileimage = uploadImage(BytesIO(image_file.read()),user.id_number)
+            user_name = request.form.get("username")
+            password = request.form.get("password")
+            department = request.form.get("department")
+            mail = request.form.get("mail")
+
+            user.set_user(
+                username=user_name if user_name != "" else user.username,
+                password=hasher.hash(password) if password != "" else user.password,
+                gender=gender if gender != "" else user.gender,
+                department=department if department != "" else user.department,
+                mail=mail if mail != "" else user.mail
+            )
+
+            if image_file.read() != b'':
+                user.profileimage = uploadImage(image_file.stream, user.id_number)
+                user.convert_image_path()
+                current_user.profile_image = user.profileimage
+
+            db.update_user_info(user.id_number, user)
+
+
+            return redirect(url_for("profile_page", user=user.username))
+
     
-    return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department)[0].department_name)
+    return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department).department_name)
    
 @login_required
 def upload_video_page(user):

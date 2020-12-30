@@ -1,5 +1,12 @@
 import os
 from PIL import Image, ImageDraw, ImageFilter
+from flask import current_app
+import random
+import string
+
+def randomnamegen(size=6):
+    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
+
 
 def crop_center(pil_img, crop_width, crop_height):
     img_width, img_height = pil_img.size
@@ -28,6 +35,7 @@ def modifyImage(img,width):
 
 def squareImage(src, width, newImageName, savePath):
     img = Image.open(src)
-    path = f"{savePath}/{newImageName}.{img.format.lower()}"
-    modifyImage(img,width).save("." + path, quality=512)
+    path = f"{savePath}/{randomnamegen(50)}{newImageName}.{img.format.lower()}"
+    newimg = modifyImage(img,width)
+    newimg.save(path)
     return path
