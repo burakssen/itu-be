@@ -24,7 +24,7 @@ class CreateAccountForm(FlaskForm):
 
     mail = StringField("Mail", validators=[DataRequired()])
 
-    account_type = SelectField("Account Type", validators=[DataRequired()], choices=["Student", "Tutor"])
+    account_type = SelectField("Account Type", validators=[DataRequired()], choices=["Admin","Student", "Tutor"])
 
     department = SelectField("department", validators=[DataRequired()],
                              choices=[],
