@@ -81,10 +81,8 @@ class Video():
     
 class DataBase():
 
-    def __init__(self, database, user, password):
-        self.database = database
-        self.user = user
-        self.password = password
+    def __init__(self, url):
+        self.url = url
 
     def CheckIfDataExists(self,data,check):
         with dbapi2.connect(self.url) as connection:
