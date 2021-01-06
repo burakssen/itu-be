@@ -21,22 +21,22 @@
                     <p >Review Points</p>
                 </div>
             </div>
-          {% for cl in classList %}
+          {% for nclass in class_list %}
             <div class="columns is-12", style="border: 1px solid black; border-radius: 10px; margin: 10px">
                 <div class="column is-3" style="padding: 10px">
-                    <a class="button" style="width: 100%; height: 100%">{{cl.className}}</a>
+                    <a class="button" href="{{ url_for("class_page", class_code=nclass.class_code) }}/" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
                 </div>
                 <div class="column"  style="margin: 5px; text-align: center;">
-                    <p >{{cl.classCode}}</p>
+                    <p >{{nclass.class_code}}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{cl.tutor}}</p>
+                    <p >{{db.get_user_with_id(nclass.tutor).username}}</p>
                 </div>
                 <div class="column is-4" style="margin: 5px; text-align: center;">
-                    <p >{{cl.department}}</p>
+                    <p >{{db.get_departments(db.get_user_with_id(nclass.tutor).department).department_name}}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{cl.review_point}}</p>
+                    <p >{{nclass.review_points}}</p>
                 </div>
             </div>
           {% endfor %}

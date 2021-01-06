@@ -1,0 +1,45 @@
+{% macro createClass(context) %}
+
+<div class="column is-10" style="margin-left: 50px">
+    <div class="tile is-ancestor" style="height:600px;">
+      <div class="tile is-parent is-11 card" style="height:100%;">
+
+          <form action="" method="POST" style="width:100%;" class="form" name="classcreate">
+              {{ form.csrf_token }}
+              <div class="tile is-vertical notification" style="height:100%; align-items:center; justify-content:center; border: 1px solid black;">
+                  {% if info == "success" %}
+                      <label class="title" style="color:gold">
+                          Class is created
+                      </label>
+                  {% elif info == "fail" %}
+                      <label class="title" style="color:red">
+                          Class couldn't created: (Class Code Already Exists)
+                      </label>
+                  {% endif %}
+                  <label class="title">
+                    Create New Class
+                  </label>
+                  <div style="align-items:center; justify-content:center;">
+                      <label class="label" style="padding: 10px">
+                          Class Name
+                          {{ form.class_name() }}
+                      </label>
+                      <label class="label" style="padding: 10px">
+                          Class Code
+                          {{ form.class_code() }}
+                      </label>
+                      <label class="label" style="padding: 10px">
+                          Class Context
+                          <br>
+                          {{ form.class_context() }}
+                      </label>
+                  </div>
+                  {{ form.create_button( class="button") }}
+              </div>
+          </form>
+      </div>
+    </div>
+</div>
+
+
+{% endmacro %}

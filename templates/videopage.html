@@ -20,9 +20,9 @@
                 <div class="tile is-vertical notification " style="margin:2px;border: 1px solid black;">
                     <div class="tile is-parent columns is-12" style="padding:0px">
                         <div class="tile column is-vertical">
-                            <div style="width:90%; position: relative; transform: translate(-50%,0%); left: 50%;">
-                                <video id="plyr-video" poster="../../static/profile_images/boy.png" controls>
-                                    <source src="../../static/videos/deneme.mp4" type="video/mp4">
+                            <div style="position: relative; transform: translate(-50%,0%); left: 50%;">
+                                <video id="plyr-video" poster="../..{{ video.thumbnail_path }}" style="max-height: 450px" controls>
+                                    <source src="../..{{ video.video_path }}" type="video/mp4">
                                     <script>
                                         plyr.setup("#plyr-video");
                                     </script>
@@ -31,40 +31,54 @@
                             <article class="media is-12" style="padding-top: 10px;">
                                 <figure class="media-left">
                                   <p class="image is-64x64">
-                                    <img src="../../{{user.profileimage}}">
+                                    <img style="border:1px; border-radius: 50%" src="../../static/{{ db.get_user_with_id(video.tutor).profileimage }}">
                                   </p>
                                 </figure>
                                 <div class="media-content" >
                                   <div class="content">
                                     <p>
-                                      <strong>{{user.username}}</strong>
+                                      <strong>{{ db.get_user_with_id(video.tutor).username }}</strong>
                                       <br>
-                                      Lorem Ipsum
+                                      {{ video.video_descriptions }}
                                     </p>
                                   </div>
-                              </article>
-                        </div>   
-                        <div class="tile is-4" id="scrollbar" style="max-height: 72vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap; margin-bottom: 10px;">
-                            {% for i in range(10) %}
-                            <div class="comment" style="padding: 5px; margin: 5px; width: 100%;">
-                                <article class="media" style="padding-top: 10px;">
-                                    <figure class="media-left">
-                                      <p class="image is-64x64">
-                                        <img src="../../{{user.profileimage}}">
-                                      </p>
-                                    </figure>
-                                    <div class="media-content">
-                                      <div class="content">
-                                        <p>
-                                          <strong>{{user.username}}</strong>
-                                          <br>
-                                          {{"Lorem Ipsum"*i*i}}
-                                        </p>
-                                      </div>
-                                  </article>
-                            </div>
+                                </div>
+                            </article>
+                        </div>
+                        <div class="tile columns is-vertical is-4" style="padding-top: 10px">
+                            <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">
+                            {% for comment in comment_list %}
+                                <div class="columns is-12", style="width:100%; border: 1px solid black; border-radius: 10px; margin: 10px">
+                                    <article class="media" style="padding:10px">
+                                        <figure class="media-left">
+                                            <p class="image is-64x64" >
+                                                <img style="border:1px; border-radius: 50%" src="../../{{db.get_user_with_id(comment.user_id).profileimage}}">
+                                            </p>
+                                        </figure>
+                                        <div class="media-content">
+                                            <div class="content">
+                                                <p>
+                                                    <strong>{{ db.get_user_with_id(comment.user_id).username }}</strong>
+                                                    {% if db.get_user_with_id(comment.user_id).account_type != "Student" %}
+                                                        <strong>{{"<" + db.get_user_with_id(comment.user_id).account_type  + ">"}}</strong>
+                                                    {% endif %}
+                                                <br>
+                                                {{ comment.comment_context }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </article>
+                                </div>
                             {% endfor %}
-                        </div>   
+                            </div>
+                            <div class="column tile" id="scrollbar" style="margin-top:10px; max-height: 17vh; margin-left: 10px;border: 1px #000000 solid; border-radius: 5px; margin-bottom: 10px;">
+                                <form form action="" method="post" >
+                                    {{ form.csrf_token }}
+                                    {{ form.comment(style="margin-top:5px" ) }}
+                                    {{ form.send_comment(class="button", style="position:relative; bottom: 0px") }}
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

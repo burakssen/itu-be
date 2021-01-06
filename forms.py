@@ -2,9 +2,10 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, \
     TextAreaField, RadioField
-from wtforms.validators import DataRequired, NumberRange, Optional
+from wtforms.validators import DataRequired, NumberRange, Optional, Length
 from wtforms_components import IntegerField
 from flask import current_app
+from flask_login import current_user
 
 
 class CreateAccountForm(FlaskForm):
@@ -24,7 +25,7 @@ class CreateAccountForm(FlaskForm):
 
     mail = StringField("Mail", validators=[DataRequired()])
 
-    account_type = SelectField("Account Type", validators=[DataRequired()], choices=["Admin","Student", "Tutor"])
+    account_type = SelectField("Account Type", validators=[DataRequired()], choices=["Student", "Tutor"])
 
     department = SelectField("department", validators=[DataRequired()],
                              choices=[],
@@ -68,16 +69,24 @@ class ProfileUpdateForm(FlaskForm):
 
     department = SelectField("Department",coerce=str, validators=[Optional()], choices=[],validate_choice=[])
 
+    title = StringField("Title", validators=[Optional()])
+
 
 class VideoUploadForm(FlaskForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = current_app.config["db"]
+        self.video_class.choices = [
+            (nclass.class_code, f"{nclass.class_code}: {nclass.class_name}") for nclass in self.db.get_tutors_classes(current_user.id_number)
+        ]
     video_thumbnail = FileField("image",
-                                validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!')])
+                                validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), Optional()])
 
     video = FileField("video", validators=[FileAllowed(['mp4', '3gp', 'mkv'], 'Only mp4, 3gp and mkv Allowed!')])
 
     video_title = StringField("Video Title")
 
-    video_class = SelectField()
+    video_class = SelectField("Video Class")
 
     video_comments_available = BooleanField("Available")
 
@@ -85,10 +94,42 @@ class VideoUploadForm(FlaskForm):
 
 
 class ClassSearchForm(FlaskForm):
-    class_name = StringField("Class Name")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = current_app.config["db"]
+        self.department.choices = [
+            (department.department_code, department.department_name) for department in self.db.get_departments()
+        ]
 
-    class_code = SelectField()
+        tutors_list = []
 
-    tutor = SelectField()
+        for user in self.db.get_all_users():
+            if user.account_type == "Tutor":
+                tutors_list.append(user)
+
+        self.tutor.choices = [
+            (ntutor.id_number, ntutor.username) for ntutor in tutors_list
+        ]
+
+
+    department = SelectField("Department")
+
+    tutor = SelectField("Tutors")
 
     stars = RadioField("Stars", choices=[5, 4, 3, 2, 1])
+
+
+class ClassCreateForm(FlaskForm):
+    class_name = StringField("Class Name")
+
+    class_code = StringField("Class Code")
+
+    class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
+
+    create_button = SubmitField("Create Class")
+
+
+class CommentPostForm(FlaskForm):
+    comment = TextAreaField("Comment", render_kw={"rows": 5, "cols": 48}, validators=[Optional()])
+
+    send_comment = SubmitField("Comment!")

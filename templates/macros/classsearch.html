@@ -7,22 +7,18 @@
           <form action="" method="post">
             {{ form.csrf_token }}
             <div>
-                <label>Class Name</label>
-                {{form.class_name(autofocus=False)}}
-            </div>
-            <br>
-            <div>
-                <label>Class Code</label>
-                {{form.class_code(autofocus=False)}}
+                <label>Department</label>
+                <br>
+                {{form.department(autofocus=False, style="width:90%")}}
             </div>
             <br>
             <div>
                 <label>Tutor</label>
-                {{form.tutor(autofocus=False)}}
+                {{form.tutor(autofocus=False, style="width:90%")}}
             </div>
             <br>
             <div>
-                <label>Stars</label>
+                <label>Review Points</label>
                 <p>
                     {% for star in form.stars %}
                       <div class="columns">

@@ -1,11 +1,5 @@
-import os
-from PIL import Image, ImageDraw, ImageFilter
-from flask import current_app
-import random
-import string
-
-def randomnamegen(size=6):
-    return ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(size))
+from PIL import Image
+from tools.utils import randomnamegen
 
 
 def crop_center(pil_img, crop_width, crop_height):
@@ -14,6 +8,7 @@ def crop_center(pil_img, crop_width, crop_height):
                          (img_height - crop_height) // 2,
                          (img_width + crop_width) // 2,
                          (img_height + crop_height) // 2))
+
 
 def modifyImage(img,width):
     o_width, o_height = img.size

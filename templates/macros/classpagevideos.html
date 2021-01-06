@@ -5,11 +5,11 @@
         <div class="tile is-parent is-11 card" style="height: 600px;">
             <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
                 <div class="columns is-12" style="display: flex; flex-wrap: wrap; padding:10px">
-                    {% for video in videoList%}
+                    {% for video in video_list%}
                         <div class="card" style="flex: 0 0 24%; padding:10px;margin: 6px;">
-                            <a class="play card-image" href="/classes/{{classCode}}/{{video.video_code}}">
+                            <a class="play card-image" href="/classes/{{class_code}}/{{video.video_code}}">
                                 <figure class="video-image image is-3by2">
-                                  <img src="{{video.thumbnail}}" alt="Placeholder image">
+                                  <img src="../../{{video.thumbnail_path}}" alt="Placeholder image">
                                 </figure>
                             </a>
                             <div class="card-content" style="padding-left: 5px;">

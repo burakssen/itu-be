@@ -1,0 +1,39 @@
+{% macro adminPanel(context) %}
+
+
+<div class="column is-10" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="height: 100%; display: flex; border: 1px solid black; align-items: center; justify-content: center">
+            <div class="columns">
+                <div class="card column" style="margin: 5px; display: flex; align-items: center; justify-content: center" >
+                    <a style="margin: 50px" href="{{ url_for('admin_users_page') }}">
+                        <img style="border:1px solid; border-radius: 50%" src="../../static/users.png" style="border: 1px; border-radius:50%;">
+                        <div style="text-align: center; margin: 10px; font-size: 20px">
+                            Users
+                        </div>
+                    </a>
+                </div>
+                <div class="card column" style="margin: 5px; display: flex; align-items: center; justify-content: center" >
+                    <a style="margin: 50px">
+                        <img style="border:1px solid; border-radius: 50%" src="../../static/departments.jpg" style="border: 1px; border-radius:50%;">
+                        <div style="text-align: center; margin: 10px; font-size: 20px">
+                            Departments
+                        </div>
+                    </a>
+                </div>
+                <div class="card column" style="margin: 5px; display: flex; align-items: center; justify-content: center" >
+                    <a style="margin: 50px">
+                        <img style="border:1px solid; border-radius: 50%" src="../../static/classes.png" style="border: 1px; border-radius:50%;">
+                        <div style="text-align: center; margin: 10px; font-size: 20px">
+                            Classes
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+{% endmacro %}

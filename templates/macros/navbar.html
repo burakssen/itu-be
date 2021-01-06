@@ -1,7 +1,7 @@
 {% macro navbar(context) %}
 <nav class="navbar card" role="navigation" aria-label="main navigation">
     <a href="#">
-      <img class="logo" src="../../../static/mini_logo.png" width="224" height="82" style="margin: 10px">
+      <img class="logo" src="../../../../static/mini_logo.png" width="224" height="82" style="margin: 10px">
     </a>
     <div id="custom-navbar" class="navbar-menu">
 
@@ -9,7 +9,7 @@
         <a class="navbar-item">
           Tutors
         </a>
-        <a class="navbar-item">
+        <a class="navbar-item" href="{{ url_for("all_classes_page") }}">
           Classes
         </a>  
       </div>
@@ -19,7 +19,7 @@
           <a class="navbar-item" href="{{url_for('profile_page', user=user.username)}}">
             {{user.username}}
           </a>
-          <a class="navbar-item">
+          <a class="navbar-item" href="{{ url_for('log_out') }}">
             Log Out
           </a>
         </div>

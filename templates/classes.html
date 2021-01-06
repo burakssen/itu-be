@@ -1,8 +1,9 @@
 {% extends "layout.html" %}
 {% from "./macros/classesmacro.html" import getClasses with context %}
 {% from "./macros/classsearch.html" import classSearch with context %}
+{% from "./macros/profilebanner.html" import profilebanner with context %}
 {% block css %}
-    <link rel="stylesheet" href="../static/profile.css" />
+    <link rel="stylesheet" href="../../../static/profile.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
 {% endblock %}
 {% block title %}{{user.username}}'s Profile{% endblock %}
@@ -11,7 +12,11 @@
 {{navbar(user)}}
 
 <div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
-{{ classSearch() }}
+{%  if personal == False %}
+    {{ classSearch() }}
+{% else %}
+    {{ profilebanner(user) }}
+{% endif %}
 {{ getClasses() }}
 </div>
 

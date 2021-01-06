@@ -15,28 +15,28 @@
                     <p >Department</p>
                 </div>
                 <div class="column" style="text-align: center;">
-                    <p >Gender</p>
+                    <p >E-Mail</p>
                 </div>
                 <div class="column is-2">
                    
                 </div>
             </div>
-          {% for users in Users %}
+          {% for t_user in Users %}
             <div class="columns is-12 is-vcentered", style="border: 1px solid black; border-radius: 10px; margin: 10px">
                 <div class="column is-2" style="width:12vh;height:12vh; margin-left: 10px;">
-                    <img src="https://via.placeholder.com/150" style="border: 1px; border-radius:50%;">
+                    <img src="../{{ t_user.profileimage }}" style="border: 1px; border-radius:50%;">
                 </div>
                 <div class="column " style="text-align: center;">
-                    Burak Şen
+                    {{ t_user.username }}
                 </div>
                 <div class="column" style="text-align: center;">
-                    <p >Computer</p>
+                    <p >{{ db.get_departments(t_user.department).department_name }}</p>
                 </div>
                 <div class="column" style="text-align: center;">
-                    <p >Male</p>
+                    <p >{{ t_user.mail }}</p>
                 </div>
                 <div class="column is-2">
-                    <button class="button" type="submit" style="color:red" value="user_id">Delete</button>
+                    <a type="submit" class="button" href="{{ url_for('user_delete', user_id=t_user.id_number) }}" style="color:red" >Delete</a>
                 </div>
             </div>
           {% endfor %}

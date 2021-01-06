@@ -1,6 +1,7 @@
 {% extends "layout.html" %}
+{% from "./macros/usermacro.html" import userinfo with context%}
+
 {% block css %}
-    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
 {% endblock %}
 {% block title %}{{user.username}}'s Profile{% endblock %}

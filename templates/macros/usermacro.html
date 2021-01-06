@@ -22,6 +22,7 @@
                       <td>{{form.username(autofocus=False, value=Burak, type="text")}}</td>
                     {% endif %}
                     {% if update is true %}
+                        <th>Profile Image :</th>
                       <td style="border: none;">
                         {{form.image(autofocus=False, accept="image/*")}}
                       </td>
@@ -30,9 +31,13 @@
                   <tr>
                     <th>ID :</th>
                     {% if update is not true %}
-                      <td>{{ user.id_number }}</td>
+                        <td>{{ user.id_number }}</td>
                     {% else %}
-                      <td>{{form.id_number(autofocus=False, value=user.id_number, disabled=True)}}</td>
+                        <td>{{form.id_number(autofocus=False, value=user.id_number, disabled=True)}}</td>
+                    {% endif %}
+                    {% if update is true %}
+                        <th>Title (Optional) :</th>
+                        <td>{{ form.title() }}</td>
                     {% endif %}
                   </tr>
                   <tr>
