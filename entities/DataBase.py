@@ -110,12 +110,37 @@ class DataBase():
         user_list = []
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM USERS WHERE (account_type != 'admin' )"""
+            query = f"""SELECT 
+                users.user_id, 
+                users.user_name, 
+                department.department_name,
+                users.account_type,
+                users.gender,
+                users.mail,
+                users.title,
+                users.profile_image_path
+            FROM USERS 
+            INNER JOIN DEPARTMENT 
+            ON (users.department = department.department_code)
+            WHERE (users.account_type != 'admin')
+            """
             cursor.execute(query)
             try:
                 users = cursor.fetchall()
+
                 for User in users:
-                    User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7])
+
+                    User = Person(
+                        id_number=User[0],
+                        username=User[1],
+                        password=None,
+                        department=User[2],
+                        account_type=User[3],
+                        gender=User[4],
+                        mail=User[5],
+                        title=User[6],
+                        profileimage=User[7]
+                    )
                     user_list.append(User)
                 connection.commit()
                 return user_list
@@ -151,6 +176,28 @@ class DataBase():
                 except:
                     return None
 
+    def create_department(self,department):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            try:
+                cursor.execute(
+                    """INSERT INTO DEPARTMENT (department_code, department_name) VALUES (%s, %s)""",
+                    (department.department_code, department.department_name))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def delete_department(self,department_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            try:
+                cursor.execute(
+                    """DELETE FROM DEPARTMENT WHERE department_code = %s""",
+                    (department_code,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
     def create_user(self, User):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
@@ -185,52 +232,109 @@ class DataBase():
                 if e.pgcode == 23505:
                     return "Class code exists"
 
+    def delete_class(self,class_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            try:
+                cursor.execute("""DELETE FROM CLASS WHERE class_code = %s""", (class_code,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
     def get_tutors_classes(self, id_number):
         class_list = []
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM Class WHERE (tutor = %s)"""
+            query = f"""
+            SELECT 
+            class.class_name, 
+            class.class_code,
+            class.review_points,
+            class.class_context,
+            users.user_name,
+            department.department_name
+            FROM Class
+            JOIN users
+            ON users.user_id = class.tutor
+            JOIN department
+            ON users.department = department.department_code
+            WHERE (tutor = %s)"""
             try:
                 cursor.execute(query, (id_number,))
                 classes = cursor.fetchall()
 
-                for nclass in classes:
-                    nclass = Class(nclass[1], nclass[0], nclass[2], nclass[3], nclass[4])
+                for t_class in classes:
+                    nclass = Class(t_class[0], t_class[1], t_class[4], t_class[2], t_class[3])
+                    tutor = Person(None, t_class[4], None, t_class[5], None, None, None)
                     class_list.append(nclass)
 
                 connection.commit()
-                return class_list
+                return tutor, class_list
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
     def get_all_classes(self):
         class_list = []
+        tutor_list = []
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM Class"""
+            query = f"""
+            SELECT
+                class.class_name, 
+                class.class_code,
+                class.review_points,
+                class.class_context,
+                users.user_name,
+                department.department_name
+            FROM Class
+            JOIN users
+            ON users.user_id = class.tutor
+            JOIN department
+            ON users.department = department.department_code
+            """
             try:
                 cursor.execute(query)
                 classes = cursor.fetchall()
 
-                for nclass in classes:
-                    nclass = Class(nclass[1], nclass[0], nclass[2], nclass[3], nclass[4])
+                for t_class in classes:
+                    nclass = Class(t_class[0], t_class[1], t_class[4], t_class[2], t_class[3])
+                    tutor = Person(None,t_class[4],None,t_class[5],None,None,None)
                     class_list.append(nclass)
+                    tutor_list.append(tutor)
 
                 connection.commit()
-                return class_list
+                return tutor_list, class_list
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
     def get_class_with_class_code(self,class_code):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM Class WHERE class_code = %s"""
+            query = f"""
+            SELECT 
+                class.class_name,
+                class.class_code,
+                class.review_points,
+                class.class_context,
+                users.user_name,
+                users.profile_image_path,
+                users.title,
+                department.department_name
+             
+            FROM 
+            Class 
+            JOIN users
+            ON users.user_id = class.tutor
+            JOIN department
+            ON users.department = department.department_code
+            WHERE class_code = %s"""
             try:
                 cursor.execute(query,(class_code,))
                 classes = cursor.fetchone()
-                nclass = Class(classes[1], classes[0], classes[2], classes[3], classes[4])
+                nclass = Class(classes[0],classes[1],classes[4],classes[2],classes[3])
+                tutor = Person(None,classes[4],None,classes[7],None,None,None,classes[6],classes[5])
                 connection.commit()
-                return nclass
+                return (nclass, tutor)
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
@@ -255,7 +359,8 @@ class DataBase():
         video_list = []
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM Video WHERE (class_code = %s)"""
+            query = f"""
+            SELECT * FROM Video WHERE (class_code = %s)"""
             try:
                 cursor.execute(query, (class_code,))
                 videos = cursor.fetchall()
@@ -301,11 +406,23 @@ class DataBase():
             cursor = connection.cursor()
             try:
                 cursor.execute(
-                    """SELECT * FROM comments WHERE video_code = %s""", (video_code,)
+                    """SELECT
+                     comments.comment_id,
+                     users.user_name,
+                     users.account_type,
+                     users.profile_image_path,
+                     video.video_name,
+                     comments.comment_context
+                     FROM comments 
+                     INNER JOIN users
+                     ON users.user_id = comments.user_id
+                     INNER JOIN video
+                     ON video.video_code = comments.video_code
+                     WHERE video.video_code = %s""", (video_code,)
                 )
                 comments = cursor.fetchall()
                 for comment in comments:
-                    comment = Comment(comment[0],comment[1],comment[2],comment[3])
+                    comment = Comment(comment[0],comment[1], comment[2],comment[3],comment[4],comment[5])
                     comment_list.append(comment)
                 connection.commit()
 

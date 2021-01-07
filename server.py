@@ -25,7 +25,8 @@ def create_app():
     app.add_url_rule("/profile/<string:user>/uploadvideo/",view_func=view.upload_video_page,methods=["GET","POST"])
     app.add_url_rule("/profile/<string:user>/uploadvideo/<string:info>/",view_func=view.upload_video_page,methods=["GET","POST"])
     app.add_url_rule("/classes/",view_func=view.all_classes_page,methods=["GET","POST"])
-    app.add_url_rule("/classes/<string:filter>/", view_func=view.all_classes_page,methods=["GET","POST"])
+    app.add_url_rule("/classes/delete/<string:class_code>/",view_func=view.delete_class, methods=["GET","POST"])
+    app.add_url_rule("/classes/filtered/<string:filtered>/", view_func=view.all_classes_page,methods=["GET","POST"])
     app.add_url_rule("/classes/<string:class_code>/",view_func=view.class_page,methods=["GET", "POST"])
     app.add_url_rule("/classes/<string:class_code>/<string:video_code>", view_func=view.video_page, methods=["GET", "POST"])
     app.add_url_rule("/adminpanel/", view_func=view.admin_panel_page, methods=["GET", "POST"])
@@ -36,12 +37,14 @@ def create_app():
     app.add_url_rule("/classcreate/<string:info>/", view_func=view.create_class_page, methods=["GET", "POST"])
     app.add_url_rule("/access_denied/", view_func=view.access_denied, methods=["GET", "POST"])
     app.add_url_rule("/profile/<string:user>/classes/",view_func=view.tutor_classes_page,methods=["GET","POST"])
-
+    app.add_url_rule("/adminpanel/departments",view_func=view.department_page, methods=["GET","POST"])
+    app.add_url_rule("/adminpanel/departments/delete/<string:department_code>", view_func=view.department_delete, methods=["GET","POST"])
     lm.init_app(app)
     lm.login_view = "auth_page"
     
     db = DataBase()
     app.config["db"] = db
+    app.jinja_env.filters['zip'] = zip
 
     csrf.init_app(app)
     return app

@@ -1,6 +1,6 @@
 #Directories
 /venv
-/.env
+.env
 /__pycache__
 /entities/__pycache__
 /tools/__pycache__

@@ -1,0 +1,30 @@
+{% macro createDepartment(context) %}
+    <form action="" method="POST" style="width:100%" class="form" name="classcreate">
+        {{ form.csrf_token }}
+
+            {% if info == "success" %}
+                <label class="title" style="color:gold">
+                    Department is created
+                </label>
+            {% elif info == "fail" %}
+                <label class="title" style="color:red">
+                    Department couldn't created: (Department Code Already Exists)
+                </label>
+            {% endif %}
+            <label class="title">
+                Create New Department
+            </label>
+            <div style="align-items:flex-start; justify-content:space-around;">
+                <label class="label" style="padding: 10px">
+                    Department Name
+                    {{ form.department_name() }}
+                </label>
+                <label class="label" style="padding: 10px">
+                    Depratment Code
+                    {{ form.department_code() }}
+                </label>
+            </div>
+            {{ form.create_button( class="button") }}
+
+    </form>
+{% endmacro %}

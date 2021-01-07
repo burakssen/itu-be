@@ -48,19 +48,19 @@
                         <div class="tile columns is-vertical is-4" style="padding-top: 10px">
                             <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">
                             {% for comment in comment_list %}
-                                <div class="columns is-12", style="width:100%; border: 1px solid black; border-radius: 10px; margin: 10px">
+                                <div class="columns is-12" style="width:100%; border: 1px solid black; border-radius: 10px; margin: 10px">
                                     <article class="media" style="padding:10px">
                                         <figure class="media-left">
                                             <p class="image is-64x64" >
-                                                <img style="border:1px; border-radius: 50%" src="../../{{db.get_user_with_id(comment.user_id).profileimage}}">
+                                                <img style="border:1px; border-radius: 50%" src="../../{{comment.profileimage}}">
                                             </p>
                                         </figure>
                                         <div class="media-content">
                                             <div class="content">
                                                 <p>
-                                                    <strong>{{ db.get_user_with_id(comment.user_id).username }}</strong>
-                                                    {% if db.get_user_with_id(comment.user_id).account_type != "Student" %}
-                                                        <strong>{{"<" + db.get_user_with_id(comment.user_id).account_type  + ">"}}</strong>
+                                                    <strong>{{ comment.username }}</strong>
+                                                    {% if comment.account_type != "Student" %}
+                                                        <strong>{{"<" + comment.account_type  + ">"}}</strong>
                                                     {% endif %}
                                                 <br>
                                                 {{ comment.comment_context }}

@@ -7,7 +7,7 @@
                 <div class="columns is-12" style="display: flex; flex-wrap: wrap; padding:10px">
                     {% for video in video_list%}
                         <div class="card" style="flex: 0 0 24%; padding:10px;margin: 6px;">
-                            <a class="play card-image" href="/classes/{{class_code}}/{{video.video_code}}">
+                            <a class="play card-image" href="/classes/{{ nclass.class_code }}/{{video.video_code}}">
                                 <figure class="video-image image is-3by2">
                                   <img src="../../{{video.thumbnail_path}}" alt="Placeholder image">
                                 </figure>

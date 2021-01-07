@@ -1,0 +1,59 @@
+{% extends "layout.html" %}
+{% from "./macros/profilebanner.html" import profilebanner with context %}
+{% from "./admin/departmentcreate.html" import createDepartment with context %}
+{% block css %}
+    <link rel="stylesheet" href="../../../static/profile.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+{% endblock %}
+{% block title %}{{user.username}}'s Profile{% endblock %}
+{% block content %}
+
+{{navbar(user)}}
+<div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
+{{profilebanner(user)}}
+    <div class="column is-10" style="margin-left: 50px">
+        <div class="tile is-ancestor" style="height:600px;">
+            <div class="tile is-parent is-11 card" style="height:100%;">
+                <div class="tile notification" style="height:100%;border: 1px solid black;">
+                    <div class="tile columns is-child ">
+                        <div class="tile column is-5 is-align-items-center">
+                            {{ createDepartment(info) }}
+                        </div>
+                        <div class="column is-6" id="scrollbar" style="width:100%; flex: auto; overflow-y: scroll; border: 1px black solid; border-radius: 10px">
+                           <div class="column is-vertical" >
+                               <div class="columns">
+                                   <div class="column is-6" style="border: 1px solid black; border-radius: 10px; margin: 3px">
+                                       Department Name
+                                   </div>
+                                   <div class="column is-4" style="border: 1px solid black; border-radius: 10px; margin: 3px">
+                                       Department Code
+                                   </div>
+                                   <div class="column is-1">
+                                        Deneme
+                                   </div>
+                               </div>
+                               {% for department in department_list %}
+                               <div class="columns">
+                                   <div class="column is-6 has-text-centered" style="border: 1px solid black; border-radius: 10px; margin: 3px">
+                                       {{ department.department_name }}
+                                   </div>
+                                   <div class="column is-4 has-text-centered" style="border: 1px solid black; border-radius: 10px; margin: 3px">
+                                       {{ department.department_code }}
+                                   </div>
+                                   <div class="column is-1">
+                                       <a class="button" style="color:red" href="{{ url_for("department_delete", department_code=department.department_code) }}">
+                                           Delete
+                                       </a>
+                                   </div>
+                               </div>
+                               {% endfor %}
+                           </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

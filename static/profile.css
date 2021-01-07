@@ -65,3 +65,19 @@ body::-webkit-scrollbar{
 .profile-update-text:focus{
     border:none;
 }
+
+html {
+    --scrollbarBG: #CFD8DC;
+    --thumbBG: #90A4AE;
+}
+
+#scrollbar::-webkit-scrollbar {
+    width: 11px;
+}
+#scrollbar::-webkit-scrollbar-track {
+    background: none;
+}
+#scrollbar::-webkit-scrollbar-thumb {
+    background-color: var(--thumbBG) ;
+    border-radius: 6px;
+}

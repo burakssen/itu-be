@@ -5,7 +5,7 @@
       <div class="tile is-parent is-11 card" style="height: 600px;">
         <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
             <div class="columns is-12">
-                <div class="column is-3" style="margin: 5px; text-align: center;">
+                <div class="column is-2" style="margin: 5px; text-align: center;">
                     <p>Class Name</p>
                 </div>
                 <div class="column"  style="margin: 5px; text-align: center;">
@@ -14,32 +14,82 @@
                 <div class="column" style="margin: 5px; text-align: center;">
                     <p>Tutor</p>
                 </div>
-                <div class="column is-4" style="margin: 5px; text-align: center;">
+                <div class="column" style="margin: 5px; text-align: center;">
                     <p >Department</p>
                 </div>
                 <div class="column" style="margin: 5px">
                     <p >Review Points</p>
                 </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <div>Students/Class Capacity</div>
+                </div>
+                {% if user.account_type == "admin" %}
+                    <div class="column" style="margin: 5px">
+
+                    </div>
+                {% endif %}
             </div>
-          {% for nclass in class_list %}
+            {% if personal != true %}
+            {% for tutor, nclass in tutor_list|zip(class_list) %}
             <div class="columns is-12", style="border: 1px solid black; border-radius: 10px; margin: 10px">
                 <div class="column is-3" style="padding: 10px">
-                    <a class="button" href="{{ url_for("class_page", class_code=nclass.class_code) }}/" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
+                    <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
                 </div>
                 <div class="column"  style="margin: 5px; text-align: center;">
                     <p >{{nclass.class_code}}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{db.get_user_with_id(nclass.tutor).username}}</p>
+                    <p >{{ tutor.username }}</p>
                 </div>
-                <div class="column is-4" style="margin: 5px; text-align: center;">
-                    <p >{{db.get_departments(db.get_user_with_id(nclass.tutor).department).department_name}}</p>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p >{{ tutor.department }}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
                     <p >{{nclass.review_points}}</p>
                 </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+
+                </div>
+                {% if user.account_type == "admin" %}
+                    <div class="column" style="margin: 5px">
+                        <a class="button" style="color:red" href="{{ url_for("delete_class",class_code=nclass.class_code) }}">
+                            Delete
+                        </a>
+                    </div>
+                {% endif %}
             </div>
-          {% endfor %}
+            {% endfor %}
+            {% else %}
+                {% for nclass in class_list %}
+            <div class="columns is-12", style="border: 1px solid black; border-radius: 10px; margin: 10px">
+                <div class="column is-3" style="padding: 10px">
+                    <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
+                </div>
+                <div class="column"  style="margin: 5px; text-align: center;">
+                    <p >{{nclass.class_code}}</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p >{{ tutor.username }}</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p >{{ tutor.department }}</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+                    <p >{{nclass.review_points}}</p>
+                </div>
+                <div class="column" style="margin: 5px; text-align: center;">
+
+                </div>
+                {% if user.account_type == "admin" %}
+                    <div class="column" style="margin: 5px">
+                        <a class="button" style="color:red" href="{{ url_for("delete_class",class_code=nclass.class_code) }}">
+                            Delete
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+            {% endif %}
         </div>
       </div>
     </div>

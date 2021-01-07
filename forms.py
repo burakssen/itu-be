@@ -116,7 +116,7 @@ class ClassSearchForm(FlaskForm):
 
     tutor = SelectField("Tutors")
 
-    stars = RadioField("Stars", choices=[5, 4, 3, 2, 1])
+    stars = RadioField("Stars", choices=[(5,5), (4,4), (3,3), (2,2), (1,1)])
 
 
 class ClassCreateForm(FlaskForm):
@@ -133,3 +133,10 @@ class CommentPostForm(FlaskForm):
     comment = TextAreaField("Comment", render_kw={"rows": 5, "cols": 48}, validators=[Optional()])
 
     send_comment = SubmitField("Comment!")
+
+class DepartmentCreateForm(FlaskForm):
+    department_name = StringField("Department Name")
+
+    department_code = StringField("Department Code")
+
+    create_button = SubmitField("Create Department")

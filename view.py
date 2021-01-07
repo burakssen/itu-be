@@ -22,7 +22,8 @@ from forms import \
     VideoUploadForm, \
     ClassSearchForm, \
     ClassCreateForm, \
-    CommentPostForm
+    CommentPostForm, \
+    DepartmentCreateForm
 
 
 def auth_page(info=False):
@@ -181,8 +182,8 @@ def profile_page(user):
 def tutor_classes_page(user):
     db = current_app.config["db"]
     user = current_user
-    class_list = db.get_tutors_classes(user.id_number)
-    return render_template("classes.html", user=user, personal=True, db=db, class_list=class_list)
+    tutor, class_list = db.get_tutors_classes(user.id_number)
+    return render_template("classes.html", user=user, personal=True, tutor=tutor,db=db, class_list=class_list)
 
 
 @login_required
@@ -254,6 +255,7 @@ def upload_video_page(user, info=None):
             nvideo = Video(video_title, randomnamegen(20), user.id_number, video_class, None,
                           thumbnail_path, video_path, video_descriptions, video_comments_available)
 
+
             db.create_video(nvideo)
 
             return redirect(url_for("upload_video_page",user=user.username, info="success"))
@@ -270,26 +272,41 @@ def all_classes_page(filtered=None):
 
     db = current_app.config["db"]
 
-    class_list = db.get_all_classes()
+    tutor_list, class_list = db.get_all_classes()
+
 
     if form.validate_on_submit():
+        department = request.form.get("department")
 
-        return render_template("classes.html", form=form, user=user, db=db, personal=False, class_list=class_list)
+        tutor = request.form.get("tutor")
+
+        star = request.form.get("stars")
+
+        return render_template("classes.html", form=form, user=user, db=db, personal=False,tutor_list=tutor_list, class_list=class_list)
     
-    return render_template("classes.html", form=form, user=user, db=db, personal=False, class_list=class_list)
+    return render_template("classes.html", form=form, user=user, db=db, personal=False,tutor_list=tutor_list, class_list=class_list)
 
 
 @login_required
 def class_page(class_code):
     user = current_user
     db = current_app.config["db"]
-
+    nclass, tutor = db.get_class_with_class_code(class_code)
     video_list = db.get_videos(class_code)
 
     for video in video_list:
         video.convert_image_path()
 
-    return render_template("classpage.html", user=user, video_list=video_list, db=db, class_code=class_code)
+    return render_template("classpage.html", user=user, video_list=video_list, tutor=tutor, nclass=nclass)
+
+@login_required
+def delete_class(class_code):
+    if current_user.account_type != "admin":
+        return redirect(url_for("profile_page", user=current_user.username))
+
+    db = current_app.config["db"]
+    db.delete_class(class_code)
+    return redirect(url_for("all_classes_page"))
 
 
 @login_required
@@ -307,7 +324,12 @@ def video_page(class_code, video_code):
       comment = request.form.get("comment")
 
       if comment != "":
-        comment = Comment(randomnamegen(50), user.id_number, video_code, comment)
+        comment = Comment(
+            comment_id=randomnamegen(50),
+            user_id=user.id_number,
+            video_code=video_code,
+            comment_context=comment
+        )
         db.create_comment(comment)
 
         return redirect(url_for("video_page", class_code=class_code, video_code=video_code))
@@ -345,3 +367,32 @@ def user_delete(user_id):
     db = current_app.config["db"]
     db.delete_user(user_id)
     return redirect(url_for("admin_users_page"))
+
+@login_required
+def department_page():
+    if current_user.account_type != "admin":
+        return redirect(url_for("profile_page", user=current_user.username))
+
+    db = current_app.config["db"]
+    department_list = db.get_departments()
+
+    form = DepartmentCreateForm()
+    if form.validate_on_submit():
+        department_name = request.form.get("department_name")
+        department_code = request.form.get("department_code")
+
+        department = Department(department_code, department_name)
+        db.create_department(department)
+
+        return redirect(url_for("department_page"))
+
+    return render_template("./admin/departmentspage.html", user=current_user, form=form, department_list=department_list)
+
+@login_required
+def department_delete(department_code):
+    if current_user.account_type != "admin":
+        return redirect(url_for("profile_page", user=current_user.username))
+
+    db = current_app.config["db"]
+    db.delete_department(department_code)
+    return redirect(url_for("department_page"))
