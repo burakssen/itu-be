@@ -134,9 +134,25 @@ class CommentPostForm(FlaskForm):
 
     send_comment = SubmitField("Comment!")
 
+
 class DepartmentCreateForm(FlaskForm):
     department_name = StringField("Department Name")
 
     department_code = StringField("Department Code")
 
     create_button = SubmitField("Create Department")
+
+
+class StudentAddForm(FlaskForm):
+    def __init__(self, class_code=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = current_app.config["db"]
+        student_list = self.db.get_all_student()
+
+        self.student.choices = [
+            (student.id_number, f"{student.id_number}: {student.username} -- This Student is already in the class" if self.db.check_if_student_in_the_class(class_code,student.id_number) else f"{student.id_number}: {student.username}") for student in student_list
+        ]
+
+    student = SelectMultipleField("Student", choices=[], coerce=int)
+
+    submit_button = SubmitField("Add Students")

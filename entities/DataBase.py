@@ -432,6 +432,96 @@ class DataBase():
                 if e.pgcode == 23505:
                     return "Comment code exists"
 
+    def get_all_student(self):
+        student_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""
+                    SELECT user_name, user_id FROM USERS WHERE (account_type = 'Student')"""
+            try:
+                cursor.execute(query)
+                students = cursor.fetchall()
+
+                for student in students:
+                    student = Person(student[1],student[0],None,None,"Student",None,None)
+                    student_list.append(student)
+
+                connection.commit()
+                return student_list
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def get_all_students_from_class(self,class_code):
+        student_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""
+                SELECT 
+                    users.user_name,
+                    users.user_id,
+                    users.profile_image_path
+                FROM student
+                JOIN users
+                ON users.user_id = student.student_id
+                WHERE (class_code = %s)"""
+            try:
+                cursor.execute(query,(class_code,))
+                students = cursor.fetchall()
+
+                for student in students:
+                    student = Person(student[1], student[0], None, None, "Student", None, None,None,student[2])
+                    student_list.append(student)
+
+                connection.commit()
+                return student_list
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def delete_student_from_class(self, class_code, student_id):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            try:
+                cursor.execute("""DELETE FROM STUDENT WHERE class_code = %s AND student_id = %s""", (class_code, student_id,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def check_if_student_in_the_class(self,class_code,student_id):
+        if class_code == None:
+            return False
+
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""
+                        SELECT 
+                            (student_id)
+                        FROM student
+                        WHERE (class_code = %s AND student_id = %s)"""
+            try:
+                cursor.execute(query,(class_code, student_id,))
+                user_id = cursor.fetchall()
+                for user in user_id:
+                    if user[0] == student_id:
+                        return True
+                    else:
+                        return False
+
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def add_student(self, user_ids, class_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""INSERT INTO STUDENT (class_code, student_id) VALUES(%s,%s)"""
+            try:
+                for user_id in user_ids:
+                    cursor.execute(query,(class_code, user_id,))
+
+                connection.commit()
+
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
 def get_User(user_name):
     user = current_app.config["db"].get_user(user_name)
     return user

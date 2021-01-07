@@ -39,6 +39,8 @@ def create_app():
     app.add_url_rule("/profile/<string:user>/classes/",view_func=view.tutor_classes_page,methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments",view_func=view.department_page, methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments/delete/<string:department_code>", view_func=view.department_delete, methods=["GET","POST"])
+    app.add_url_rule("/classes/<string:class_code>/addstudent/",view_func=view.student_add_page, methods=["GET","POST"])
+    app.add_url_rule("/classes/<string:class_code>/deletestudent/<string:student_id>/",view_func=view.delete_student_from_class, methods=["GET","POST"])
     lm.init_app(app)
     lm.login_view = "auth_page"
     

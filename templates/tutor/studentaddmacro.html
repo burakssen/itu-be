@@ -1,0 +1,18 @@
+{% macro studentAdd(context) %}
+<div class="column is-5" style="margin-left: 50px">
+    <div class="tile is-ancestor" style="height:600px;">
+      <div class="tile is-parent is-11 card" style="height:100%;">
+          <div class="tile notification" style="height:100%; align-items:center; justify-content:center; border: 1px solid black;">
+          <form action="" method="POST" style="height:100%; width:100%;" class="form columns" name="addstudent">
+              {{ form.csrf_token }}
+              <div class="tile column is-vertical">
+                  {{ form.student(style="height:100%", id="scrollbar", multiple=True) }}
+                  {{ form.submit_button(style="margin-top:10px") }}
+              </div>
+          </form>
+          </div>
+      </div>
+    </div>
+</div>
+
+{% endmacro %}

@@ -23,7 +23,8 @@ from forms import \
     ClassSearchForm, \
     ClassCreateForm, \
     CommentPostForm, \
-    DepartmentCreateForm
+    DepartmentCreateForm, \
+    StudentAddForm
 
 
 def auth_page(info=False):
@@ -396,3 +397,32 @@ def department_delete(department_code):
     db = current_app.config["db"]
     db.delete_department(department_code)
     return redirect(url_for("department_page"))
+
+@login_required
+def student_add_page(class_code):
+    if current_user.account_type != "Tutor":
+        return redirect(url_for("profile_page", user=current_user.username))
+
+    db = current_app.config["db"]
+    form = StudentAddForm(class_code)
+
+    student_list = db.get_all_students_from_class(class_code)
+    for student in student_list:
+        print(student.username)
+    if form.validate_on_submit():
+        students = request.form.getlist("student")
+
+        db.add_student(students, class_code)
+
+        return redirect(url_for("student_add_page",class_code=class_code))
+
+    return render_template("./tutor/studentadd.html",class_code=class_code, form=form, user=current_user, student_list=student_list)
+
+@login_required
+def delete_student_from_class(class_code,student_id):
+    if current_user.account_type != "Tutor":
+        return redirect(url_for("profile_page", user=current_user.username))
+
+    db = current_app.config["db"]
+    db.delete_student_from_class(class_code,student_id)
+    return redirect(url_for("student_add_page",class_code=class_code))

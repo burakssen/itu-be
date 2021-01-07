@@ -1,0 +1,59 @@
+{% macro studentList(context) %}
+
+<div class="column is-5" style="margin-left: -20px">
+    <div class="tile is-ancestor" style="height:600px;">
+        <div class="tile is-parent is-11 card" style="height:100%;">
+            <div class="tile notification" style="overflow-y:scroll; height:100%; border: 1px solid black;">
+                <div class="tile columns is-vertical" style=" height: 100px">
+                    <div class="tile column" style="border: 1px solid black; border-radius: 10px ;margin:5px"">
+                            <div class="tile columns " style="padding:3px; align-items:center">
+                                <figure class="column">
+                                    <p class="image is-64x64" >
+
+                                    </p>
+                                </figure>
+                                <div class="column is-3">
+                                    <p class="has-text-centered">
+                                        Student Username
+                                    </p>
+                                </div>
+                                <div class="column is-3">
+                                    <p class="has-text-centered">
+                                        Student Id
+                                    </p>
+                                </div>
+                                <div class="column is-4">
+
+                                </div>
+                            </div>
+                        </div>
+                    {% for student in student_list %}
+                        <div class="tile column" style="border: 1px solid black; border-radius: 10px ;margin:5px"">
+                            <div class="tile columns " style="padding:3px; align-items:center">
+                                <figure class="column">
+                                    <p class="image is-64x64" >
+                                        <img style="border:1px solid black; border-radius: 50%" src="../../../{{student.profileimage}}">
+                                    </p>
+                                </figure>
+                                <div class="column is-3">
+                                    <p class="has-text-centered">
+                                        {{ student.username }}
+                                    </p>
+                                </div>
+                                <div class="column is-3">
+                                    <p class="has-text-centered">
+                                        {{ student.id_number }}
+                                    </p>
+                                </div>
+                                <div class="column is-4">
+                                    <a class="button" style="color:red" href="{{ url_for("delete_student_from_class",class_code=class_code,student_id=student.id_number) }}">Delete</a>
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+              </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endmacro %}
