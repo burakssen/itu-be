@@ -2,7 +2,7 @@ import os
 from os import path
 from passlib.hash import pbkdf2_sha256 as hasher
 
-from flask import render_template, request, redirect, url_for, flash, current_app
+from flask import render_template, request, redirect, url_for, flash, current_app, session
 from flask_login import login_user, logout_user, login_required, current_user
 
 from entities.DataBase import get_User
@@ -203,8 +203,9 @@ def create_class_page(info=None):
         class_name = request.form.get("class_name")
         class_code = request.form.get("class_code")
         class_context = request.form.get("class_context")
+        class_capacity = request.form.get("class_capacity")
 
-        nclass = Class(class_name, class_code, user.id_number, class_context=class_context)
+        nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity)
 
         if db.create_class(nclass) == "Class code exists":
             return redirect(url_for("create_class_page", info="fail"))
@@ -314,10 +315,12 @@ def delete_class(class_code):
 def video_page(class_code, video_code):
     form = CommentPostForm()
     user = current_user
+
     db = current_app.config["db"]
 
     comment_list = db.get_comments(video_code)
-    video = db.get_video_with_video_code(video_code)
+    tutor, video = db.get_video_with_video_code(video_code)
+
     video.convert_video_path()
     video.convert_image_path()
 
@@ -335,7 +338,7 @@ def video_page(class_code, video_code):
 
         return redirect(url_for("video_page", class_code=class_code, video_code=video_code))
 
-    return render_template("videopage.html", form=form, video=video, user=user, db=db, comment_list=comment_list)
+    return render_template("videopage.html", form=form, tutor=tutor, video=video, user=user, db=db, comment_list=comment_list)
 
 
 @login_required
@@ -407,21 +410,27 @@ def student_add_page(class_code):
     form = StudentAddForm(class_code)
 
     student_list = db.get_all_students_from_class(class_code)
-    for student in student_list:
-        print(student.username)
+    nclass, tutor = db.get_class_with_class_code(class_code)
     if form.validate_on_submit():
         students = request.form.getlist("student")
 
-        db.add_student(students, class_code)
+        capacity = request.form.get("capacity")
+        if capacity != "":
+            db.update_capacity_of_a_class(class_code,capacity)
+        if nclass.number_of_students < nclass.class_capacity:
+            db.add_student(students, class_code)
+        else:
+            flash("Class Capacity is Full!", "alert-error")
 
         return redirect(url_for("student_add_page",class_code=class_code))
 
-    return render_template("./tutor/studentadd.html",class_code=class_code, form=form, user=current_user, student_list=student_list)
+    return render_template("./tutor/studentadd.html", nclass=nclass, form=form, user=current_user, student_list=student_list)
 
 @login_required
 def delete_student_from_class(class_code,student_id):
     if current_user.account_type != "Tutor":
         return redirect(url_for("profile_page", user=current_user.username))
+
 
     db = current_app.config["db"]
     db.delete_student_from_class(class_code,student_id)

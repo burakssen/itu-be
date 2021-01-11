@@ -4,8 +4,8 @@
     <div class="tile is-ancestor">
       <div class="tile is-parent is-11 card" style="height: 600px;">
         <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
-            <div class="columns is-12">
-                <div class="column is-2" style="margin: 5px; text-align: center;">
+            <div class="columns is-12" style="align-items:center; ">
+                <div class="column is-3" style="margin: 5px; text-align: center;">
                     <p>Class Name</p>
                 </div>
                 <div class="column"  style="margin: 5px; text-align: center;">
@@ -31,7 +31,7 @@
             </div>
             {% if personal != true %}
             {% for tutor, nclass in tutor_list|zip(class_list) %}
-            <div class="columns is-12", style="border: 1px solid black; border-radius: 10px; margin: 10px">
+            <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
                 <div class="column is-3" style="padding: 10px">
                     <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
                 </div>
@@ -48,7 +48,7 @@
                     <p >{{nclass.review_points}}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p></p>
+                    <p>{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</p>
                 </div>
                 {% if user.account_type == "admin" %}
                     <div class="column" style="margin: 5px">
@@ -61,7 +61,7 @@
             {% endfor %}
             {% else %}
                 {% for nclass in class_list %}
-            <div class="columns is-12", style="border: 1px solid black; border-radius: 10px; margin: 10px">
+            <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
                 <div class="column is-3" style="padding: 10px">
                     <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
                 </div>
@@ -78,7 +78,7 @@
                     <p >{{nclass.review_points}}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-
+                    <a class="button" href="{{ url_for("student_add_page",class_code=nclass.class_code) }}">{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</a>
                 </div>
                 {% if user.account_type == "admin" %}
                     <div class="column" style="margin: 5px">

@@ -124,6 +124,8 @@ class ClassCreateForm(FlaskForm):
 
     class_code = StringField("Class Code")
 
+    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40)])
+
     class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 
     create_button = SubmitField("Create Class")
@@ -156,3 +158,5 @@ class StudentAddForm(FlaskForm):
     student = SelectMultipleField("Student", choices=[], coerce=int)
 
     submit_button = SubmitField("Add Students")
+
+    capacity = IntegerField("Capacity", validators=[Optional(), NumberRange(min=5,max=60)])

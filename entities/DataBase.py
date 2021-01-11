@@ -1,8 +1,6 @@
 from flask import current_app
 import psycopg2 as dbapi2
 import os
-import sys
-
 
 from entities.Department import Department
 from entities.Person import Person
@@ -53,7 +51,7 @@ class DataBase():
                 query = """UPDATE USERS SET department = %s WHERE user_id = %s;"""
                 cursor.execute(query, (user_data.department, id_number))
 
-            if user_data.profileimage != user.profileimage:
+            if user_data.profileimage != user.profileimage and user_data.profileimage != "":
                 query = """UPDATE USERS SET profile_image_path = %s WHERE user_id = %s;"""
                 cursor.execute(query, (user_data.profileimage, id_number))
 
@@ -224,8 +222,8 @@ class DataBase():
             cursor = connection.cursor()
             try:
                 cursor.execute(
-                    """INSERT INTO Class (class_code, class_name, tutor, review_points, class_context) VALUES (%s, %s, %s, %s, %s)""",
-                    (nclass.class_code, nclass.class_name, nclass.tutor, nclass.review_points, nclass.class_context))
+                    """INSERT INTO Class (class_code, class_name, tutor, review_points, class_context, capacity) VALUES (%s, %s, %s, %s, %s, %s)""",
+                    (nclass.class_code, nclass.class_name, nclass.tutor, nclass.review_points, nclass.class_context, nclass.class_capacity))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
@@ -243,29 +241,36 @@ class DataBase():
 
     def get_tutors_classes(self, id_number):
         class_list = []
+        tutor = ""
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
             query = f"""
             SELECT 
-            class.class_name, 
-            class.class_code,
-            class.review_points,
-            class.class_context,
-            users.user_name,
-            department.department_name
+                class.class_name, 
+                class.class_code,
+                class.review_points,
+                class.class_context,
+                class.capacity,
+                users.user_name,
+                department.department_name,
+                count(student.class_code)
             FROM Class
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
             ON users.department = department.department_code
-            WHERE (tutor = %s)"""
+            JOIN student
+            ON student.class_code = class.class_code
+            WHERE (class.tutor = %s)
+            GROUP BY class.class_code, users.user_name, department.department_name 
+            """
             try:
                 cursor.execute(query, (id_number,))
                 classes = cursor.fetchall()
 
                 for t_class in classes:
-                    nclass = Class(t_class[0], t_class[1], t_class[4], t_class[2], t_class[3])
-                    tutor = Person(None, t_class[4], None, t_class[5], None, None, None)
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7])
+                    tutor = Person(None, t_class[5], None, t_class[6], None, None, None)
                     class_list.append(nclass)
 
                 connection.commit()
@@ -284,21 +289,27 @@ class DataBase():
                 class.class_code,
                 class.review_points,
                 class.class_context,
+                class.capacity,
                 users.user_name,
-                department.department_name
+                department.department_name,
+                count(student.class_code)
             FROM Class
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
             ON users.department = department.department_code
+            JOIN student
+            ON student.class_code = class.class_code
+            GROUP BY class.class_code, users.user_name, department.department_name 
             """
             try:
                 cursor.execute(query)
                 classes = cursor.fetchall()
 
                 for t_class in classes:
-                    nclass = Class(t_class[0], t_class[1], t_class[4], t_class[2], t_class[3])
-                    tutor = Person(None,t_class[4],None,t_class[5],None,None,None)
+                    print(t_class)
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3],t_class[4],t_class[7])
+                    tutor = Person(None,t_class[5],None,t_class[6],None,None,None)
                     class_list.append(nclass)
                     tutor_list.append(tutor)
 
@@ -311,30 +322,32 @@ class DataBase():
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
             query = f"""
-            SELECT 
-                class.class_name,
+            SELECT
+                class.class_name, 
                 class.class_code,
                 class.review_points,
                 class.class_context,
+                class.capacity,
                 users.user_name,
-                users.profile_image_path,
-                users.title,
-                department.department_name
-             
-            FROM 
-            Class 
+                department.department_name,
+                count(student.class_code)
+            FROM Class
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
             ON users.department = department.department_code
-            WHERE class_code = %s"""
+            JOIN student
+            ON student.class_code = class.class_code
+            WHERE class.class_code = %s
+            GROUP BY class.class_code, users.user_name, department.department_name
+            """
             try:
                 cursor.execute(query,(class_code,))
                 classes = cursor.fetchone()
-                nclass = Class(classes[0],classes[1],classes[4],classes[2],classes[3])
-                tutor = Person(None,classes[4],None,classes[7],None,None,None,classes[6],classes[5])
+                nclass = Class(classes[0],classes[1],classes[3],classes[2],classes[3],classes[4],classes[7])
+                tutor = Person(None,classes[4],None,classes[6],None,None,None)
                 connection.commit()
-                return (nclass, tutor)
+                return nclass, tutor
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
@@ -375,15 +388,35 @@ class DataBase():
                 print(e.pgcode, e.pgerror)
 
     def get_video_with_video_code(self,video_code):
+
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM Video WHERE (video_code = %s)"""
+            query = f"""
+            SELECT 
+                video.video_name,
+                video.video_code,
+                users.user_name,
+                class.class_name,
+                video.review_points,
+                video.thumbnail_path,
+                video.video_path,
+                video.video_descriptions,
+                video.comments_available,
+                users.profile_image_path
+            FROM VIDEO 
+            JOIN users
+            ON users.user_id = video.tutor
+            JOIN class
+            ON class.class_code = video.class_code
+            WHERE video_code = %s"""
             try:
                 cursor.execute(query, (video_code,))
-                video = cursor.fetchone()
-                video = Video(video[2],video[1],video[4],video[3],video[9],video[6],video[7],video[8],video[5])
+                t_video = cursor.fetchone()
+
+                video = Video(t_video[0],t_video[1],None,t_video[3],t_video[4],t_video[5],t_video[6],t_video[7],t_video[8])
+                tutor = Person(None,t_video[2],None,None,None,None,None,None,t_video[9])
                 connection.commit()
-                return video
+                return tutor, video
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
@@ -516,6 +549,19 @@ class DataBase():
             try:
                 for user_id in user_ids:
                     cursor.execute(query,(class_code, user_id,))
+
+                connection.commit()
+
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def update_capacity_of_a_class(self,class_code,capacity):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""UPDATE CLASS SET capacity = %s WHERE class_code= %s"""
+            try:
+
+                cursor.execute(query,(capacity, class_code,))
 
                 connection.commit()
 

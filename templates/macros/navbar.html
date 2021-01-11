@@ -1,9 +1,9 @@
 {% macro navbar(context) %}
-<nav class="navbar card" role="navigation" aria-label="main navigation">
+<nav class="navbar card" style="align-items: center" role="navigation" aria-label="main navigation">
     <a href="#">
       <img class="logo" src="../../../../static/mini_logo.png" width="224" height="82" style="margin: 10px">
     </a>
-    <div id="custom-navbar" class="navbar-menu">
+    <div id="custom-navbar" class="navbar-menu" style="align-items: center">
 
       <div class="navbar-start">
         <a class="navbar-item">
@@ -13,7 +13,18 @@
           Classes
         </a>  
       </div>
-  
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            <div class="navbar-center">
+                {% if messages %}
+                    <ul class=flashes>
+                    {% for category, message in messages %}
+                    <div class="{{ category }} class-item" style="border-radius:10px; padding-left: 50px; padding-right: 50px; color:black">{{ message }}</div>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+
+            </div>
+        {% endwith %}
       <div class="navbar-end">
         <div class="navbar-item">
           <a class="navbar-item" href="{{url_for('profile_page', user=user.username)}}">

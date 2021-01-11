@@ -6,6 +6,10 @@
           <form action="" method="POST" style="height:100%; width:100%;" class="form columns" name="addstudent">
               {{ form.csrf_token }}
               <div class="tile column is-vertical">
+                  <label class="label">
+                      Capacity:
+                      {{ form.capacity }}
+                  </label>
                   {{ form.student(style="height:100%", id="scrollbar", multiple=True) }}
                   {{ form.submit_button(style="margin-top:10px") }}
               </div>

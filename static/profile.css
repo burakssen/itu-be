@@ -51,6 +51,28 @@ body::-webkit-scrollbar{
     border-radius: 20px;
 }
 
+.alert {
+    position: absolute;
+    transform: translate(-50%,0%);
+    left:50%;
+    top:0%;
+    width: 30%;
+    margin-top: 5px;
+    border-radius: 10px;
+}
+
+.alert-error {
+    background-color: red;
+    color: whitesmoke;
+    text-align: center;
+}
+
+.alert-info {
+    background-color: yellow;
+    color: black;
+    text-align: center;
+}
+
 .profile-table{
     position:absolute; 
     transform: translate(-50%,-50%);

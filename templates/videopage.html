@@ -21,8 +21,8 @@
                     <div class="tile is-parent columns is-12" style="padding:0px">
                         <div class="tile column is-vertical">
                             <div style="position: relative; transform: translate(-50%,0%); left: 50%;">
-                                <video id="plyr-video" poster="../..{{ video.thumbnail_path }}" style="max-height: 450px" controls>
-                                    <source src="../..{{ video.video_path }}" type="video/mp4">
+                                <video id="plyr-video" poster="../../../..{{ video.thumbnail_path }}" style="max-height: 450px" controls>
+                                    <source src="../../../..{{ video.video_path }}" type="video/mp4">
                                     <script>
                                         plyr.setup("#plyr-video");
                                     </script>
@@ -31,13 +31,13 @@
                             <article class="media is-12" style="padding-top: 10px;">
                                 <figure class="media-left">
                                   <p class="image is-64x64">
-                                    <img style="border:1px; border-radius: 50%" src="../../static/{{ db.get_user_with_id(video.tutor).profileimage }}">
+                                    <img style="border:1px; border-radius: 50%" src="../../../../static/{{ tutor.profileimage }}">
                                   </p>
                                 </figure>
                                 <div class="media-content" >
                                   <div class="content">
                                     <p>
-                                      <strong>{{ db.get_user_with_id(video.tutor).username }}</strong>
+                                      <strong>{{ tutor.username }}</strong>
                                       <br>
                                       {{ video.video_descriptions }}
                                     </p>
@@ -52,7 +52,7 @@
                                     <article class="media" style="padding:10px">
                                         <figure class="media-left">
                                             <p class="image is-64x64" >
-                                                <img style="border:1px; border-radius: 50%" src="../../{{comment.profileimage}}">
+                                                <img style="border:1px; border-radius: 50%" src="../../../{{comment.profileimage}}">
                                             </p>
                                         </figure>
                                         <div class="media-content">

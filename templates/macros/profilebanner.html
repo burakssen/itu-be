@@ -16,12 +16,12 @@
                     <a class="button text-center" href="{{url_for('admin_panel_page')}}">
                         Admin Panel
                     </a>
-                {% elif user.account_type == "student" %}
+                {% elif user.account_type == "Student" %}
                     <a class="button text-center">
-                        Favorite Videos
+                        My Classes
                     </a>
                     <a class="button text-center">
-                        Messages
+                        My Comments
                     </a>
                 {% else %}
                     <a class="button text-center" href="{{ url_for('tutor_classes_page',user=user.username) }}">
