@@ -319,6 +319,9 @@ def video_page(class_code, video_code):
     comment_list = db.get_comments(video_code)
     tutor, video = db.get_video_with_video_code(video_code)
 
+    video.convert_video_path()
+    video.convert_image_path()
+
     if form.validate_on_submit():
       comment = request.form.get("comment")
 
