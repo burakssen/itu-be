@@ -237,7 +237,7 @@ def upload_video_page(user, info=None):
         video_descriptions = request.form.get("video_descriptions")
 
         if video.filename != '' and thumbnail != '':
-            video_path = "." + \
+            video_path = ".\itube" + \
                          "\\static\\videos\\" + \
                          randomnamegen(100) + "-" + \
                          video_class + "." + \
@@ -245,7 +245,7 @@ def upload_video_page(user, info=None):
             video_path = video_path.replace("\\", "/")
             video.save(video_path)
 
-            thumbnail_path = "." + \
+            thumbnail_path = ".\itube" + \
                         "\\static\\video_thumbnail\\" + \
                         randomnamegen(100) + "-" + \
                         video_class + "." + \
