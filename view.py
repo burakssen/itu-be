@@ -237,7 +237,7 @@ def upload_video_page(user, info=None):
         video_descriptions = request.form.get("video_descriptions")
 
         if video.filename != '' and thumbnail != '':
-            video_path = str(get_project_root()) + \
+            video_path = "." + str(get_project_root()) + \
                          "\\static\\videos\\" + \
                          randomnamegen(100) + "-" + \
                          video_class + "." + \
@@ -245,7 +245,7 @@ def upload_video_page(user, info=None):
             video_path = video_path.replace("\\", "/")
             video.save(video_path)
 
-            thumbnail_path = str(get_project_root()) + \
+            thumbnail_path = "." + str(get_project_root()) + \
                         "\\static\\video_thumbnail\\" + \
                         randomnamegen(100) + "-" + \
                         video_class + "." + \
