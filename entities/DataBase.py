@@ -253,16 +253,17 @@ class DataBase():
                 class.capacity,
                 users.user_name,
                 department.department_name,
-                count(student.class_code)
+                count(student.class_code),
+                users.title
             FROM Class
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
             ON users.department = department.department_code
-            JOIN student
+            LEFT JOIN student
             ON student.class_code = class.class_code
             WHERE (class.tutor = %s)
-            GROUP BY class.class_code, users.user_name, department.department_name 
+            GROUP BY class.class_code, users.user_name, department.department_name, users.title
             """
             try:
                 cursor.execute(query, (id_number,))
@@ -270,11 +271,46 @@ class DataBase():
 
                 for t_class in classes:
                     nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7])
-                    tutor = Person(None, t_class[5], None, t_class[6], None, None, None)
+                    tutor = Person(None, t_class[5], None, t_class[6], None, None, t_class[8])
                     class_list.append(nclass)
 
                 connection.commit()
                 return tutor, class_list
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def get_classes_of_tutor(self, id_number):
+        class_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""
+            SELECT 
+                class.class_name, 
+                class.class_code,
+                class.review_points,
+                class.class_context,
+                class.capacity,
+                users.user_name,
+                count(student.class_code)
+            FROM Class
+            JOIN users
+            ON users.user_id = class.tutor
+            LEFT JOIN student
+            ON student.class_code = class.class_code
+            WHERE (class.tutor = %s)
+            GROUP BY class.class_code, users.user_name
+            """
+            try:
+                cursor.execute(query, (id_number,))
+                classes = cursor.fetchall()
+
+                for t_class in classes:
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[6])
+
+                    class_list.append(nclass)
+
+                connection.commit()
+                return class_list
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
@@ -298,16 +334,16 @@ class DataBase():
             ON users.user_id = class.tutor
             JOIN department
             ON users.department = department.department_code
-            JOIN student
+            LEFT JOIN student
             ON student.class_code = class.class_code
             GROUP BY class.class_code, users.user_name, department.department_name 
             """
+
             try:
                 cursor.execute(query)
                 classes = cursor.fetchall()
-
                 for t_class in classes:
-                    print(t_class)
+                    print("Help")
                     nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3],t_class[4],t_class[7])
                     tutor = Person(None,t_class[5],None,t_class[6],None,None,None)
                     class_list.append(nclass)
@@ -317,6 +353,7 @@ class DataBase():
                 return tutor_list, class_list
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
+                print("Help")
 
     def get_class_with_class_code(self,class_code):
         with dbapi2.connect(self.url) as connection:
@@ -330,22 +367,25 @@ class DataBase():
                 class.capacity,
                 users.user_name,
                 department.department_name,
-                count(student.class_code)
+                count(student.class_code),
+                users.profile_image_path,
+                users.title
             FROM Class
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
             ON users.department = department.department_code
-            JOIN student
+            LEFT JOIN student
             ON student.class_code = class.class_code
             WHERE class.class_code = %s
-            GROUP BY class.class_code, users.user_name, department.department_name
+            GROUP BY class.class_code, users.user_name, department.department_name, users.profile_image_path, users.title
             """
             try:
-                cursor.execute(query,(class_code,))
+                cursor.execute(query, (class_code,))
                 classes = cursor.fetchone()
+                print(classes)
                 nclass = Class(classes[0],classes[1],classes[3],classes[2],classes[3],classes[4],classes[7])
-                tutor = Person(None,classes[4],None,classes[6],None,None,None)
+                tutor = Person(None,classes[5],None,classes[6],None,None,None,classes[9],classes[8])
                 connection.commit()
                 return nclass, tutor
             except dbapi2.Error as e:

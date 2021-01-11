@@ -77,7 +77,7 @@ class VideoUploadForm(FlaskForm):
         super().__init__(*args, **kwargs)
         self.db = current_app.config["db"]
         self.video_class.choices = [
-            (nclass.class_code, f"{nclass.class_code}: {nclass.class_name}") for nclass in self.db.get_tutors_classes(current_user.id_number)
+            (nclass.class_code, f"{nclass.class_code}: {nclass.class_name}") for nclass in self.db.get_classes_of_tutor(current_user.id_number)
         ]
     video_thumbnail = FileField("image",
                                 validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), Optional()])
