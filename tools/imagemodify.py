@@ -32,5 +32,6 @@ def squareImage(src, width, newImageName, savePath):
     img = Image.open(src)
     path = f"{savePath}/{randomnamegen(50)}{newImageName}.{img.format.lower()}"
     newimg = modifyImage(img,width)
+    print(path)
     newimg.save(path)
     return path
