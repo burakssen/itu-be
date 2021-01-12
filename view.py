@@ -242,11 +242,9 @@ def upload_video_page(user, info=None):
                          video.content_type.split('/')[1]
             video.save(video_path)
 
-            thumbnail_path = str(get_project_root()) + \
-                        "\\static\\video_thumbnail\\" + \
-                        randomnamegen(100) + "-" + \
-                        video_class + "." + \
-                        thumbnail.content_type.split('/')[1]
+            thumbnail_path = "./static/" + randomnamegen(100) + "-" + \
+                         video_class + "." + \
+                         thumbnail.content_type.split('/')[1]
             thumbnail.save(thumbnail_path)
 
             nvideo = Video(video_title, randomnamegen(20), user.id_number, video_class, None,
