@@ -314,6 +314,49 @@ class DataBase():
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
+    def search_classes(self,department,tutor,star):
+        class_list = []
+        tutor_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = f"""
+                    SELECT
+                        class.class_name, 
+                        class.class_code,
+                        class.review_points,
+                        class.class_context,
+                        class.capacity,
+                        users.user_name,
+                        department.department_name,
+                        count(student.class_code)
+                    FROM Class
+                    JOIN users
+                    ON users.user_id = class.tutor
+                    JOIN department
+                    ON users.department = department.department_code
+                    LEFT JOIN student
+                    ON student.class_code = class.class_code
+                    WHERE (%s is null or department.department_code = %s) and
+                    (%s is null or users.user_id = %s) and 
+                    (%s is null or class.review_points >= %s)
+                    GROUP BY class.class_code, users.user_name, department.department_name
+                    ORDER BY class.review_points
+                    """
+            try:
+                cursor.execute(query,(department, department, tutor, tutor, star, star))
+                classes = cursor.fetchall()
+                for t_class in classes:
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7])
+                    tutor = Person(None, t_class[5], None, t_class[6], None, None, None)
+                    class_list.append(nclass)
+                    tutor_list.append(tutor)
+
+                connection.commit()
+                return tutor_list, class_list
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+                print("Help")
+
     def get_all_classes(self):
         class_list = []
         tutor_list = []
@@ -343,7 +386,6 @@ class DataBase():
                 cursor.execute(query)
                 classes = cursor.fetchall()
                 for t_class in classes:
-                    print("Help")
                     nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3],t_class[4],t_class[7])
                     tutor = Person(None,t_class[5],None,t_class[6],None,None,None)
                     class_list.append(nclass)

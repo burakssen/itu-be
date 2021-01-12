@@ -26,7 +26,6 @@ def create_app():
     app.add_url_rule("/profile/<string:user>/uploadvideo/<string:info>/",view_func=view.upload_video_page,methods=["GET","POST"])
     app.add_url_rule("/classes/",view_func=view.all_classes_page,methods=["GET","POST"])
     app.add_url_rule("/classes/delete/<string:class_code>/",view_func=view.delete_class, methods=["GET","POST"])
-    app.add_url_rule("/classes/filtered/<string:filtered>/", view_func=view.all_classes_page,methods=["GET","POST"])
     app.add_url_rule("/classes/<string:class_code>/",view_func=view.class_page,methods=["GET", "POST"])
     app.add_url_rule("/classes/<string:class_code>/video/<string:video_code>/", view_func=view.video_page, methods=["GET", "POST"])
     app.add_url_rule("/adminpanel/", view_func=view.admin_panel_page, methods=["GET", "POST"])

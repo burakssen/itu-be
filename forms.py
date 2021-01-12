@@ -2,11 +2,13 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, \
     TextAreaField, RadioField
-from wtforms.validators import DataRequired, NumberRange, Optional, Length
+from wtforms.validators import DataRequired, NumberRange, Optional, ValidationError
 from wtforms_components import IntegerField
 from flask import current_app
 from flask_login import current_user
 
+from entities.Department import Department
+from entities.Person import Person
 
 class CreateAccountForm(FlaskForm):
 
@@ -79,6 +81,8 @@ class VideoUploadForm(FlaskForm):
         self.video_class.choices = [
             (nclass.class_code, f"{nclass.class_code}: {nclass.class_name}") for nclass in self.db.get_classes_of_tutor(current_user.id_number)
         ]
+
+
     video_thumbnail = FileField("image",
                                 validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), Optional()])
 
@@ -97,11 +101,22 @@ class ClassSearchForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.db = current_app.config["db"]
+        department_list = []
+
+        t_department = Department(0,"Choose a Department!")
+        department_list.append(t_department)
+
+        for department in self.db.get_departments():
+            department_list.append(department)
+
         self.department.choices = [
-            (department.department_code, department.department_name) for department in self.db.get_departments()
+            (department.department_code, department.department_name) for department in department_list
         ]
+        self.department.default = "Complete"
 
         tutors_list = []
+        t_tutor = Person(0, "Choose a Tutor!", None, None, None, None, None, None)
+        tutors_list.append(t_tutor)
 
         for user in self.db.get_all_users():
             if user.account_type == "Tutor":
@@ -111,12 +126,11 @@ class ClassSearchForm(FlaskForm):
             (ntutor.id_number, ntutor.username) for ntutor in tutors_list
         ]
 
+    department = SelectField("Department",validators=[Optional()])
 
-    department = SelectField("Department")
+    tutor = SelectField("Tutors",validators=[Optional()])
 
-    tutor = SelectField("Tutors")
-
-    stars = RadioField("Stars", choices=[(5,5), (4,4), (3,3), (2,2), (1,1)])
+    stars = RadioField("Stars",validators=[Optional()], choices=[(5,5), (4,4), (3,3), (2,2), (1,1)])
 
 
 class ClassCreateForm(FlaskForm):

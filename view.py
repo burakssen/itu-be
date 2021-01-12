@@ -197,8 +197,6 @@ def create_class_page(info=None):
     db = current_app.config["db"]
     form = ClassCreateForm()
 
-    flash("help")
-
     if form.validate_on_submit():
         class_name = request.form.get("class_name")
         class_code = request.form.get("class_code")
@@ -261,7 +259,7 @@ def upload_video_page(user, info=None):
 
 
 @login_required
-def all_classes_page(filtered=None):
+def all_classes_page():
     form = ClassSearchForm()
     user = current_user
 
@@ -269,13 +267,20 @@ def all_classes_page(filtered=None):
 
     tutor_list, class_list = db.get_all_classes()
 
-
     if form.validate_on_submit():
         department = request.form.get("department")
 
+        if department == "0":
+            department = None
+
         tutor = request.form.get("tutor")
 
+        if tutor == "0":
+            tutor = None
+
         star = request.form.get("stars")
+
+        tutor_list, class_list = db.search_classes(department,tutor,star)
 
         return render_template("classes.html", form=form, user=user, db=db, personal=False,tutor_list=tutor_list, class_list=class_list)
     

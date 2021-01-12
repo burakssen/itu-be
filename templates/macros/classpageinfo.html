@@ -18,7 +18,9 @@
                     <b>{{ tutor.username }}</b>
                   </div>
                   <div>
-                    {{ tutor.title }}
+                      {% if tutor.title != None %}
+                        {{ tutor.title }}
+                      {% endif %}
                   </div>
                 </div>
               </article>
