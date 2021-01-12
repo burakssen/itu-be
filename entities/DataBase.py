@@ -340,7 +340,7 @@ class DataBase():
                     (%s is null or users.user_id = %s) and 
                     (%s is null or class.review_points >= %s)
                     GROUP BY class.class_code, users.user_name, department.department_name
-                    ORDER BY class.review_points DEC
+                    ORDER BY class.review_points DESC
                     """
             try:
                 cursor.execute(query,(department, department, tutor, tutor, star, star))
