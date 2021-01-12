@@ -14,8 +14,7 @@ class Video():
         self.video_descriptions = video_descriptions
 
     def convert_image_path(self):
-
-        self.thumbnail_path = self.thumbnail_path.replace("/","\\")
+        self.thumbnail_path = self.thumbnail_path.replace("\\","/")
 
     def convert_video_path(self):
-        self.video_path = self.video_path.replace("/","\\")
+        self.video_path = self.video_path.replace("\\","/")
