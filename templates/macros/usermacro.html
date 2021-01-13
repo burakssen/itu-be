@@ -13,7 +13,7 @@
             {{ form.csrf_token }}
             <div class="tile is-child is-11 profile-table" {% if update is true %} style="padding-top: 50px;" {% endif %}>
               <table class="table notification" style="background: none;">
-                <tbody>
+                <tbody style=" align-items: center">
                   <tr>
                     <th>Username :</th>
                     {% if update is not true %}
@@ -24,7 +24,7 @@
                     {% if update is true %}
                         <th>Profile Image :</th>
                       <td style="border: none;">
-                        {{form.image(autofocus=False, accept="image/*")}}
+                        {{form.image(autofocus=False, id="image_file", accept="image/*")}}
                       </td>
                     {% endif %}
                   </tr>
@@ -40,11 +40,12 @@
                         <td>{{ form.title() }}</td>
                     {% endif %}
                   </tr>
-                  <tr>
+                  <tr >
                     {% if update is true %}
                       <tr>
                         <th>Password:</th>
                         <td>{{form.password(autofocus=False, value=Burak)}}</td>
+
                       </tr>
                     {% endif %}
                   </tr>
