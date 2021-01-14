@@ -45,7 +45,7 @@
                     <p >{{ tutor.department }}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{nclass.review_points}}</p>
+                    <p class="star_id{{ nclass.class_code }}"></p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
                     <p>{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</p>
@@ -58,6 +58,9 @@
                     </div>
                 {% endif %}
             </div>
+                <script>
+                    setStars({{ nclass.review_points }},"{{ nclass.class_code }}")
+                </script>
             {% endfor %}
             {% else %}
                 {% for nclass in class_list %}
@@ -75,7 +78,7 @@
                     <p >{{ tutor.department }}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{nclass.review_points}}</p>
+                    <p class="star_id{{ nclass.class_code }}"></p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
                     <a class="button" href="{{ url_for("student_add_page",class_code=nclass.class_code) }}">{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</a>
@@ -88,8 +91,12 @@
                     </div>
                 {% endif %}
             </div>
+                    <script>
+                        setStars({{ nclass.review_points }},"{{ nclass.class_code }}")
+                    </script>
             {% endfor %}
             {% endif %}
+
         </div>
       </div>
     </div>

@@ -650,6 +650,27 @@ class DataBase():
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
+    def add_review_point(self, review_point, video_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query1 = """SELECT review_points, number_of_reviews FROM video WHERE video_code = %s"""
+            query2 = """UPDATE video SET review_points = %s, number_of_reviews = %s WHERE video_code = %s"""
+            try:
+
+                cursor.execute(query1, (video_code,))
+                data = cursor.fetchone()
+                review_points = data[0] * data[1]
+                number_of_reviews = data[1]
+                review_points = review_points + int(review_point)
+                number_of_reviews += 1
+                review_points /= number_of_reviews
+                cursor.execute(query2, ("{:.2f}".format(review_points),number_of_reviews,video_code,))
+
+                connection.commit()
+
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
 def get_User(user_name):
     user = current_app.config["db"].get_user(user_name)
     return user

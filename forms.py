@@ -146,6 +146,9 @@ class ClassCreateForm(FlaskForm):
 
 
 class CommentPostForm(FlaskForm):
+
+    review_points = SelectField("Review Points", choices=[(0, "Review Points"), (5, 5), (4, 4), (3, 3), (2, 2), (1, 1)], validators=[Optional()])
+
     comment = TextAreaField("Comment", render_kw={"rows": 5, "cols": 48}, validators=[Optional()])
 
     send_comment = SubmitField("Comment!")

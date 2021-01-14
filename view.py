@@ -323,16 +323,19 @@ def video_page(class_code, video_code):
     video.convert_image_path()
 
     if form.validate_on_submit():
-      comment = request.form.get("comment")
+        review_point = request.form.get("review_points")
+        if review_point != 0:
+            db.add_review_point(review_point, video_code)
+        comment = request.form.get("comment")
 
-      if comment != "":
-        comment = Comment(
-            comment_id=randomnamegen(50),
-            user_id=user.id_number,
-            video_code=video_code,
-            comment_context=comment
-        )
-        db.create_comment(comment)
+        if comment != "":
+            comment = Comment(
+                comment_id=randomnamegen(50),
+                user_id=user.id_number,
+                video_code=video_code,
+                comment_context=comment
+            )
+            db.create_comment(comment)
 
         return redirect(url_for("video_page", class_code=class_code, video_code=video_code))
 
@@ -425,11 +428,11 @@ def student_add_page(class_code):
     return render_template("./tutor/studentadd.html", nclass=nclass, form=form, user=current_user, student_list=student_list)
 
 @login_required
-def delete_student_from_class(class_code,student_id):
+def delete_student_from_class(class_code, student_id):
     if current_user.account_type != "Tutor":
         return redirect(url_for("profile_page", user=current_user.username))
 
-
+    print(class_code)
     db = current_app.config["db"]
     db.delete_student_from_class(class_code,student_id)
     return redirect(url_for("student_add_page",class_code=class_code))

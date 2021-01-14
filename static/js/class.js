@@ -1,53 +1,24 @@
-function create_stars(temp){
-   var index = Number(String(temp).replace("stars-",""));
+function setStars(number_of_stars,class_code){
+   var star = document.querySelector(".star_id"+String(class_code));
 
-   var stars = document.querySelector("#stars-"+index);
-
-
-   for(var i = 0; i < 5 - index; i++){
-    
+   for(var i = 0; i < Math.floor(number_of_stars); i++ ){
       var span = document.createElement("SPAN");
       var div = document.createElement("DIV");
-   
+
       span.appendChild(div);
       span.classList.add("fas");
       span.classList.add("fa-star");
-      stars.append(span);
-      stars.append(span);
+      star.append(span);
+      star.append(span);
    }
 
-   for(var i = 0; i < index; i++){
+   for(var i = 0; i < 5 - Math.floor(number_of_stars); i++ ){
       var span = document.createElement("SPAN");
       var div = document.createElement("DIV");
-   
       span.appendChild(div);
       span.classList.add("far");
       span.classList.add("fa-star");
-      stars.append(span);
-   } 
-}
-
-function place_stars(num){
-   var stars = document.querySelector(".star"+num);
-   for(var i = 0; i < 5 - num; i++){
-    
-      var span = document.createElement("SPAN");
-      var div = document.createElement("DIV");
-   
-      span.appendChild(div);
-      span.classList.add("fas");
-      span.classList.add("fa-star");
-      stars.append(span);
-      stars.append(span);
+      star.append(span);
+      star.append(span);
    }
-
-   for(var i = 0; i < num; i++){
-      var span = document.createElement("SPAN");
-      var div = document.createElement("DIV");
-   
-      span.appendChild(div);
-      span.classList.add("far");
-      span.classList.add("fa-star");
-      stars.append(span);
-   } 
 }

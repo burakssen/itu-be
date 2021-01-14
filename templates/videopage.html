@@ -2,8 +2,9 @@
 {% block css %}
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
-    <link rel="stylesheet" href="../../static/profile.css">
-    <link rel="stylesheet" href="../../static/video.css">
+    <link rel="stylesheet" href="../../../../static/profile.css">
+    <link rel="stylesheet" href="../../../../static/video.css">
+    <script src="../../../../static/js/class.js"></script>
     <script src="https://cdn.plyr.io/2.0.15/plyr.js"></script>
     <link rel="stylesheet" href="https://cdn.plyr.io/2.0.15/plyr.css">
 
@@ -14,6 +15,8 @@
 {{navbar(user)}}
 
 <div style=" margin: 0px;">
+<form form action="" method="post" >
+{{ form.csrf_token }}
     <div class="column is-12">
         <div class="tile is-ancestor">
             <div class="tile is-parent is-12 card" style="height: 600px;">
@@ -43,9 +46,33 @@
                                     </p>
                                   </div>
                                 </div>
+                                <label class="label">
+                                    Give a Review Point:
+                                    <div>
+                                        {{ form.review_points(onChange="this.form.submit()", style="width:100%" )}}
+                                    </div>
+                                </label>
+                                <div style="margin-left: 10px; margin-right: 10px" class="review_points">
+                                    Review Points: {{ video.review_points }}
+                                    <div class="star_id">
+
+                                    </div>
+                                </div>
+                                <script>
+                                    setStars({{ video.review_points }},"","radio")
+                                </script>
                             </article>
                         </div>
                         <div class="tile columns is-vertical is-4" style="padding-top: 10px">
+                            {% if video.comments_available != true %}
+                                <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">
+                                    Tutor does not allow any comments.
+                                </div>
+                                <div class="column tile" id="scrollbar" style="margin-top:10px; max-height: 17vh; margin-left: 10px;border: 1px #000000 solid; border-radius: 5px; margin-bottom: 10px;">
+                                    {{ form.comment(style="margin-top:5px", disabled) }}
+                                    {{ form.send_comment(class="button", style="position:relative; bottom: 0px", disabled) }}
+                                </div>
+                            {% else %}
                             <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">
                             {% for comment in comment_list %}
                                 <div class="columns is-12" style="width:100%; border: 1px solid black; border-radius: 10px; margin: 10px">
@@ -72,18 +99,20 @@
                             {% endfor %}
                             </div>
                             <div class="column tile" id="scrollbar" style="margin-top:10px; max-height: 17vh; margin-left: 10px;border: 1px #000000 solid; border-radius: 5px; margin-bottom: 10px;">
-                                <form form action="" method="post" >
-                                    {{ form.csrf_token }}
+
+
                                     {{ form.comment(style="margin-top:5px" ) }}
                                     {{ form.send_comment(class="button", style="position:relative; bottom: 0px") }}
-                                </form>
+
                             </div>
+                            {% endif %}
+
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</form>
 </div>
-<script src="../../static/js/video.js"></script>
 {% endblock %}
