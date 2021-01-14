@@ -321,6 +321,9 @@ def video_page(class_code, video_code):
 
     video.convert_video_path()
     video.convert_image_path()
+    if video.comments_available is not True:
+        form.comment.render_kw = {'disabled': 'disabled'}
+        form.send_comment.render_kw = {'disabled': 'disabled'}
 
     if form.validate_on_submit():
         review_point = request.form.get("review_points")

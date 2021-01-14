@@ -64,16 +64,8 @@
                             </article>
                         </div>
                         <div class="tile columns is-vertical is-4" style="padding-top: 10px">
-                            {% if video.comments_available != true %}
-                                <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">
-                                    Tutor does not allow any comments.
-                                </div>
-                                <div class="column tile" id="scrollbar" style="margin-top:10px; max-height: 17vh; margin-left: 10px;border: 1px #000000 solid; border-radius: 5px; margin-bottom: 10px;">
-                                    {{ form.comment(style="margin-top:5px", disable=true) }}
-                                    {{ form.send_comment(class="button", style="position:relative; bottom: 0px", disable=true) }}
-                                </div>
-                            {% else %}
                             <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">
+                            {% if video.comment_available == true %}
                             {% for comment in comment_list %}
                                 <div class="columns is-12" style="width:100%; border: 1px solid black; border-radius: 10px; margin: 10px">
                                     <article class="media" style="padding:10px">
@@ -97,16 +89,16 @@
                                     </article>
                                 </div>
                             {% endfor %}
+                            {% else %}
+                                <div class="columns is-12" style="padding:15px">
+                                    Tutor does not allow any comments in this video!
+                                </div>
+                            {% endif %}
                             </div>
                             <div class="column tile" id="scrollbar" style="margin-top:10px; max-height: 17vh; margin-left: 10px;border: 1px #000000 solid; border-radius: 5px; margin-bottom: 10px;">
-
-
-                                    {{ form.comment(style="margin-top:5px" ) }}
-                                    {{ form.send_comment(class="button", style="position:relative; bottom: 0px") }}
-
+                                {{ form.comment(style="margin-top:5px" ) }}
+                                {{ form.send_comment(class="button", style="position:relative; bottom: 0px") }}
                             </div>
-                            {% endif %}
-
                         </div>
                     </div>
                 </div>
