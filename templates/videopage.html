@@ -69,8 +69,8 @@
                                     Tutor does not allow any comments.
                                 </div>
                                 <div class="column tile" id="scrollbar" style="margin-top:10px; max-height: 17vh; margin-left: 10px;border: 1px #000000 solid; border-radius: 5px; margin-bottom: 10px;">
-                                    {{ form.comment(style="margin-top:5px", disabled) }}
-                                    {{ form.send_comment(class="button", style="position:relative; bottom: 0px", disabled) }}
+                                    {{ form.comment(style="margin-top:5px", disable=true) }}
+                                    {{ form.send_comment(class="button", style="position:relative; bottom: 0px", disable=true) }}
                                 </div>
                             {% else %}
                             <div class="tile column" id="scrollbar" style="max-height: 55vh; overflow-y: scroll ;margin-left: 10px;border: 1px black solid; border-radius: 5px; display: flex; flex-wrap: wrap;">

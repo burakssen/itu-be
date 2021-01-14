@@ -395,7 +395,7 @@ class DataBase():
                 return tutor_list, class_list
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
-                print("Help")
+
 
     def get_class_with_class_code(self,class_code):
         with dbapi2.connect(self.url) as connection:
@@ -425,7 +425,6 @@ class DataBase():
             try:
                 cursor.execute(query, (class_code,))
                 classes = cursor.fetchone()
-                print(classes)
                 nclass = Class(classes[0],classes[1],classes[3],classes[2],classes[3],classes[4],classes[7])
                 tutor = Person(None,classes[5],None,classes[6],None,None,None,classes[9],classes[8])
                 connection.commit()
@@ -461,7 +460,7 @@ class DataBase():
                 videos = cursor.fetchall()
 
                 for video in videos:
-                    video = Video(video[2],video[1],video[4],video[3],video[9],video[6],video[7],video[8],video[5])
+                    video = Video(video[1],video[0],video[3],video[2],video[8],video[5],video[6],video[7],video[4])
                     video_list.append(video)
 
                 connection.commit()
