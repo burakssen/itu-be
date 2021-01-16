@@ -343,6 +343,9 @@ def video_page(class_code, video_code):
     user = current_user
     db = current_app.config["db"]
 
+    if db.check_video_reviewed(video_code, user.id_number):
+        form.review_points.render_kw = {'disabled' : 'disabled'}
+
     if user.account_type == "Student":
         if not db.check_student_in_class(user.id_number, class_code):
             flash("You are not in this class")
@@ -359,8 +362,10 @@ def video_page(class_code, video_code):
 
     if form.validate_on_submit():
         review_point = request.form.get("review_points")
-        if review_point != 0:
-            db.add_review_point(review_point, video_code)
+
+        if review_point != 0 and not db.check_video_reviewed(video_code, user.id_number):
+            db.add_review_point(review_point, video_code, user.id_number)
+
         comment = request.form.get("comment")
 
         if comment != "":

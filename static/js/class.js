@@ -1,7 +1,7 @@
 function setStars(number_of_stars,class_code){
    var star = document.querySelector(".star_id"+String(class_code));
 
-   for(var i = 0; i < Math.floor(number_of_stars); i++ ){
+   for(var i = 0; i < Math.round(number_of_stars); i++ ){
       var span = document.createElement("SPAN");
       var div = document.createElement("DIV");
 
@@ -12,7 +12,7 @@ function setStars(number_of_stars,class_code){
       star.append(span);
    }
 
-   for(var i = 0; i < 5 - Math.floor(number_of_stars); i++ ){
+   for(var i = 0; i < 5 - Math.round(number_of_stars); i++ ){
       var span = document.createElement("SPAN");
       var div = document.createElement("DIV");
       span.appendChild(div);

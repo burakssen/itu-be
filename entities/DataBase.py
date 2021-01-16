@@ -647,7 +647,7 @@ class DataBase():
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
 
-    def add_review_point(self, review_point, video_code):
+    def add_review_point(self, review_point, video_code, user_id):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
             query1 = """
@@ -661,6 +661,7 @@ class DataBase():
                 WHERE video_code = %s
                 GROUP BY video.review_points, video.number_of_reviews, video.class_code, class.review_points"""
             query2 = """UPDATE video SET review_points = %s, number_of_reviews = %s WHERE video_code = %s"""
+            query3 = """INSERT INTO reviews(video_code, user_id, reviewed) VALUES (%s, %s, %s) """
             try:
                 cursor.execute(query1, (video_code,))
                 data = cursor.fetchone()
@@ -670,6 +671,7 @@ class DataBase():
                 number_of_reviews += 1
                 review_points /= number_of_reviews
                 cursor.execute(query2, ("{:.2f}".format(review_points),number_of_reviews,video_code,))
+                cursor.execute(query3, (video_code, user_id, True))
                 connection.commit()
                 self.update_class_review(data[2])
 
@@ -763,14 +765,6 @@ class DataBase():
 
     def update_video_with_video_code(self, video_code, new_video_data):
         with dbapi2.connect(self.url) as connection:
-            print("--------------")
-            print(video_code)
-            print(new_video_data.thumbnail_path)
-            print(new_video_data.class_code)
-            print(new_video_data.video_descriptions)
-            print(new_video_data.video_path)
-            print(new_video_data.comments_available)
-            print("--------------")
             cursor = connection.cursor()
             query = """
             UPDATE video
@@ -796,6 +790,27 @@ class DataBase():
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgerror)
+
+
+    def check_video_reviewed(self, video_code, user_id):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = """
+            SELECT reviewed 
+            FROM REVIEWS
+            WHERE video_code = %s and user_id = %s
+            """
+
+            try:
+                cursor.execute(query, (video_code, user_id,))
+                reviewed = cursor.fetchone()
+                if reviewed is None:
+                    return False
+                connection.commit()
+                return reviewed[0]
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
 
 def get_User(user_name):
     user = current_app.config["db"].get_user(user_name)
