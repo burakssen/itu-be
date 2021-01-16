@@ -13,8 +13,6 @@ class DataBase():
     def __init__(self):
         self.url = os.getenv("DATABASE_URL")
 
-
-
     def CheckIfDataExists(self, data, check):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
@@ -32,46 +30,33 @@ class DataBase():
     def update_user_info(self, id_number, user_data):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = """"""
-            user = self.get_user_with_id(id_number)
-
-            if user_data.id_number != user.id_number:
-                query = """UPDATE USERS SET user_id = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.id_number, id_number))
-
-            if user_data.username != user.username:
-                query = """UPDATE USERS SET user_name = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.username, id_number))
-
-            if user_data.password != user.password:
-                query = """UPDATE USERS SET password = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.password, id_number))
-
-            if user_data.department != user.department:
-                query = """UPDATE USERS SET department = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.department, id_number))
-
-            if user_data.profileimage != user.profileimage and user_data.profileimage != "":
-                query = """UPDATE USERS SET profile_image_path = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.profileimage, id_number))
-
-            if user_data.account_type != user.account_type:
-                query = """UPDATE USERS SET account_type = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.account_type, id_number))
-
-            if user_data.gender != user.gender:
-                query = """UPDATE USERS SET gender = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.gender, id_number))
-
-            if user_data.mail != user.mail:
-                query = f"""UPDATE USERS SET mail = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.mail, id_number))
-
-            if user_data.title != user.title:
-                query = f"""UPDATE USERS SET title = %s WHERE user_id = %s;"""
-                cursor.execute(query, (user_data.title, id_number))
-
+            query = """
+                UPDATE USERS
+                SET
+                user_id = COALESCE(%s, user_id),
+                user_name = COALESCE(%s, user_name),
+                password = COALESCE(%s, password),
+                department = COALESCE(%s, department),
+                profile_image_path = COALESCE(%s, profile_image_path),
+                account_type = COALESCE(%s, account_type),
+                gender = COALESCE(%s, gender),
+                mail = COALESCE(%s, mail),
+                title = COALESCE(%s, title)
+                WHERE user_id = %s
+            """
             try:
+                cursor.execute(query,(
+                    user_data.id_number,
+                    user_data.username,
+                    user_data.password,
+                    user_data.department,
+                    user_data.profileimage,
+                    user_data.account_type,
+                    user_data.gender,
+                    user_data.mail,
+                    user_data.title,
+                    id_number,
+                ))
                 connection.commit()
                 return True
             except dbapi2.Error as e:
@@ -84,7 +69,7 @@ class DataBase():
             cursor.execute(query)
             try:
                 User = cursor.fetchone()
-                User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7])
+                User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7],activated=User[9])
                 connection.commit()
                 return User
             except:
@@ -97,7 +82,7 @@ class DataBase():
             cursor.execute(query)
             try:
                 User = cursor.fetchone()
-                User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7])
+                User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7], activated=User[9])
                 connection.commit()
                 return User
             except:
@@ -116,7 +101,8 @@ class DataBase():
                 users.gender,
                 users.mail,
                 users.title,
-                users.profile_image_path
+                users.profile_image_path,
+                users.activated
             FROM USERS 
             INNER JOIN DEPARTMENT 
             ON (users.department = department.department_code)
@@ -137,7 +123,8 @@ class DataBase():
                         gender=User[4],
                         mail=User[5],
                         title=User[6],
-                        profileimage=User[7]
+                        profileimage=User[7],
+                        activated=User[8]
                     )
                     user_list.append(User)
                 connection.commit()
@@ -217,13 +204,22 @@ class DataBase():
             except dbapi2.Error as e:
                 print(e.pgerror)
 
+    def activate_user(self, user_id):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            try:
+                cursor.execute("""UPDATE users SET activated = True WHERE user_id = %s""", (user_id,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
     def create_class(self, nclass):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
             try:
                 cursor.execute(
                     """INSERT INTO Class (class_code, class_name, tutor, review_points, class_context, capacity) VALUES (%s, %s, %s, %s, %s, %s)""",
-                    (nclass.class_code, nclass.class_name, nclass.tutor, nclass.review_points, nclass.class_context, nclass.class_capacity))
+                    (nclass.class_code, nclass.class_name, nclass.tutor, 0, nclass.class_context, nclass.class_capacity))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
@@ -442,7 +438,7 @@ class DataBase():
                     video_path, video_descriptions, review_points) 
                     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s)""",
                     (video.video_code, video.video_name, video.class_code, video.tutor, video.comments_available,
-                     video.thumbnail_path, video.video_path, video.video_descriptions, video.review_points))
+                     video.thumbnail_path, video.video_path, video.video_descriptions, 0))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
@@ -502,6 +498,8 @@ class DataBase():
                 print(e.pgcode, e.pgerror)
 
     def create_comment(self,comment):
+        if comment.comment_context == None:
+            return
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
             try:
@@ -652,10 +650,18 @@ class DataBase():
     def add_review_point(self, review_point, video_code):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query1 = """SELECT review_points, number_of_reviews FROM video WHERE video_code = %s"""
+            query1 = """
+                SELECT 
+                video.review_points, 
+                video.number_of_reviews,
+                video.class_code
+                FROM video
+                JOIN class
+                ON video.class_code = class.class_code
+                WHERE video_code = %s
+                GROUP BY video.review_points, video.number_of_reviews, video.class_code, class.review_points"""
             query2 = """UPDATE video SET review_points = %s, number_of_reviews = %s WHERE video_code = %s"""
             try:
-
                 cursor.execute(query1, (video_code,))
                 data = cursor.fetchone()
                 review_points = data[0] * data[1]
@@ -664,11 +670,132 @@ class DataBase():
                 number_of_reviews += 1
                 review_points /= number_of_reviews
                 cursor.execute(query2, ("{:.2f}".format(review_points),number_of_reviews,video_code,))
-
                 connection.commit()
+                self.update_class_review(data[2])
 
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
+
+    def update_class_review(self,class_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query1 ="""SELECT SUM(review_points), count(review_points) FROM video WHERE class_code = %s"""
+            query2 = """UPDATE class SET review_points = %s WHERE class_code = %s"""
+            try:
+                cursor.execute(query1, (class_code,))
+                data = cursor.fetchone()
+                rev = data[0] / data[1]
+                cursor.execute(query2, (rev, class_code,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def check_student_in_class(self,user_id,class_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = """select exists(select student_id from student where class_code = %s and student_id = %s)"""
+            try:
+                cursor.execute(query, (class_code,user_id,))
+                trueorfalse = cursor.fetchone()
+                return trueorfalse[0]
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+
+    def get_tutors(self):
+        tutor_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = """
+            SELECT
+            users.user_name,
+            users.user_id,
+            department.department_name,
+            users.mail,
+            users.profile_image_path
+            FROM users
+            JOIN department
+            ON users.department = department.department_code
+            WHERE users.account_type = 'Tutor'
+            """
+            try:
+                cursor.execute(query)
+                tutors = cursor.fetchall()
+                for t_tutor in tutors:
+                    tutor = Person(t_tutor[1],t_tutor[0],None,t_tutor[2],'Tutor',None,t_tutor[3],None,t_tutor[4])
+                    tutor_list.append(tutor)
+
+                return tutor_list
+            except dbapi2.Error as e:
+                print(e.pgcode, e.pgerror)
+
+    def delete_video(self, video_code):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            try:
+                cursor.execute("""DELETE FROM video WHERE video_code = %s""", (video_code,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def update_class_with_class_code(self,class_code,new_class_data):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query = """
+            UPDATE class
+            SET 
+            class_name = COALESCE(%s, class_name),
+            class_code = COALESCE(%s, class_code),
+            class_context = COALESCE(%s, class_context)
+            WHERE class_code = %s
+            """
+
+            try:
+                cursor.execute(query, (new_class_data.class_name,
+                                       new_class_data.class_code,
+                                       new_class_data.class_context,
+                                       class_code,
+                                       ))
+                connection.commit()
+                return True
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def update_video_with_video_code(self, video_code, new_video_data):
+        with dbapi2.connect(self.url) as connection:
+            print("--------------")
+            print(video_code)
+            print(new_video_data.thumbnail_path)
+            print(new_video_data.class_code)
+            print(new_video_data.video_descriptions)
+            print(new_video_data.video_path)
+            print(new_video_data.comments_available)
+            print("--------------")
+            cursor = connection.cursor()
+            query = """
+            UPDATE video
+            SET 
+            video_name = COALESCE(%s, video_name),
+            class_code = COALESCE(%s, class_code),
+            comments_available = %s,
+            thumbnail_path = COALESCE(%s, thumbnail_path),
+            video_path = COALESCE(%s, video_path),
+            video_descriptions = COALESCE(%s, video_descriptions)        
+            WHERE video_code = %s
+            """
+
+            try:
+                cursor.execute(query, (new_video_data.video_name,
+                                       new_video_data.class_code,
+                                       new_video_data.comments_available,
+                                       new_video_data.thumbnail_path,
+                                       new_video_data.video_path,
+                                       new_video_data.video_descriptions,
+                                       video_code,
+                                       ))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
 
 def get_User(user_name):
     user = current_app.config["db"].get_user(user_name)

@@ -14,12 +14,17 @@
                             </a>
                             <div class="card-content" style="padding-left: 5px;">
                                 {{video.video_name}}
-                                <div class="star-{{review_point}}">
+                                <div class="star_id" style="margin-top:10px">
 
                                 </div>
-                                <script type="text/javascript">
-                                    place_stars("{{video.review_point}}");
-                                </script> 
+                                <script>
+                                    setStars({{ video.review_points }},"","radio")
+                                </script>
+                                {% if user.account_type != "Student" %}
+                                <hr>
+                                <a class="button" href="#" >Update Video</a>
+                                <a class="button" href="{{ url_for('delete_video', class_code=nclass.class_code, video_code=video.video_code) }}" style="color:red; margin-top:10px">Delete Video</a>
+                                {% endif %}
                             </div>
                         </div>
                     {% endfor %}

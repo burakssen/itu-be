@@ -1,0 +1,83 @@
+{% macro videoupdatemacro(user) %}
+
+<form class="column is-10" style="padding: 0px" action="" method="post" enctype=multipart/form-data>
+  {{ form.csrf_token }}
+  <div class="column is-12" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="border: 1px solid black;">
+            <div class="tile columns is-vertical">
+                <div class="column">
+                    <p>Video Update Page!</p>
+                    <p>You are going to update this video <b>{{ video_name }}</b></p>
+                </div>
+                <div class="tile columns">
+            <div class="column is-6">
+              <div style="width: 60%;">
+                <div>
+                  <label><p>Video Title</p></label>
+                  {{form.video_title(autofocus=False, id="video_title", style="width: 100%")}}
+                </div>
+                <br>
+                <div class="card" style="border: 1px solid black">
+                  <img id="video-image-placeholder" src="https://via.placeholder.com/1024x720.png" >
+                  <label style="text-align: center;"><p>Video Thumbnail</p></label>
+                  <p style="text-align: center;">
+                    {{form.video_thumbnail(autofocus=False, id="video-thumbnail", onChange="previewFile()")}}
+                  </p>
+                </div>
+                <br>
+                <div>
+                  <label><p>Video</p></label>
+                  <div class="file has-name is-fullwidth">
+                    <label class="file-label">
+
+                      {{form.video(autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
+                      <span class="file-cta">
+                        <span class="file-icon">
+                          <i class="fas fa-upload"></i>
+                        </span>
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                      <span class="file-name" style="background-color:white;">
+                        No File Choosen!
+                      </span>
+                    </label>
+                  </div>
+                </div>
+                <br>
+
+              </div>
+              </div>
+            <div class="column is-6">
+              <div>
+                <label>Video Class</label>
+                {{form.video_class(autofocus=False, id="video", )}}
+              </div>
+              <br>
+              <div>
+                <label><p>Video Comments</p></label>
+                <label>Available</label>
+                {{form.video_comments_available(autofocus=False, id="comments_available")}}
+              </div>
+              <br>
+              <div>
+                <label><p>Video Descriptions</p></label>
+                {{form.video_descriptions(autofocus=False,style="margin-top: 10px" )}}
+              </div>
+              <div>
+                <input class="button" type="submit" value="Update Video">
+              </div>
+            </div>
+          </div>
+            </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</form>
+
+
+{% endmacro %}

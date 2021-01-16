@@ -34,11 +34,11 @@
                 </div>
                   <hr>
                   <div>
-                      <b><a class="button">Add Students To Class</a></b>
+                      <b><a class="button" href="{{ url_for('student_add_page', class_code=nclass.class_code) }}">Add Students To Class</a></b>
                   </div>
                   <hr>
                   <div>
-                      <b><a class="button">List All Students</a></b>
+                      <b><a class="button" href="{{ url_for('update_class_page', class_code=nclass.class_code) }}">Update Class</a></b>
                   </div>
               </div>
         </div>

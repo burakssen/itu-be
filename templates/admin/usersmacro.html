@@ -17,9 +17,12 @@
                 <div class="column" style="text-align: center;">
                     <p >E-Mail</p>
                 </div>
-                <div class="column is-2">
-                   
-                </div>
+                {% if user.account_type == "admin" %}
+                    <div class="column is-1">
+                    </div>
+                    <div class="column is-2">
+                    </div>
+                {% endif %}
             </div>
           {% for t_user in Users %}
             <div class="columns is-12 is-vcentered", style="border: 1px solid black; border-radius: 10px; margin: 10px">
@@ -35,9 +38,16 @@
                 <div class="column" style="text-align: center;">
                     <p >{{ t_user.mail }}</p>
                 </div>
-                <div class="column is-2">
-                    <a type="submit" class="button" href="{{ url_for('user_delete', user_id=t_user.id_number) }}" style="color:red" >Delete</a>
-                </div>
+                {% if user.account_type == "admin" %}
+                    <div class="column is-1">
+                        <a type="submit" class="button" href="{{ url_for('user_delete', user_id=t_user.id_number) }}" style="color:red" >Delete</a>
+                    </div>
+                    <div class="column is-2">
+                    {% if ((t_user.account_type == 'Tutor') and (t_user.activated == false)) %}
+                        <a type="submit" class="button" href="{{ url_for('user_activate',user_id=t_user.id_number) }}" style="color:dodgerblue" >Activate</a>
+                    {% endif %}
+                    </div>
+                {% endif %}
             </div>
           {% endfor %}
         </div>

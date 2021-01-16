@@ -96,7 +96,6 @@ class VideoUploadForm(FlaskForm):
 
     video_descriptions = TextAreaField("Descriptions", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 
-
 class ClassSearchForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -130,7 +129,7 @@ class ClassSearchForm(FlaskForm):
 
     tutor = SelectField("Tutors",validators=[Optional()])
 
-    stars = RadioField("Stars",validators=[Optional()], choices=[(5,5), (4,4), (3,3), (2,2), (1,1)])
+    stars = RadioField("Stars",validators=[Optional()], choices=[(5,5), (4,4), (3,3), (2,2), (1,1), (0,0)])
 
 
 class ClassCreateForm(FlaskForm):
@@ -177,3 +176,12 @@ class StudentAddForm(FlaskForm):
     submit_button = SubmitField("Add Students")
 
     capacity = IntegerField("Capacity", validators=[Optional(), NumberRange(min=5,max=60)])
+
+class ClassUpdateForm(FlaskForm):
+    class_name = StringField("Class Name")
+
+    class_code = StringField("Class Code")
+
+    class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
+
+    update_button = SubmitField("Update Class")

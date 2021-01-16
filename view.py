@@ -24,7 +24,8 @@ from forms import \
     ClassCreateForm, \
     CommentPostForm, \
     DepartmentCreateForm, \
-    StudentAddForm
+    StudentAddForm, \
+    ClassUpdateForm
 
 
 def auth_page(info=False):
@@ -53,10 +54,14 @@ def auth_page(info=False):
             user = get_User(username)
             if user is not None:
                 if hasher.verify(password, user.password):
-                    user.logged_in = True
-                    login_user(user)
-                    next_page = request.args.get("next", url_for("profile_page",user=user.username))
-                    return redirect(next_page)
+                    if (user.account_type == "Tutor" and user.activated is True) or user.account_type != "Tutor":
+                        user.logged_in = True
+                        login_user(user)
+                        next_page = request.args.get("next", url_for("profile_page",user=user.username))
+                        return redirect(next_page)
+                    else:
+                        flash("Wait For Admin to Activate Your Account!!","error")
+                        return redirect(url_for("auth_page"))
 
         flash("Your Log In informations are incorrect","error")
         return render_template("auth.html",form=form)
@@ -149,13 +154,31 @@ def profile_page(user):
             mail = request.form.get("mail")
             title = request.form.get("title")
 
+            if gender == "":
+                gender = None
+
+            if user_name == "":
+                user_name = None
+
+            if password == "":
+                password = None
+
+            if department == "":
+                department = None
+
+            if mail == "":
+                mail = None
+
+            if title == "":
+                title = None
+
             user.set_user(
-                username=user_name if user_name != "" else user.username,
-                password=hasher.hash(password) if password != "" else user.password,
-                gender=gender if gender != "" else user.gender,
-                department=department if department != "" else user.department,
-                mail=mail if mail != "" else user.mail,
-                title=title if title != "" else user.title
+                username=user_name,
+                password=hasher.hash(password) if password is not None else None,
+                gender=gender,
+                department=department,
+                mail=mail,
+                title=title
             )
 
             if image_file.read() != b'':
@@ -169,10 +192,9 @@ def profile_page(user):
 
                 user.profileimage = uploadImage(image_file.stream, user.id_number)
                 user.convert_image_path()
-                current_user.profile_image = user.profileimage
+                current_user.profileimage = user.profileimage
             else:
-                user.set_profile_image()
-                current_user.profile_image = user.profileimage
+                image_file = None
 
             db.update_user_info(user.id_number, user)
 
@@ -235,12 +257,12 @@ def upload_video_page(user, info=None):
         video_descriptions = request.form.get("video_descriptions")
 
         if video.filename != '' and thumbnail != '':
-            video_path = "./static/" + randomnamegen(100) + "-" + \
+            video_path = "./static/videos/" + randomnamegen(100) + "-" + \
                          video_class + "." + \
                          video.content_type.split('/')[1]
             video.save(video_path)
 
-            thumbnail_path = "./static/" + randomnamegen(100) + "-" + \
+            thumbnail_path = "./static/video_thumbnail/" + randomnamegen(100) + "-" + \
                          video_class + "." + \
                          thumbnail.content_type.split('/')[1]
             thumbnail.save(thumbnail_path)
@@ -291,6 +313,12 @@ def all_classes_page():
 def class_page(class_code):
     user = current_user
     db = current_app.config["db"]
+
+    if user.account_type == "Student":
+        if not db.check_student_in_class(user.id_number, class_code):
+            flash("You are not in this class")
+            return redirect(url_for("profile_page", user=user.username))
+
     nclass, tutor = db.get_class_with_class_code(class_code)
     video_list = db.get_videos(class_code)
 
@@ -313,8 +341,12 @@ def delete_class(class_code):
 def video_page(class_code, video_code):
     form = CommentPostForm()
     user = current_user
-
     db = current_app.config["db"]
+
+    if user.account_type == "Student":
+        if not db.check_student_in_class(user.id_number, class_code):
+            flash("You are not in this class")
+            return redirect(url_for("profile_page", user=user.username))
 
     comment_list = db.get_comments(video_code)
     tutor, video = db.get_video_with_video_code(video_code)
@@ -364,7 +396,7 @@ def admin_users_page():
 
     db = current_app.config['db']
 
-    return render_template("./admin/adminuserspage.html", user=current_user,db=db, Users=db.get_all_users())
+    return render_template("./admin/adminuserspage.html", user=current_user, Users=db.get_all_users())
 
 
 @login_required
@@ -375,6 +407,16 @@ def user_delete(user_id):
     db = current_app.config["db"]
     db.delete_user(user_id)
     return redirect(url_for("admin_users_page"))
+
+@login_required
+def user_activate(user_id):
+    if current_user.account_type != "admin":
+        return redirect(url_for("profile_page", user=current_user.username))
+
+    db = current_app.config["db"]
+    db.activate_user(user_id)
+    return redirect(url_for("admin_users_page"))
+
 
 @login_required
 def department_page():
@@ -435,7 +477,118 @@ def delete_student_from_class(class_code, student_id):
     if current_user.account_type != "Tutor":
         return redirect(url_for("profile_page", user=current_user.username))
 
-    print(class_code)
     db = current_app.config["db"]
     db.delete_student_from_class(class_code,student_id)
     return redirect(url_for("student_add_page",class_code=class_code))
+
+@login_required
+def tutor_list():
+    db = current_app.config["db"]
+
+    return render_template("./admin/adminuserspage.html", user=current_user, Users=db.get_tutors())
+
+@login_required
+def delete_video(class_code,video_code):
+    if current_user.account_type == "Student":
+        return redirect(url_for("profile_page",user=current_user.user_name))
+
+    db = current_app.config["db"]
+    db.delete_video(video_code)
+    return redirect(url_for("class_page", class_code=class_code))
+
+@login_required
+def update_class_page(class_code):
+    if current_user.account_type != "Tutor":
+        return redirect(url_for("profile_page",user=current_user.user_name))
+
+    form = ClassUpdateForm()
+
+    db = current_app.config["db"]
+
+    if form.validate_on_submit():
+        class_name = request.form.get("class_name")
+        nclass_code = request.form.get("class_code")
+        class_context = request.form.get("class_context")
+
+        if class_name == "":
+            class_name = None
+
+        if nclass_code == "":
+            nclass_code = None
+
+        if class_context == "":
+            class_context = None
+
+        nclass = Class(class_name,nclass_code,None,None,class_context)
+        db.update_class_with_class_code(class_code,nclass)
+        flash("Class Updated")
+        return redirect(url_for("update_class_page",class_code=nclass_code if nclass_code is not None else class_code ))
+
+    return render_template("./tutor/classupdatepage.html", user=current_user, form=form)
+
+
+@login_required
+def update_video_page(class_code, video_code):
+    form = VideoUploadForm()
+
+    if current_user.account_type != "Tutor":
+        return redirect(url_for("profile_page",user=current_user.user_name))
+
+    db = current_app.config["db"]
+
+    t_tutor, t_video = db.get_video_with_video_code(video_code)
+
+    if form.validate_on_submit():
+        thumbnail = request.files['video_thumbnail']
+        video = request.files['video']
+        video_title = request.form.get("video_title")
+        video_class = request.form.get("video_class")
+        video_comments_available = request.form.get("video_comments_available")
+        video_descriptions = request.form.get("video_descriptions")
+        thumbnail_path = ""
+        video_path = ""
+        if thumbnail == '':
+            thumbnail = None
+            thumbnail_path = None
+
+        if video.filename == '':
+            video.filename = None
+            video_path = None
+
+        if video_title == '':
+            video_title = None
+
+        if video_class == '':
+            video_class = None
+
+        if video_comments_available is None:
+            video_comments_available = False
+
+        if video_descriptions == '':
+            video_descriptions = None
+
+        if video.filename is not None :
+            print("Deneme")
+            video_path = "./static/videos/" + randomnamegen(100) + "-" + \
+                         video_class + "." + \
+                         video.content_type.split('/')[1]
+            os.remove(t_video.video_path)
+            video.save(video_path)
+
+        if thumbnail is not None:
+            thumbnail_path = "./static/video_thumbnail/" + randomnamegen(100) + "-" + \
+                             video_class + "." + \
+                             thumbnail.content_type.split('/')[1]
+            os.remove(t_video.thumbnail_path)
+            thumbnail.save(thumbnail_path)
+
+        nvideo = Video(video_title, None, current_user.id_number, video_class, None,
+                       thumbnail_path, video_path, video_descriptions, video_comments_available)
+
+        db.update_video_with_video_code(video_code, nvideo)
+
+        flash("Video Updated")
+        return redirect(url_for("update_video_page", user=current_user.username, video_code=video_code,class_code=class_code))
+
+
+    return render_template("./tutor/videoupdate.html",user=current_user, form=form, video_name=t_video.video_name)
