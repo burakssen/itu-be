@@ -2,7 +2,7 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, \
     TextAreaField, RadioField
-from wtforms.validators import DataRequired, NumberRange, Optional
+from wtforms.validators import DataRequired, NumberRange, Optional, InputRequired
 from wtforms_components import IntegerField
 from flask import current_app
 from flask_login import current_user
@@ -147,13 +147,13 @@ class ClassCreateForm(FlaskForm):
             (department.department_code, department.department_name) for department in department_list
         ]
 
-    class_name = StringField("Class Name", validators=[DataRequired()])
+    class_name = StringField("Class Name", validators=[InputRequired(), ])
 
-    department = SelectField("Departments", validators=[DataRequired()])
+    department = SelectField("Departments", validators=[InputRequired()])
 
-    class_code = StringField("Class Code", validators=[DataRequired()])
+    class_code = StringField("Class Code", validators=[InputRequired()])
 
-    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40), DataRequired()])
+    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40), InputRequired()])
 
     class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 
