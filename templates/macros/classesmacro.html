@@ -30,6 +30,11 @@
                 {% endif %}
             </div>
             {% if personal != true %}
+                {% if class_list == []%}
+                    <div class="columns is-12" style="align-items: center; font-size: 35px; border: 1px solid black; border-radius: 10px; margin: 10px; padding:10px">
+                        <b>There is no class yet</b>
+                    </div>
+                {% endif %}
             {% for tutor, nclass in tutor_list|zip(class_list) %}
             <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
                 <div class="column is-3" style="padding: 10px">
@@ -97,6 +102,11 @@
                         </script>
                 {% endfor %}
                 {% else %}
+                    {% if class_list == []%}
+                        <div class="columns is-12" style="align-items: center; font-size: 35px; border: 1px solid black; border-radius: 10px; margin: 10px; padding:10px">
+                            <b>There is no class yet</b>
+                        </div>
+                    {% endif %}
                     {% for nclass in class_list %}
                     <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
                     <div class="column is-3" style="padding: 10px">
@@ -131,6 +141,7 @@
                 {% endfor %}
                 {% endif %}
             {% endif %}
+
         </div>
       </div>
     </div>

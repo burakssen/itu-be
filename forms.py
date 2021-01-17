@@ -96,6 +96,29 @@ class VideoUploadForm(FlaskForm):
 
     video_descriptions = TextAreaField("Descriptions", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 
+class VideoUpdateForm(FlaskForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = current_app.config["db"]
+        self.video_class.choices = [
+            (nclass.class_code, f"{nclass.class_code}: {nclass.class_name}") for nclass in self.db.get_classes_of_tutor(current_user.id_number)
+        ]
+
+
+    video_thumbnail = FileField("image",
+                                validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), Optional()])
+
+    video = FileField("video", validators=[FileAllowed(['mp4', '3gp', 'mkv'], 'Only mp4, 3gp and mkv Allowed!'), Optional()])
+
+    video_title = StringField("Video Title", validators=[Optional()])
+
+    video_class = SelectField("Video Class", validators=[Optional()])
+
+    video_comments_available = BooleanField("Available")
+
+    video_descriptions = TextAreaField("Descriptions", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
+
+
 class ClassSearchForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

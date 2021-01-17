@@ -267,8 +267,11 @@ class DataBase():
                 cursor.execute(query, (id_number,))
                 classes = cursor.fetchall()
 
+                if classes == None:
+                    return None, None
+
                 for t_class in classes:
-                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7])
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7],t_class[6])
                     tutor = Person(None, t_class[5], None, t_class[6], None, None, t_class[8])
                     class_list.append(nclass)
 
@@ -883,6 +886,10 @@ class DataBase():
             try:
                 cursor.execute(query, (user_id,))
                 classes = cursor.fetchall()
+
+                if classes == None:
+                    return None, None
+
                 for t_class in classes:
                     nclass = Class(t_class[0],t_class[1],None,t_class[2],t_class[3],t_class[4],t_class[7],t_class[6])
                     tutor = Person(None,t_class[5], None, None, None, None, None)
@@ -900,19 +907,23 @@ class DataBase():
             cursor = connection.cursor()
             query="""
                 SELECT
-                video.video_name,
-                video.video_code,
-                video.class_code,
-                comm.given_point,
-                video.thumbnail_path,
-                array_agg('[' || comm.comment_context || ', ' || comm.time || ']') as comments
-                from (SELECT comments.comment_context, comments.video_code, comments.time, reviews.given_point FROM comments
-                LEFT JOIN reviews
-                ON comments.video_code = reviews.video_code
-                WHERE comments.user_id = %s) as comm
-                JOIN video
-                ON video.video_code = comm.video_code
-                GROUP BY video.video_name, video.video_code, video.thumbnail_path, comm.given_point
+                    video.video_name,
+                    video.video_code,
+                    video.class_code,
+                    reviews.given_point,
+                    video.thumbnail_path,
+                    array_agg('[' || comm.comment_context || ', ' || comm.time || ']') as comments
+                    from (SELECT comments.comment_context, comments.video_code, comments.time, users.user_id FROM comments
+                    JOIN users
+                    ON comments.user_id = users.user_id
+                    WHERE comments.user_id = %s) as comm
+                    JOIN video
+                    ON video.video_code = comm.video_code
+                    JOIN users
+                    ON comm.user_id = users.user_id
+                    JOIN reviews
+                    ON video.video_code = reviews.video_code and users.user_id = reviews.user_id
+                    GROUP BY video.video_name, video.video_code, video.thumbnail_path, reviews.given_point
             """
             try:
                 cursor.execute(query, (student_id,))
@@ -921,7 +932,6 @@ class DataBase():
                 for comment in comments:
                     for t_comm in comment[5]:
                         ncomm = t_comm.strip('][').split(', ')
-                        print(ncomm[0])
                         comm = Comment(None,None,None,None,comment[1],ncomm[0],ncomm[1])
 
                         comment_list.append(comm)

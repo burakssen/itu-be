@@ -32,7 +32,7 @@
                   <div class="file has-name is-fullwidth">
                     <label class="file-label">
 
-                      {{form.video(autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
+                      {{form.video(required=false, autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
                       <span class="file-cta">
                         <span class="file-icon">
                           <i class="fas fa-upload"></i>
@@ -54,7 +54,7 @@
             <div class="column is-6">
               <div>
                 <label>Video Class</label>
-                {{form.video_class(autofocus=False, id="video", )}}
+                {{form.video_class( autofocus=False, id="video" )}}
               </div>
               <br>
               <div>
@@ -65,7 +65,7 @@
               <br>
               <div>
                 <label><p>Video Descriptions</p></label>
-                {{form.video_descriptions(autofocus=False,style="margin-top: 10px" )}}
+                {{form.video_descriptions(required=false, autofocus=False,style="margin-top: 10px" )}}
               </div>
               <div>
                 <input class="button" type="submit" value="Update Video">

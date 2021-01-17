@@ -27,8 +27,15 @@
                                 </div>
                             </div>
                         </div>
+                    {% if student_list == [] %}
+                        <div class="tile column" style="border: 1px solid black; border-radius: 10px ;margin:10px">
+                            <div class="tile columns " style="font-size: 30px; padding:10px; align-items:center">
+                                <b>There is no student in the class!</b>
+                            </div>
+                        </div>
+                    {% endif %}
                     {% for student in student_list %}
-                        <div class="tile column" style="border: 1px solid black; border-radius: 10px ;margin:5px"">
+                        <div class="tile column" style="border: 1px solid black; border-radius: 10px ;margin:5px">
                             <div class="tile columns " style="padding:3px; align-items:center">
                                 <figure class="column">
                                     <p class="image is-64x64" >

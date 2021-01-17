@@ -16,7 +16,7 @@ function create_stars(temp){
       stars.append(span);
    }
 
-   for(var i = 0; i < index + 1; i++){
+   for(var i = 0; i < index; i++){
       var span = document.createElement("SPAN");
       var div = document.createElement("DIV");
    

@@ -26,7 +26,8 @@ from forms import \
     CommentPostForm, \
     DepartmentCreateForm, \
     StudentAddForm, \
-    ClassUpdateForm
+    ClassUpdateForm, \
+    VideoUpdateForm
 
 
 def auth_page(info=False):
@@ -120,7 +121,8 @@ def account_create_page():
                 mail=mail
             )
             db.create_user(user)
-            flash("Your account is created, wait for the admin, admin will activate your account.","info")
+            if user.account_type == "Tutor":
+                flash("Your account is created, wait for the admin, admin will activate your account.","info")
             return redirect(url_for("auth_page"))
         except:
             return render_template("accountcreate.html", form=form)
@@ -220,6 +222,7 @@ def personal_classes_page(user):
     user = current_user
     tutor = ""
     tutor_list = []
+
     if user.account_type == "Tutor":
         tutor, class_list = db.get_tutors_classes(user.id_number)
     elif user.account_type == "Student":
@@ -301,7 +304,7 @@ def upload_video_page(user):
             flash("Video Uploaded Successfully","info")
             return redirect(url_for("upload_video_page",user=user.username))
 
-        flash("Please fill of the necessary places!")
+        flash("Please fill the necessary places!")
         return render_template("videoupload.html", form=form, user=user)
 
     return render_template("videoupload.html", form=form, user=user)
@@ -390,7 +393,7 @@ def video_page(class_code, video_code):
     if form.validate_on_submit():
         review_point = request.form.get("review_points")
 
-        if review_point != 0 and not db.check_video_reviewed(video_code, user.id_number):
+        if review_point != "0" and not db.check_video_reviewed(video_code, user.id_number):
             db.add_review_point(review_point, video_code, user.id_number)
 
         comment = request.form.get("comment")
@@ -491,6 +494,7 @@ def student_add_page(class_code):
     form = StudentAddForm(class_code)
 
     student_list = db.get_all_students_from_class(class_code)
+
     nclass, tutor = db.get_class_with_class_code(class_code)
     if form.validate_on_submit():
         students = request.form.getlist("student")
@@ -514,6 +518,7 @@ def delete_student_from_class(class_code, student_id):
 
     db = current_app.config["db"]
     db.delete_student_from_class(class_code,student_id)
+    flash(f"student with {student_id} id deleted!","info")
     return redirect(url_for("student_add_page",class_code=class_code))
 
 @login_required
@@ -556,7 +561,7 @@ def update_class_page(class_code):
 
         nclass = Class(class_name,nclass_code,None,None,class_context)
         db.update_class_with_class_code(class_code,nclass)
-        flash("Class Updated")
+        flash("Class Updated","info")
         return redirect(url_for("update_class_page",class_code=nclass_code if nclass_code is not None else class_code ))
 
     return render_template("./tutor/classupdatepage.html", user=current_user, form=form)
@@ -564,7 +569,7 @@ def update_class_page(class_code):
 
 @login_required
 def update_video_page(class_code, video_code):
-    form = VideoUploadForm()
+    form = VideoUpdateForm()
 
     if current_user.account_type != "Tutor":
         return redirect(url_for("profile_page",user=current_user.user_name))
@@ -621,7 +626,7 @@ def update_video_page(class_code, video_code):
 
         db.update_video_with_video_code(video_code, nvideo)
 
-        flash("Video Updated")
+        flash("Video Updated","info")
         return redirect(url_for("update_video_page", user=current_user.username, video_code=video_code,class_code=class_code))
 
     return render_template("./tutor/videoupdate.html",user=current_user, form=form, video_name=t_video.video_name)
@@ -632,5 +637,4 @@ def student_comments_page(user):
     user = current_user
     db = current_app.config["db"]
     video_list = db.get_student_comments(user.id_number)
-    print(video_list)
     return render_template("studentcomments.html",user=user, video_list=video_list)

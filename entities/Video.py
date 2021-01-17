@@ -1,5 +1,3 @@
-from tools.utils import get_project_root
-
 class Video():
     def __init__(self, video_name, video_code, tutor, class_code, review_points, thumbnail_path, video_path,
                  video_descriptions=None, comments_available=True , comment_list=None):
