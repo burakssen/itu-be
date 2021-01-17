@@ -210,7 +210,7 @@ def profile_page(user):
 
             db.update_user_info(user.id_number, user)
 
-            if user_name == None:
+            if user_name is not None:
                 flash("You changed your username. You have to reloggin to your account.","info")
                 return redirect(url_for('auth_page'))
 
