@@ -120,9 +120,11 @@ def account_create_page():
                 mail=mail
             )
             db.create_user(user)
+            flash("Your account is created","info")
             return redirect(url_for("auth_page"))
         except:
             return render_template("accountcreate.html", form=form)
+
     return render_template("accountcreate.html", form=form)
 
 

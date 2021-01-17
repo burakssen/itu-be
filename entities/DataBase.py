@@ -190,9 +190,9 @@ class DataBase():
             cursor = connection.cursor()
             try:
                 cursor.execute(
-                    """INSERT INTO USERS (user_id, user_name, password, profile_image_path, department, account_type, gender, mail,most_reviewed_video) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                    """INSERT INTO USERS (user_id, user_name, password, profile_image_path, department, account_type, gender, mail,most_reviewed_video) VALUES (%s, %s, %s, %s, %s, %s, %s, %s,%s)""",
                     (int(User.id_number), User.username, User.password, User.profileimage, User.department,
-                     User.account_type, User.gender, User.mail,None))
+                     User.account_type, User.gender, User.mail,None,))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgerror)
