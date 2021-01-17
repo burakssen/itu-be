@@ -147,13 +147,13 @@ class ClassCreateForm(FlaskForm):
             (department.department_code, department.department_name) for department in department_list
         ]
 
-    class_name = StringField("Class Name", validators=[InputRequired(), ])
+    class_name = StringField("Class Name", validators=[DataRequired()])
 
-    department = SelectField("Departments", validators=[InputRequired()])
+    department = SelectField("Departments", validators=[DataRequired()])
 
-    class_code = StringField("Class Code", validators=[InputRequired()])
+    class_code = StringField("Class Code", validators=[DataRequired()])
 
-    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40), InputRequired()])
+    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40), DataRequired()])
 
     class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 

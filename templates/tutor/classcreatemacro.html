@@ -22,27 +22,27 @@
                   <div style="align-items:center; justify-content:center;">
                       <label class="label" style="padding: 10px">
                           Class Department
-                          {{ form.department() }}
+                          {{ form.department(require=True, autofocus=False) }}
                       </label>
                       <label class="label" style="padding: 10px">
                           Class Name
-                          {{ form.class_name() }}
+                          {{ form.class_name(require=True, autofocus=False) }}
                       </label>
                       <label class="label" style="padding: 10px">
                           Class Capacity
-                          {{ form.class_capacity() }}
+                          {{ form.class_capacity(require=True, autofocus=False) }}
                       </label>
                       <label class="label" style="padding: 10px">
                           Class Code
-                          {{ form.class_code() }}
+                          {{ form.class_code(require=True, autofocus=False) }}
                       </label>
                       <label class="label" style="padding: 10px">
                           Class Context
                           <br>
-                          {{ form.class_context() }}
+                          {{ form.class_context(autofocus=False) }}
                       </label>
                   </div>
-                  {{ form.create_button( class="button") }}
+                  {{ form.create_button(autofocus=False, class="button") }}
               </div>
           </form>
       </div>
