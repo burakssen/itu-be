@@ -1,5 +1,5 @@
 class Class():
-    def __init__(self,class_name,class_code,tutor,review_points=None,class_context=None,class_capacity=None, number_of_students=None):
+    def __init__(self,class_name,class_code,tutor,review_points=None,class_context=None,class_capacity=None, number_of_students=None, department=None):
         self.class_name = class_name
         self.class_code = class_code
         self.tutor = tutor
@@ -7,3 +7,4 @@ class Class():
         self.class_context = class_context
         self.class_capacity = class_capacity
         self.number_of_students = number_of_students
+        self.department = department

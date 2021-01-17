@@ -17,14 +17,14 @@
                         Admin Panel
                     </a>
                 {% elif user.account_type == "Student" %}
-                    <a class="button text-center">
+                    <a class="button text-center" href="{{ url_for('personal_classes_page',user=user.username) }}">
                         My Classes
                     </a>
-                    <a class="button text-center">
+                    <a class="button text-center" href="{{ url_for('student_comments_page',user=user.username) }}">
                         My Comments
                     </a>
                 {% else %}
-                    <a class="button text-center" href="{{ url_for('tutor_classes_page',user=user.username) }}">
+                    <a class="button text-center" href="{{ url_for('personal_classes_page',user=user.username) }}">
                         My Classes
                     </a>
                     <a class="button text-center" href="{{ url_for('create_class_page',info="False") }}">

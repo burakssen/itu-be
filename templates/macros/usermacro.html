@@ -12,8 +12,8 @@
           <form action="" method="post" enctype="multipart/form-data">
             {{ form.csrf_token }}
             <div class="tile is-child is-11 profile-table" {% if update is true %} style="padding-top: 50px;" {% endif %}>
-              <table class="table notification" style="background: none;">
-                <tbody style=" align-items: center">
+              <table class="table notification tile columns" style="background: none;">
+                <tbody class="column is-vertical">
                   <tr>
                     <th>Username :</th>
                     {% if update is not true %}
@@ -26,6 +26,13 @@
                       <td style="border: none;">
                         {{form.image(autofocus=False, id="image_file", accept="image/*")}}
                       </td>
+                    {% else %}
+                        {% if user.account_type == "Tutor" %}
+                            {% if user.most_viewed_video != None %}
+                            <td style="width:200px; border:none"></td>
+                            <th style="border: none">Most Liked Video</th>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                   </tr>
                   <tr>
@@ -38,6 +45,28 @@
                     {% if update is true %}
                         <th>Title (Optional) :</th>
                         <td>{{ form.title() }}</td>
+                    {% else %}
+                        {% if user.account_type == "Tutor" %}
+                            {% if user.most_viewed_video != None %}
+                            <td style="width:200px; border:none"></td>
+                            <td rowspan="6" class="card" style="padding:10px;margin: 6px; border:none">
+                            <a class="play card-image" style="width:200px" href="/classes/{{ most_viewed_video.class_code }}/video/{{most_viewed_video.video_code}}">
+                                <figure class="video-image image" style="width:200px">
+                                  <img src="../../.{{most_viewed_video.thumbnail_path}}" alt="Placeholder image">
+                                </figure>
+                            </a>
+                            <div class="card-content" style="padding-left: 5px;">
+                                {{most_viewed_video.video_name}}
+                                <div class="star_id{{ most_viewed_video.video_code }}" style="margin-top:10px">
+
+                                </div>
+                                <script>
+                                    setStars({{ most_viewed_video.review_points }},"{{ most_viewed_video.video_code }}")
+                                </script>
+                            </div>
+                            </td>
+                            {% endif %}
+                        {% endif %}
                     {% endif %}
                   </tr>
                   <tr >
@@ -79,6 +108,7 @@
                     {% else %}
                       <td>{{form.gender(autofocus=False)}}</td>
                     {% endif %}
+
                 </tbody>
               </table>
               <div>

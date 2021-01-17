@@ -42,7 +42,7 @@
                     <p >{{ tutor.username }}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{ tutor.department }}</p>
+                    <p >{{ nclass.department }}</p>
                 </div>
                 <div class="column" style="margin: 5px; text-align: center;">
                     <p class="star_id{{ nclass.class_code }}"></p>
@@ -63,40 +63,74 @@
                 </script>
             {% endfor %}
             {% else %}
-                {% for nclass in class_list %}
-            <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
-                <div class="column is-3" style="padding: 10px">
-                    <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
-                </div>
-                <div class="column"  style="margin: 5px; text-align: center;">
-                    <p >{{nclass.class_code}}</p>
-                </div>
-                <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{ tutor.username }}</p>
-                </div>
-                <div class="column" style="margin: 5px; text-align: center;">
-                    <p >{{ tutor.department }}</p>
-                </div>
-                <div class="column" style="margin: 5px; text-align: center;">
-                    <p class="star_id{{ nclass.class_code }}"></p>
-                </div>
-                <div class="column" style="margin: 5px; text-align: center;">
-                    <a class="button" href="{{ url_for("student_add_page",class_code=nclass.class_code) }}">{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</a>
-                </div>
-                {% if user.account_type == "admin" %}
-                    <div class="column" style="margin: 5px">
-                        <a class="button" style="color:red" href="{{ url_for("delete_class",class_code=nclass.class_code) }}">
-                            Delete
-                        </a>
+                {% if user.account_type == "Student" %}
+                {% for tutor, nclass in tutor_list|zip(class_list) %}
+                    <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
+                    <div class="column is-3" style="padding: 10px">
+                        <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
                     </div>
-                {% endif %}
-            </div>
+                    <div class="column"  style="margin: 5px; text-align: center;">
+                        <p >{{nclass.class_code}}</p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <p >{{ tutor.username }}</p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <p >{{ nclass.department }}</p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <p class="star_id{{ nclass.class_code }}"></p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <a class="button" href="{{ url_for("student_add_page",class_code=nclass.class_code) }}">{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</a>
+                    </div>
+                    {% if user.account_type == "admin" %}
+                        <div class="column" style="margin: 5px">
+                            <a class="button" style="color:red" href="{{ url_for("delete_class",class_code=nclass.class_code) }}">
+                                Delete
+                            </a>
+                        </div>
+                    {% endif %}
+                    </div>
+                        <script>
+                            setStars({{ nclass.review_points }},"{{ nclass.class_code }}")
+                        </script>
+                {% endfor %}
+                {% else %}
+                    {% for nclass in class_list %}
+                    <div class="columns is-12", style="align-items:center; border: 1px solid black; border-radius: 10px; margin: 10px">
+                    <div class="column is-3" style="padding: 10px">
+                        <a class="button" href="{{ url_for('class_page', class_code=nclass.class_code) }}" style="width: 100%; height: 100%">{{nclass.class_name}}</a>
+                    </div>
+                    <div class="column"  style="margin: 5px; text-align: center;">
+                        <p >{{nclass.class_code}}</p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <p >{{ tutor.username }}</p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <p >{{ nclass.department }}</p>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <div class="star_id{{ nclass.class_code }}"></div>
+                    </div>
+                    <div class="column" style="margin: 5px; text-align: center;">
+                        <a class="button" href="{{ url_for("student_add_page",class_code=nclass.class_code) }}">{{ nclass.number_of_students }} / {{ nclass.class_capacity }}</a>
+                    </div>
+                    {% if user.account_type == "admin" %}
+                        <div class="column" style="margin: 5px">
+                            <a class="button" style="color:red" href="{{ url_for("delete_class",class_code=nclass.class_code) }}">
+                                Delete
+                            </a>
+                        </div>
+                    {% endif %}
+                    </div>
                     <script>
                         setStars({{ nclass.review_points }},"{{ nclass.class_code }}")
                     </script>
-            {% endfor %}
+                {% endfor %}
+                {% endif %}
             {% endif %}
-
         </div>
       </div>
     </div>

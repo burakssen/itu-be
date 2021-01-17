@@ -81,6 +81,7 @@
                                                     {% if comment.account_type != "Student" %}
                                                         <strong>{{"<" + comment.account_type  + ">"}}</strong>
                                                     {% endif %}
+                                                    <strong>{{ comment.time }}</strong>
                                                 <br>
                                                 {{ comment.comment_context }}
                                                 </p>

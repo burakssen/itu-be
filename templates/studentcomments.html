@@ -1,0 +1,61 @@
+{% extends "layout.html" %}
+
+
+{% block css %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"/>
+    <link rel="stylesheet" href="../../../../static/profile.css" />
+    <script src="../../../../static/js/class.js"></script>
+
+{% endblock %}
+{% block title %}{{user.username}}'s Comments{% endblock %}
+{% block content %}
+
+{{navbar(user)}}
+
+<div class="columns is-12 " style="margin-left: 30px; margin-top: 10px; padding: 0px;">
+  {{profilebanner(user)}}
+  <div class="column is-10" style="margin-left: 50px">
+    <div class="tile is-ancestor">
+      <div class="tile is-parent is-11 card" style="height: 600px;">
+        <div class="tile is-vertical notification " style="overflow-y: scroll; border: 1px solid black;">
+            {% for video in video_list%}
+                <div class="columns">
+                    <div class="card column" style="flex: 0 0 40%; padding:10px;margin: 6px;">
+                        <a class="play card-image" href="/classes/{{ video.class_code }}/video/{{video.video_code}}">
+                            <figure class="video-image">
+                            <img src="../../.{{video.thumbnail_path}}" alt="Placeholder image">
+                            </figure>
+                        </a>
+                        <div class="card-content" style="padding-left: 5px;">
+                            {{video.video_name}}
+                            {% if video.review_points == None %}
+                                <p><strong>You did not give any review points to this video!</strong></p>
+                            {% else %}
+                                <p style="margin-top: 10px">
+                                <p>You gave {{ video.review_points }} review points to this video.</p>
+                                    <div class="star_id{{ video.video_code }}" style="margin-top:3px">
+                                    </div>
+                                    <script>
+                                        setStars({{ video.review_points }},"{{ video.video_code }}")
+                                    </script>
+                                </p>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="card column" style="padding:10px;margin: 6px;">
+                        {% for comment in video.comment_list %}
+                            <div class="columns" style="border: 1px solid black; border-radius: 10px; margin:5px; padding:5px">
+                                <strong class="column is-4">{{ comment.time }}: </strong>
+                                <div class="column" >{{ comment.comment_context }}</div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

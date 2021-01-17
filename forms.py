@@ -111,7 +111,6 @@ class ClassSearchForm(FlaskForm):
         self.department.choices = [
             (department.department_code, department.department_name) for department in department_list
         ]
-        self.department.default = "Complete"
 
         tutors_list = []
         t_tutor = Person(0, "Choose a Tutor!", None, None, None, None, None, None)
@@ -133,11 +132,28 @@ class ClassSearchForm(FlaskForm):
 
 
 class ClassCreateForm(FlaskForm):
-    class_name = StringField("Class Name")
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.db = current_app.config["db"]
+        department_list = []
 
-    class_code = StringField("Class Code")
+        t_department = Department(0,"Choose a Department!")
+        department_list.append(t_department)
 
-    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40)])
+        for department in self.db.get_departments():
+            department_list.append(department)
+
+        self.department.choices = [
+            (department.department_code, department.department_name) for department in department_list
+        ]
+
+    class_name = StringField("Class Name", validators=[DataRequired()])
+
+    department = SelectField("Departments", validators=[DataRequired()])
+
+    class_code = StringField("Class Code", validators=[DataRequired()])
+
+    class_capacity = IntegerField("Class Capacity",validators=[NumberRange(min=5, max=40), DataRequired()])
 
     class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 
@@ -154,11 +170,11 @@ class CommentPostForm(FlaskForm):
 
 
 class DepartmentCreateForm(FlaskForm):
-    department_name = StringField("Department Name")
+    department_name = StringField("Department Name", validators=[DataRequired()])
 
-    department_code = StringField("Department Code")
+    department_code = StringField("Department Code", validators=[DataRequired()])
 
-    create_button = SubmitField("Create Department")
+    create_button = SubmitField("Create Department", validators=[DataRequired()])
 
 
 class StudentAddForm(FlaskForm):

@@ -1,7 +1,7 @@
 from flask_login import UserMixin
 
 class Person(UserMixin):
-    def __init__(self, id_number, username, password, department, account_type, gender, mail, title=None, profileimage=None,activated=False):
+    def __init__(self, id_number, username, password, department, account_type, gender, mail, title=None, profileimage=None,activated=False, most_viewed_video=None):
         self.id = id_number
         self.active = True
         self.profileimage = profileimage
@@ -9,6 +9,7 @@ class Person(UserMixin):
         self.set_user(username, id_number, mail, account_type, gender, department, title, password)
         self.logged_in = False
         self.activated = activated
+        self.most_viewed_video = most_viewed_video
 
     @property
     def is_active(self):

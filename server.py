@@ -36,7 +36,7 @@ def create_app():
     app.add_url_rule("/classcreate/",view_func=view.create_class_page, methods=["GET", "POST"])
     app.add_url_rule("/classcreate/<string:info>/", view_func=view.create_class_page, methods=["GET", "POST"])
     app.add_url_rule("/access_denied/", view_func=view.access_denied, methods=["GET", "POST"])
-    app.add_url_rule("/profile/<string:user>/classes/",view_func=view.tutor_classes_page,methods=["GET","POST"])
+    app.add_url_rule("/profile/<string:user>/classes/",view_func=view.personal_classes_page,methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments",view_func=view.department_page, methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments/delete/<string:department_code>", view_func=view.department_delete, methods=["GET","POST"])
     app.add_url_rule("/classes/<string:class_code>/addstudent/",view_func=view.student_add_page, methods=["GET","POST"])
@@ -45,7 +45,7 @@ def create_app():
     app.add_url_rule("/classes/<string:class_code>/deletevideo/<string:video_code>/",view_func=view.delete_video,methods=["GET","POST"])
     app.add_url_rule("/classes/<string:class_code>/updateclass/",view_func=view.update_class_page,methods=["GET","POST"])
     app.add_url_rule("/classes/<string:class_code>/video/<string:video_code>/update", view_func=view.update_video_page,methods=["GET","POST"])
-
+    app.add_url_rule("/profile/<string:user>/comments/",view_func=view.student_comments_page,methods=["GET","POST"])
     lm.init_app(app)
     lm.login_view = "auth_page"
     

@@ -14,6 +14,7 @@ from entities.Comment import Comment
 
 from tools.utils import get_project_root, randomnamegen
 from tools.uploadimage import uploadImage
+from datetime import datetime
 
 from forms import \
     CreateAccountForm, \
@@ -55,6 +56,8 @@ def auth_page(info=False):
             if user is not None:
                 if hasher.verify(password, user.password):
                     if (user.account_type == "Tutor" and user.activated is True) or user.account_type != "Tutor":
+
+
                         user.logged_in = True
                         login_user(user)
                         next_page = request.args.get("next", url_for("profile_page",user=user.username))
@@ -140,6 +143,15 @@ def profile_page(user):
 
     form.process()
     db = current_app.config["db"]
+
+    if user.account_type == "Tutor":
+        db = current_app.config["db"]
+        db.update_most_reviewed_video(user.id_number)
+
+    most_viewed_video = None
+    if user.account_type == "Tutor":
+        most_viewed_video = db.get_most_viewed_video(user.most_viewed_video)
+
     if form.validate_on_submit():
 
         if request.form["update"] == "Update Profile Information":
@@ -198,15 +210,23 @@ def profile_page(user):
 
             db.update_user_info(user.id_number, user)
 
-    return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department).department_name)
+    return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department).department_name, most_viewed_video=most_viewed_video)
 
 
 @login_required
-def tutor_classes_page(user):
+def personal_classes_page(user):
     db = current_app.config["db"]
     user = current_user
-    tutor, class_list = db.get_tutors_classes(user.id_number)
-    return render_template("classes.html", user=user, personal=True, tutor=tutor,db=db, class_list=class_list)
+    tutor = ""
+    tutor_list = []
+    if user.account_type == "Tutor":
+        tutor, class_list = db.get_tutors_classes(user.id_number)
+    elif user.account_type == "Student":
+        tutor_list, class_list = db.get_students_classes(user.id_number)
+    else:
+        return redirect(url_for("profile_page",user=user.username))
+
+    return render_template("classes.html", user=user, personal=True, tutor=tutor, tutor_list=tutor_list, db=db, class_list=class_list)
 
 
 @login_required
@@ -222,10 +242,11 @@ def create_class_page(info=None):
     if form.validate_on_submit():
         class_name = request.form.get("class_name")
         class_code = request.form.get("class_code")
+        class_department = request.form.get("department")
         class_context = request.form.get("class_context")
         class_capacity = request.form.get("class_capacity")
 
-        nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity)
+        nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity,department=class_department)
 
         if db.create_class(nclass) == "Class code exists":
             return redirect(url_for("create_class_page", info="fail"))
@@ -368,12 +389,15 @@ def video_page(class_code, video_code):
 
         comment = request.form.get("comment")
 
+        time = datetime.date(datetime.now())
+
         if comment != "":
             comment = Comment(
                 comment_id=randomnamegen(50),
                 user_id=user.id_number,
                 video_code=video_code,
-                comment_context=comment
+                comment_context=comment,
+                time=time
             )
             db.create_comment(comment)
 
@@ -573,7 +597,6 @@ def update_video_page(class_code, video_code):
             video_descriptions = None
 
         if video.filename is not None :
-            print("Deneme")
             video_path = "./static/videos/" + randomnamegen(100) + "-" + \
                          video_class + "." + \
                          video.content_type.split('/')[1]
@@ -595,5 +618,13 @@ def update_video_page(class_code, video_code):
         flash("Video Updated")
         return redirect(url_for("update_video_page", user=current_user.username, video_code=video_code,class_code=class_code))
 
-
     return render_template("./tutor/videoupdate.html",user=current_user, form=form, video_name=t_video.video_name)
+
+
+@login_required
+def student_comments_page(user):
+    user = current_user
+    db = current_app.config["db"]
+    video_list = db.get_student_comments(user.id_number)
+    print(video_list)
+    return render_template("studentcomments.html",user=user, video_list=video_list)

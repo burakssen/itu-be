@@ -8,6 +8,8 @@ from entities.Class import Class
 from entities.Video import Video
 from entities.Comment import Comment
 
+import time
+
 class DataBase():
 
     def __init__(self):
@@ -82,7 +84,7 @@ class DataBase():
             cursor.execute(query)
             try:
                 User = cursor.fetchone()
-                User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7], activated=User[9])
+                User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7], activated=User[9], most_viewed_video=User[10])
                 connection.commit()
                 return User
             except:
@@ -188,9 +190,9 @@ class DataBase():
             cursor = connection.cursor()
             try:
                 cursor.execute(
-                    """INSERT INTO USERS (user_id, user_name, password, profile_image_path, department, account_type, gender, mail) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                    """INSERT INTO USERS (user_id, user_name, password, profile_image_path, department, account_type, gender, mail,most_reviewed_video) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
                     (int(User.id_number), User.username, User.password, User.profileimage, User.department,
-                     User.account_type, User.gender, User.mail))
+                     User.account_type, User.gender, User.mail,None))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgerror)
@@ -218,8 +220,8 @@ class DataBase():
             cursor = connection.cursor()
             try:
                 cursor.execute(
-                    """INSERT INTO Class (class_code, class_name, tutor, review_points, class_context, capacity) VALUES (%s, %s, %s, %s, %s, %s)""",
-                    (nclass.class_code, nclass.class_name, nclass.tutor, 0, nclass.class_context, nclass.class_capacity))
+                    """INSERT INTO Class (class_code, class_name, tutor, review_points, class_context, capacity, number_of_videos,department) VALUES (%s, %s, %s, %s, %s, %s, %s, %s)""",
+                    (nclass.class_code, nclass.class_name, nclass.tutor, 0, nclass.class_context, nclass.class_capacity, 0, nclass.department))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
@@ -255,7 +257,7 @@ class DataBase():
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
-            ON users.department = department.department_code
+            ON class.department = department.department_code
             LEFT JOIN student
             ON student.class_code = class.class_code
             WHERE (class.tutor = %s)
@@ -329,7 +331,7 @@ class DataBase():
                     JOIN users
                     ON users.user_id = class.tutor
                     JOIN department
-                    ON users.department = department.department_code
+                    ON class.department = department.department_code
                     LEFT JOIN student
                     ON student.class_code = class.class_code
                     WHERE (%s is null or department.department_code = %s) and
@@ -342,8 +344,8 @@ class DataBase():
                 cursor.execute(query,(department, department, tutor, tutor, star, star))
                 classes = cursor.fetchall()
                 for t_class in classes:
-                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7])
-                    tutor = Person(None, t_class[5], None, t_class[6], None, None, None)
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3], t_class[4], t_class[7], t_class[6])
+                    tutor = Person(None, t_class[5], None, None, None, None, None)
                     class_list.append(nclass)
                     tutor_list.append(tutor)
 
@@ -351,7 +353,6 @@ class DataBase():
                 return tutor_list, class_list
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
-                print("Help")
 
     def get_all_classes(self):
         class_list = []
@@ -372,7 +373,7 @@ class DataBase():
             JOIN users
             ON users.user_id = class.tutor
             JOIN department
-            ON users.department = department.department_code
+            ON class.department = department.department_code
             LEFT JOIN student
             ON student.class_code = class.class_code
             GROUP BY class.class_code, users.user_name, department.department_name 
@@ -382,8 +383,8 @@ class DataBase():
                 cursor.execute(query)
                 classes = cursor.fetchall()
                 for t_class in classes:
-                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3],t_class[4],t_class[7])
-                    tutor = Person(None,t_class[5],None,t_class[6],None,None,None)
+                    nclass = Class(t_class[0], t_class[1], t_class[5], t_class[2], t_class[3],t_class[4],t_class[7],t_class[6])
+                    tutor = Person(None,t_class[5],None,None,None,None,None)
                     class_list.append(nclass)
                     tutor_list.append(tutor)
 
@@ -421,8 +422,8 @@ class DataBase():
             try:
                 cursor.execute(query, (class_code,))
                 classes = cursor.fetchone()
-                nclass = Class(classes[0],classes[1],classes[3],classes[2],classes[3],classes[4],classes[7])
-                tutor = Person(None,classes[5],None,classes[6],None,None,None,classes[9],classes[8])
+                nclass = Class(classes[0],classes[1],classes[3],classes[2],classes[3],classes[4],classes[7],classes[6])
+                tutor = Person(None,classes[5],None,None,None,None,None,classes[9],classes[8])
                 connection.commit()
                 return nclass, tutor
             except dbapi2.Error as e:
@@ -504,8 +505,8 @@ class DataBase():
             cursor = connection.cursor()
             try:
                 cursor.execute(
-                    """INSERT INTO comments (comment_id, user_id, video_code, comment_context) VALUES (%s, %s, %s, %s)""",
-                    (comment.comment_id, comment.user_id, comment.video_code, comment.comment_context))
+                    """INSERT INTO comments (comment_id, user_id, video_code, comment_context, time) VALUES (%s, %s, %s, %s, %s)""",
+                    (comment.comment_id, comment.user_id, comment.video_code, comment.comment_context, comment.time))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgcode, e.pgerror)
@@ -524,7 +525,8 @@ class DataBase():
                      users.account_type,
                      users.profile_image_path,
                      video.video_name,
-                     comments.comment_context
+                     comments.comment_context,
+                     comments.time
                      FROM comments 
                      INNER JOIN users
                      ON users.user_id = comments.user_id
@@ -534,7 +536,7 @@ class DataBase():
                 )
                 comments = cursor.fetchall()
                 for comment in comments:
-                    comment = Comment(comment[0],comment[1], comment[2],comment[3],comment[4],comment[5])
+                    comment = Comment(comment[0],comment[1], comment[2],comment[3],comment[4],comment[5],comment[6])
                     comment_list.append(comment)
                 connection.commit()
 
@@ -661,7 +663,7 @@ class DataBase():
                 WHERE video_code = %s
                 GROUP BY video.review_points, video.number_of_reviews, video.class_code, class.review_points"""
             query2 = """UPDATE video SET review_points = %s, number_of_reviews = %s WHERE video_code = %s"""
-            query3 = """INSERT INTO reviews(video_code, user_id, reviewed) VALUES (%s, %s, %s) """
+            query3 = """INSERT INTO reviews(video_code, user_id, reviewed, given_point) VALUES (%s, %s, %s, %s) """
             try:
                 cursor.execute(query1, (video_code,))
                 data = cursor.fetchone()
@@ -671,7 +673,7 @@ class DataBase():
                 number_of_reviews += 1
                 review_points /= number_of_reviews
                 cursor.execute(query2, ("{:.2f}".format(review_points),number_of_reviews,video_code,))
-                cursor.execute(query3, (video_code, user_id, True))
+                cursor.execute(query3, (video_code, user_id, True,review_point))
                 connection.commit()
                 self.update_class_review(data[2])
 
@@ -810,6 +812,128 @@ class DataBase():
                 return reviewed[0]
             except dbapi2.Error as e:
                 print(e.pgerror)
+
+    def update_most_reviewed_video(self, tutor_id):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query1 = """
+            UPDATE users
+            SET most_reviewed_video = %s 
+            WHERE user_id = %s
+            """
+            query2 = """
+            SELECT DISTINCT ON (review_points) video_code from video WHERE tutor = %s ORDER BY review_points DESC;;
+            """
+            try:
+                cursor.execute(query2, (tutor_id,))
+                reviewed_video = cursor.fetchone()
+                if reviewed_video != None:
+                    cursor.execute(query1, (reviewed_video[0], tutor_id,))
+                else:
+                    cursor.execute(query1, (None, tutor_id,))
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def get_most_viewed_video(self,most_viewed_video):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query="""
+                SELECT
+                 * FROM 
+                 video 
+                 WHERE video_code = %s
+            """
+            try:
+                if most_viewed_video == None:
+                    return None
+                cursor.execute(query, (most_viewed_video,))
+                t_video = cursor.fetchone()
+                video = Video(t_video[1],t_video[0],t_video[3],t_video[2],t_video[8],t_video[5],t_video[6],t_video[4],t_video[7])
+                return video
+                connection.commit()
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def get_students_classes(self, user_id):
+        class_list = []
+        tutor_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query="""
+                SELECT
+                class.class_name, 
+                class.class_code,
+                class.review_points,
+                class.class_context,
+                class.capacity,
+                users.user_name,
+                department.department_name,
+                count(student.class_code)
+            FROM Class
+            JOIN users
+            ON users.user_id = class.tutor
+            JOIN department
+            ON class.department = department.department_code
+            LEFT JOIN student
+            ON student.class_code = class.class_code
+            WHERE student.student_id = %s
+            GROUP BY class.class_code, users.user_name, department.department_name
+            """
+            try:
+                cursor.execute(query, (user_id,))
+                classes = cursor.fetchall()
+                for t_class in classes:
+                    nclass = Class(t_class[0],t_class[1],None,t_class[2],t_class[3],t_class[4],t_class[7],t_class[6])
+                    tutor = Person(None,t_class[5], None, None, None, None, None)
+                    class_list.append(nclass)
+                    tutor_list.append(tutor)
+                connection.commit()
+                return tutor_list, class_list
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
+    def get_student_comments(self,student_id):
+        video_list = []
+        comment_list = []
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query="""
+                SELECT
+                video.video_name,
+                video.video_code,
+                video.class_code,
+                comm.given_point,
+                video.thumbnail_path,
+                array_agg('[' || comm.comment_context || ', ' || comm.time || ']') as comments
+                from (SELECT comments.comment_context, comments.video_code, comments.time, reviews.given_point FROM comments
+                LEFT JOIN reviews
+                ON comments.video_code = reviews.video_code
+                WHERE comments.user_id = %s) as comm
+                JOIN video
+                ON video.video_code = comm.video_code
+                GROUP BY video.video_name, video.video_code, video.thumbnail_path, comm.given_point
+            """
+            try:
+                cursor.execute(query, (student_id,))
+                comments = cursor.fetchall()
+
+                for comment in comments:
+                    for t_comm in comment[5]:
+                        ncomm = t_comm.strip('][').split(', ')
+                        print(ncomm[0])
+                        comm = Comment(None,None,None,None,comment[1],ncomm[0],ncomm[1])
+
+                        comment_list.append(comm)
+                    video = Video(comment[0],comment[1],None,comment[2],comment[3],comment[4],None,comment_list=comment_list)
+                    video_list.append(video)
+                    comment_list = []
+
+                connection.commit()
+                return video_list
+            except dbapi2.Error as e:
+                print(e.pgerror)
+
 
 
 def get_User(user_name):
