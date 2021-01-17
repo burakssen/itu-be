@@ -137,7 +137,7 @@ class ClassCreateForm(FlaskForm):
         self.db = current_app.config["db"]
         department_list = []
 
-        t_department = Department(0,"Choose a Department!")
+        t_department = Department(None,"Choose a Department!")
         department_list.append(t_department)
 
         for department in self.db.get_departments():
