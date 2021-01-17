@@ -252,6 +252,10 @@ def create_class_page():
         class_context = request.form.get("class_context")
         class_capacity = request.form.get("class_capacity")
 
+        if class_department == None:
+            flash("Please Choose a Deparment!")
+            return redirect(url_for("create_class_page"))
+
         nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity,department=class_department)
 
         if db.create_class(nclass) == "Class code exists":
