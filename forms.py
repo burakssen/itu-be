@@ -84,13 +84,13 @@ class VideoUploadForm(FlaskForm):
 
 
     video_thumbnail = FileField("image",
-                                validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), Optional()])
+                                validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), DataRequired()])
 
-    video = FileField("video", validators=[FileAllowed(['mp4', '3gp', 'mkv'], 'Only mp4, 3gp and mkv Allowed!')])
+    video = FileField("video", validators=[FileAllowed(['mp4', '3gp', 'mkv'], 'Only mp4, 3gp and mkv Allowed!'), DataRequired()])
 
-    video_title = StringField("Video Title")
+    video_title = StringField("Video Title", validators=[DataRequired()])
 
-    video_class = SelectField("Video Class")
+    video_class = SelectField("Video Class", validators=[DataRequired()])
 
     video_comments_available = BooleanField("Available")
 
@@ -194,9 +194,9 @@ class StudentAddForm(FlaskForm):
     capacity = IntegerField("Capacity", validators=[Optional(), NumberRange(min=5,max=60)])
 
 class ClassUpdateForm(FlaskForm):
-    class_name = StringField("Class Name")
+    class_name = StringField("Class Name", validators=[Optional()])
 
-    class_code = StringField("Class Code")
+    class_code = StringField("Class Code", validators=[Optional()])
 
     class_context = TextAreaField("Class Context", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
 

@@ -61,14 +61,14 @@ body::-webkit-scrollbar{
     border-radius: 10px;
 }
 
-.alert-error {
-    background-color: red;
-    color: whitesmoke;
+.error {
+    background: red;
+    color: aliceblue;
     text-align: center;
 }
 
-.alert-info {
-    background-color: yellow;
+.info {
+    background: yellow;
     color: black;
     text-align: center;
 }

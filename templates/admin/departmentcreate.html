@@ -17,11 +17,11 @@
             <div style="align-items:flex-start; justify-content:space-around;">
                 <label class="label" style="padding: 10px">
                     Department Name
-                    {{ form.department_name() }}
+                    {{ form.department_name(required=true,) }}
                 </label>
                 <label class="label" style="padding: 10px">
                     Depratment Code
-                    {{ form.department_code() }}
+                    {{ form.department_code(required=true,) }}
                 </label>
             </div>
             {{ form.create_button( class="button") }}

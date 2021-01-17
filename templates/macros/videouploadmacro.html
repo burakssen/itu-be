@@ -11,14 +11,14 @@
               <div style="width: 60%;">
                 <div>
                   <label><p>Video Title</p></label>
-                  {{form.video_title(autofocus=False, id="video_title", style="width: 100%")}}
+                  {{form.video_title(required=true, autofocus=False, id="video_title", style="width: 100%")}}
                 </div>
                 <br>
                 <div class="card" style="border: 1px solid black">
                   <img id="video-image-placeholder" src="https://via.placeholder.com/1024x720.png" >
                   <label style="text-align: center;"><p>Video Thumbnail</p></label>
                   <p style="text-align: center;">
-                    {{form.video_thumbnail(autofocus=False, id="video-thumbnail", onChange="previewFile()")}}
+                    {{form.video_thumbnail(required=true, autofocus=False, id="video-thumbnail", onChange="previewFile()")}}
                   </p>
                 </div>
                 <br>
@@ -27,7 +27,7 @@
                   <div class="file has-name is-fullwidth">
                     <label class="file-label">
                       
-                      {{form.video(autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
+                      {{form.video(required=true, autofocus=False, id="video", class="file", class="file-input", onChange="previewFileName()")}}
                       <span class="file-cta">
                         <span class="file-icon">
                           <i class="fas fa-upload"></i>
@@ -49,7 +49,7 @@
             <div class="column is-6">
               <div>
                 <label>Video Class</label>
-                {{form.video_class(autofocus=False, id="video", )}}
+                {{form.video_class(required=true, autofocus=False, id="video", )}}
               </div>
               <br>
               <div>

@@ -252,24 +252,24 @@ def create_class_page():
         class_context = request.form.get("class_context")
         class_capacity = request.form.get("class_capacity")
 
-        if class_department == None:
-            flash("Please Choose a Deparment!")
+        if class_department == "None":
+            flash("Please Choose a Deparment!","error")
             return redirect(url_for("create_class_page"))
 
         nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity,department=class_department)
 
         if db.create_class(nclass) == "Class code exists":
-            flash("Class Code Already Exists!")
+            flash("Class Code Already Exists!","error")
             return redirect(url_for("create_class_page"))
 
-        flash("Class Created Successfully")
+        flash("Class Created Successfully","info")
         return redirect(url_for("create_class_page"))
 
     return render_template("./tutor/classcreatepage.html", user=user, form=form)
 
 
 @login_required
-def upload_video_page(user, info=None):
+def upload_video_page(user):
     form = VideoUploadForm()
     user = current_user
 
@@ -277,9 +277,6 @@ def upload_video_page(user, info=None):
         return redirect(url_for("profile_page", user=user))
 
     db = current_app.config["db"]
-
-    if info == "success":
-        flash("You created uploaded a video","info")
 
     if form.validate_on_submit():
         thumbnail = request.files['video_thumbnail']
@@ -306,8 +303,10 @@ def upload_video_page(user, info=None):
 
             db.create_video(nvideo)
 
-            return redirect(url_for("upload_video_page",user=user.username, info="success"))
+            flash("Video Uploaded Successfully","info")
+            return redirect(url_for("upload_video_page",user=user.username))
 
+        flash("Please fill of the necessary places!")
         return render_template("videoupload.html", form=form, user=user)
 
     return render_template("videoupload.html", form=form, user=user)
