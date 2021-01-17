@@ -34,7 +34,6 @@ def create_app():
     app.add_url_rule("/adminpanel/users/delete/<int:user_id>", view_func=view.user_delete, methods=["GET", "POST"])
     app.add_url_rule("/adminpanel/users/activate/<int:user_id>", view_func=view.user_activate, methods=["GET", "POST"])
     app.add_url_rule("/classcreate/",view_func=view.create_class_page, methods=["GET", "POST"])
-    app.add_url_rule("/classcreate/<string:info>/", view_func=view.create_class_page, methods=["GET", "POST"])
     app.add_url_rule("/access_denied/", view_func=view.access_denied, methods=["GET", "POST"])
     app.add_url_rule("/profile/<string:user>/classes/",view_func=view.personal_classes_page,methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments",view_func=view.department_page, methods=["GET","POST"])

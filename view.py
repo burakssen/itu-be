@@ -236,7 +236,7 @@ def personal_classes_page(user):
 
 
 @login_required
-def create_class_page(info=None):
+def create_class_page():
     user = current_user
 
     if user.account_type != "Tutor":
@@ -255,11 +255,13 @@ def create_class_page(info=None):
         nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity,department=class_department)
 
         if db.create_class(nclass) == "Class code exists":
-            return redirect(url_for("create_class_page", info="fail"))
+            flash("Class Code Already Exists!")
+            return redirect(url_for("create_class_page"))
 
-        return redirect(url_for("create_class_page", info="success"))
+        flash("Class Created Successfully")
+        return redirect(url_for("create_class_page"))
 
-    return render_template("./tutor/classcreatepage.html", user=user, form=form, info=info)
+    return render_template("./tutor/classcreatepage.html", user=user, form=form)
 
 
 @login_required
