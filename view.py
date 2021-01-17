@@ -2,7 +2,7 @@ import os
 from os import path
 from passlib.hash import pbkdf2_sha256 as hasher
 
-from flask import render_template, request, redirect, url_for, flash, current_app, session
+from flask import render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
 
 from entities.DataBase import get_User
@@ -126,11 +126,6 @@ def account_create_page():
             return render_template("accountcreate.html", form=form)
 
     return render_template("accountcreate.html", form=form)
-
-
-@login_required
-def access_denied():
-    return redirect(url_for("profile_page", user=current_user.username))
 
 
 @login_required

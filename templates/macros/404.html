@@ -1,0 +1,21 @@
+{% extends "layout.html" %}
+{% block css %}
+    <link rel="stylesheet" href="../static/auth.css" />
+
+{% endblock %}
+{% block title %} Welcome to ITUBE {% endblock %}
+{% block content %}
+
+{% for category, message in get_flashed_messages(with_categories=True) %}
+  <div class="alert alert-{{category}}">{{category.capitalize()}}: {{ message }}</div>
+{% endfor %}
+<div class="logo">
+    <br/>
+    <br/>
+    <img src="../static/logo_transparent.png">
+</div>
+    <div style="position: absolute; left:50%; top:50%; transform: translate(-50%,-50%)">
+        <div style="text-align:center; font-size:96px; color: goldenrod">404</div>
+        <div style="text-align:center; font-size:60px; color: goldenrod">Access Denied</div>
+    </div>
+{% endblock %}

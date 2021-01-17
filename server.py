@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
 import view
 import os
@@ -33,7 +33,6 @@ def create_app():
     app.add_url_rule("/adminpanel/users/delete/<int:user_id>", view_func=view.user_delete, methods=["GET", "POST"])
     app.add_url_rule("/adminpanel/users/activate/<int:user_id>", view_func=view.user_activate, methods=["GET", "POST"])
     app.add_url_rule("/classcreate/",view_func=view.create_class_page, methods=["GET", "POST"])
-    app.add_url_rule("/access_denied/", view_func=view.access_denied, methods=["GET", "POST"])
     app.add_url_rule("/profile/<string:user>/classes/",view_func=view.personal_classes_page,methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments",view_func=view.department_page, methods=["GET","POST"])
     app.add_url_rule("/adminpanel/departments/delete/<string:department_code>", view_func=view.department_delete, methods=["GET","POST"])
@@ -44,6 +43,7 @@ def create_app():
     app.add_url_rule("/classes/<string:class_code>/updateclass/",view_func=view.update_class_page,methods=["GET","POST"])
     app.add_url_rule("/classes/<string:class_code>/video/<string:video_code>/update", view_func=view.update_video_page,methods=["GET","POST"])
     app.add_url_rule("/profile/<string:user>/comments/",view_func=view.student_comments_page,methods=["GET","POST"])
+
     lm.init_app(app)
     lm.login_view = "auth_page"
     
@@ -61,8 +61,14 @@ def load_user(username):
     return db.get_user(username)
 
 
+def page_not_found(e):
+    return render_template('./macros/404.html'), 404
+
+
 if __name__ == "__main__":
 
     app = create_app()
+    app.register_error_handler(404, page_not_found)
+
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0',port=port,debug=True)
