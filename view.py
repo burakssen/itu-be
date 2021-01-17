@@ -120,7 +120,7 @@ def account_create_page():
                 mail=mail
             )
             db.create_user(user)
-            flash("Your account is created","info")
+            flash("Your account is created, wait for the admin, admin will activate your account.","info")
             return redirect(url_for("auth_page"))
         except:
             return render_template("accountcreate.html", form=form)
