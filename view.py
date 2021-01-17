@@ -210,6 +210,10 @@ def profile_page(user):
 
             db.update_user_info(user.id_number, user)
 
+            if user_name == None:
+                flash("You changed your username. You have to reloggin to your account.","info")
+                return redirect(url_for('auth_page'))
+
     return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department).department_name, most_viewed_video=most_viewed_video)
 
 
