@@ -19,7 +19,7 @@
                     {% if update is not true %}
                       <td>{{user.username}}</td>
                     {% else %}
-                      <td>{{form.username(autofocus=False, value=Burak, type="text")}}</td>
+                      <td>{{form.username(autofocus=False, placeholder=user.username, type="text")}}</td>
                     {% endif %}
                     {% if update is true %}
                         <th>Profile Image :</th>

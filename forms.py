@@ -2,8 +2,8 @@ from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, \
     TextAreaField, RadioField
-from wtforms.validators import DataRequired, NumberRange, Optional, InputRequired
-from wtforms_components import IntegerField
+from wtforms.validators import DataRequired, NumberRange, Optional, Length
+from wtforms_components import IntegerField, EmailField
 from flask import current_app
 from flask_login import current_user
 
@@ -19,13 +19,13 @@ class CreateAccountForm(FlaskForm):
             (department.department_code, department.department_name) for department in self.db.get_departments()
         ]
 
-    username = StringField("Username", validators=[DataRequired()])
+    username = StringField("Username", validators=[DataRequired(), Length(min=5,max=20)])
 
     id_number = IntegerField("Id", validators=[DataRequired(), NumberRange(min=99999999, max=999999999)])
 
-    password = PasswordField("Password", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=10,max=20)])
 
-    mail = StringField("Mail", validators=[DataRequired()])
+    mail = EmailField("Mail", validators=[DataRequired()])
 
     account_type = SelectField("Account Type", validators=[DataRequired()], choices=["Student", "Tutor"])
 
@@ -38,9 +38,9 @@ class CreateAccountForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField("Username")
+    username = StringField("Username", validators=[DataRequired(), Length(min=5,max=20)])
 
-    password = PasswordField("Password")
+    password = PasswordField("Password", validators=[DataRequired(), Length(min=10,max=20)])
 
     loginbutton = SubmitField("Log In")
 
