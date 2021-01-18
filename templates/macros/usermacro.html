@@ -44,7 +44,7 @@
                     {% endif %}
                     {% if update is true %}
                         <th>Title (Optional) :</th>
-                        <td>{{ form.title() }}</td>
+                        <td>{{ form.title(placeholder=user.title) }}</td>
                     {% else %}
                         {% if user.account_type == "Tutor" %}
                             {% if user.most_viewed_video != None %}
@@ -83,7 +83,7 @@
                       {% if update is not true %}
                         <td>{{ user.mail }}</td>
                       {% else %}
-                        <td> {{form.mail(autofocus=False)}}</td>
+                        <td> {{form.mail(autofocus=False,placeholder=user.mail)}}</td>
                       {% endif %}
                   </tr>
                   <tr>
