@@ -678,6 +678,10 @@ def update_video_page(class_code, video_code):
 
     t_tutor, t_video = db.get_video_with_video_code(video_code)
 
+    if t_video.comments_available:
+        form.video_comments_available.default = True
+        form.process()
+
     if form.validate_on_submit():
         thumbnail = request.files['video_thumbnail']
         video = request.files['video']
@@ -688,14 +692,13 @@ def update_video_page(class_code, video_code):
         thumbnail_path = ""
         video_path = ""
 
-        print(thumbnail)
 
         if video_title != '':
             if len(video_title) > 200 or len(video_title) < 5:
                 flash("Please use a video title between 5 and 200 characters", "error")
                 return redirect(url_for("update_video_page", user=current_user.username))
 
-        if thumbnail == '':
+        if thumbnail.filename == '':
             thumbnail = None
             thumbnail_path = None
 
@@ -738,7 +741,7 @@ def update_video_page(class_code, video_code):
         return redirect(
             url_for("update_video_page", user=current_user.username, video_code=video_code, class_code=class_code))
 
-    return render_template("./tutor/videoupdate.html", user=current_user, form=form, video_name=t_video.video_name)
+    return render_template("./tutor/videoupdate.html", user=current_user, form=form, video=t_video)
 
 
 @login_required
