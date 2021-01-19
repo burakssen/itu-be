@@ -26,7 +26,7 @@
                 </div>
             {% endif %}
             {% for video in video_list%}
-                <div class="columns" style="overflow-y: scroll">
+                <div class="columns">
                     <div class="card column" style="flex: 0 0 40%; padding:10px;margin: 6px;">
                         <a class="play card-image" href="/classes/{{ video.class_code }}/video/{{video.video_code}}">
                             <figure class="video-image">
@@ -51,7 +51,7 @@
                     </div>
                     <div class="card column" style="padding:10px;margin: 6px;">
                         {% for comment in video.comment_list %}
-                            <div class="columns" style="border: 1px solid black; border-radius: 10px; margin:5px; padding:5px">
+                            <div class="columns" style="overflow-y: scroll; border: 1px solid black; border-radius: 10px; margin:5px; padding:5px">
                                 <strong class="column is-4">{{ comment.time }}: </strong>
                                 <div class="column" >{{ comment.comment_context }}</div>
                             </div>
