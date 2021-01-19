@@ -1,12 +1,12 @@
 from flask_wtf import FlaskForm
 from flask_wtf.file import FileAllowed, FileField
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, \
-    TextAreaField, RadioField
+    TextAreaField, RadioField, ValidationError
 from wtforms.validators import DataRequired, NumberRange, Optional, Length
 from wtforms_components import IntegerField, EmailField
 from flask import current_app
 from flask_login import current_user
-
+import re
 from entities.Department import Department
 from entities.Person import Person
 
@@ -19,11 +19,11 @@ class CreateAccountForm(FlaskForm):
             (department.department_code, department.department_name) for department in self.db.get_departments()
         ]
 
-    username = StringField("Username", validators=[DataRequired(), Length(min=5,max=20)])
+    username = StringField("Username", validators=[DataRequired()])
 
     id_number = IntegerField("Id", validators=[DataRequired(), NumberRange(min=99999999, max=999999999)])
 
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=10,max=20)])
+    password = PasswordField("Password", validators=[DataRequired()])
 
     mail = EmailField("Mail", validators=[DataRequired()])
 
@@ -38,9 +38,9 @@ class CreateAccountForm(FlaskForm):
 
 
 class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired(), Length(min=5,max=20)])
+    username = StringField("Username", validators=[DataRequired()])
 
-    password = PasswordField("Password", validators=[DataRequired(), Length(min=10,max=20)])
+    password = PasswordField("Password", validators=[DataRequired()])
 
     loginbutton = SubmitField("Log In")
 
@@ -57,7 +57,7 @@ class ProfileUpdateForm(FlaskForm):
 
     username = StringField("Username", validators=[Optional()])
 
-    password = PasswordField("Password", validators=[Optional()])
+    password = PasswordField("Password", validators=[Optional(), Length(min=10,max=20)])
 
     id_number = IntegerField("Id Number", validators=[Optional()])
 
@@ -152,6 +152,7 @@ class ClassSearchForm(FlaskForm):
     tutor = SelectField("Tutors",validators=[Optional()])
 
     stars = RadioField("Stars",validators=[Optional()], choices=[(5,5), (4,4), (3,3), (2,2), (1,1), (0,0)])
+
 
 
 class ClassCreateForm(FlaskForm):

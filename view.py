@@ -1,6 +1,7 @@
 import os
 from os import path
 from passlib.hash import pbkdf2_sha256 as hasher
+import re
 
 from flask import render_template, request, redirect, url_for, flash, current_app
 from flask_login import login_user, logout_user, login_required, current_user
@@ -84,8 +85,8 @@ def log_out():
 def account_create_page():
     db = current_app.config["db"]
     form = CreateAccountForm()
-    if form.validate_on_submit():
 
+    if form.validate_on_submit():
         username = form.data["username"]
 
         if db.CheckIfDataExists(username,"User"):
@@ -93,6 +94,23 @@ def account_create_page():
             return redirect(url_for("account_create_page"))
 
         password = form.data["password"]
+
+        if len(password) < 3:
+            flash("Please Use a password that is 10 or more than 10 characters","error")
+            return redirect(url_for("account_create_page"))
+
+        if len(password) > 20:
+            flash("Please do not use any password that is more than 20 characters","error")
+            return redirect(url_for("account_create_page"))
+
+        if len(username) < 3:
+            flash("Please Use a password that is 5 or more than 5 characters","error")
+            return redirect(url_for("account_create_page"))
+
+        if len(username) > 20:
+            flash("Please do not use any password that is more than 20 characters","error")
+            return redirect(url_for("account_create_page"))
+
         password = hasher.hash(password)
         id_number = form.data["id_number"]
 
@@ -237,6 +255,15 @@ def personal_classes_page(user):
     return render_template("classes.html", user=user, personal=True, tutor=tutor, tutor_list=tutor_list, db=db, class_list=class_list)
 
 
+def validate_class_code(field):
+    match = re.compile('[A-Z][A-Z][A-Z]' + '-' + '[0-9][0-9][0-9][A-Z]' + '-' + '[0-9][0-9][0-9]')
+    m = re.match(match, field)
+    if not m:
+        return False
+    else:
+        return True
+
+
 @login_required
 def create_class_page():
     user = current_user
@@ -254,8 +281,16 @@ def create_class_page():
         class_context = request.form.get("class_context")
         class_capacity = request.form.get("class_capacity")
 
+        if not validate_class_code(class_code):
+            flash("Please Give A proper class code, class code should be in this type ABC-123A-123","error")
+            return redirect(url_for("create_class_page"))
+
         if class_department == "None":
             flash("Please Choose a Deparment!","error")
+            return redirect(url_for("create_class_page"))
+
+        if len(class_name) > 70 or len(class_name) < 3:
+            flash("Please Use a Class name that is less than or equal to 70 characters or greater then or equal to 3")
             return redirect(url_for("create_class_page"))
 
         nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity,department=class_department)
@@ -288,7 +323,19 @@ def upload_video_page(user):
         video_comments_available = request.form.get("video_comments_available")
         video_descriptions = request.form.get("video_descriptions")
 
+        if len(video_title) > 200 or len(video_title) < 5:
+            flash("Please use a video title between 5 and 200 characters", "error")
+            return redirect(url_for("upload_video_page", user=user.username))
+
         if video.filename != '' and thumbnail != '':
+            if video.content_type.split('/')[0] != "video":
+                flash("Please add a proper file to video section","error")
+                return redirect(url_for("upload_video_page", user=user.username))
+
+            if thumbnail.content_type.spliy('/')[0] != "image":
+                flash("Please add a proper file to image section", "error")
+                return redirect(url_for("upload_video_page", user=user.username))
+
             video_path = "./static/videos/" + randomnamegen(100) + "-" + \
                          video_class + "." + \
                          video.content_type.split('/')[1]
@@ -390,6 +437,7 @@ def video_page(class_code, video_code):
 
     video.convert_video_path()
     video.convert_image_path()
+
     if video.comments_available is not True:
         form.comment.render_kw = {'disabled': 'disabled'}
         form.send_comment.render_kw = {'disabled': 'disabled'}
@@ -554,6 +602,11 @@ def update_class_page(class_code):
         nclass_code = request.form.get("class_code")
         class_context = request.form.get("class_context")
 
+        if not validate_class_code(nclass_code):
+            flash("Please Give A proper class code, class code should be in this type ABC-123A-123","error")
+            return redirect(
+                url_for("update_class_page", class_code=nclass_code if nclass_code is not None else class_code))
+
         if class_name == "":
             class_name = None
 
@@ -591,6 +644,11 @@ def update_video_page(class_code, video_code):
         video_descriptions = request.form.get("video_descriptions")
         thumbnail_path = ""
         video_path = ""
+
+        if len(video_title) > 200 or len(video_title) < 5:
+            flash("Please use a video title between 5 and 200 characters", "error")
+            return redirect(url_for("upload_video_page", user=current_user.username))
+
         if thumbnail == '':
             thumbnail = None
             thumbnail_path = None

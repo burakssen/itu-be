@@ -719,7 +719,8 @@ class DataBase():
             users.user_id,
             department.department_name,
             users.mail,
-            users.profile_image_path
+            users.profile_image_path,
+            users.activated
             FROM users
             JOIN department
             ON users.department = department.department_code
@@ -729,7 +730,7 @@ class DataBase():
                 cursor.execute(query)
                 tutors = cursor.fetchall()
                 for t_tutor in tutors:
-                    tutor = Person(t_tutor[1],t_tutor[0],None,t_tutor[2],'Tutor',None,t_tutor[3],None,t_tutor[4])
+                    tutor = Person(t_tutor[1],t_tutor[0],None,t_tutor[2],'Tutor',None,t_tutor[3],None,t_tutor[4],t_tutor[5])
                     tutor_list.append(tutor)
 
                 return tutor_list
