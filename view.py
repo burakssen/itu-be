@@ -525,7 +525,7 @@ def department_page():
     form = DepartmentCreateForm()
     if form.validate_on_submit():
         department_name = request.form.get("department_name")
-        department_code = request.form.get("department_code").capitalize()
+        department_code = request.form.get("department_code").upper()
 
         if len(department_name) > 50 and len(department_name) < 5:
             flash("Please use a department name that is more than 5 characters and less then 50 characters", "error")
@@ -536,7 +536,14 @@ def department_page():
             return redirect(url_for("department_page"))
 
         department = Department(department_code, department_name)
-        db.create_department(department)
+        code_exist, name_exist = db.check_if_department_exists(department)
+        if not code_exist and not name_exist:
+            db.create_department(department)
+        elif code_exist:
+            flash(f"Department Code {department_code} is already exist!","error")
+        elif name_exist:
+            flash(f"Department Name {department_name} is already exist!", "error")
+
 
         return redirect(url_for("department_page"))
 

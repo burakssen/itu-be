@@ -944,7 +944,20 @@ class DataBase():
             except dbapi2.Error as e:
                 print(e.pgerror)
 
-
+    def check_if_department_exists(self, department):
+        with dbapi2.connect(self.url) as connection:
+            cursor = connection.cursor()
+            query1 ="""select exists(select department_code from department where department_code = %s)"""
+            query2 ="""select exists(select department_name from department where department_name = %s)"""
+            try:
+                cursor.execute(query1, (department.department_code,))
+                exist1 = cursor.fetchone()
+                cursor.execute(query2, (department.department_name,))
+                exist2 = cursor.fetchone()
+                print(exist2[0])
+                return exist1[0], exist2[0]
+            except dbapi2.Error as e:
+                print(e.pgerror)
 
 def get_User(user_name):
     user = current_app.config["db"].get_user(user_name)
