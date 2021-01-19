@@ -65,7 +65,7 @@ class ProfileUpdateForm(FlaskForm):
 
     mail = StringField("Mail", validators=[Optional()])
 
-    image = FileField("image", validators=[Optional(), FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!')])
+    image = FileField("image", validators=[Optional()])
 
     account_type = SelectField("Account Type", choices=["Admin", "Tutor", "Student"], validators=[Optional()])
 

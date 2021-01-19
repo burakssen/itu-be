@@ -210,7 +210,6 @@ def profile_page(user):
             )
 
             if image_file.read() != b'':
-
                 if image_file.content_type.split('/')[0] == "image":
                     temp = current_user.profileimage
                     temp = temp.replace("../static/profile_images/","")
@@ -225,15 +224,21 @@ def profile_page(user):
                     current_user.profileimage = user.profileimage
 
                 db.update_user_info(user.id_number, user)
-
+                flash("You updated some of your informations","info")
                 if user_name is None and image_file.content_type.split('/')[0] != "image":
                     flash(f"Please Upload an Image instead of a {image_file.content_type.split('/')[1]} file!",
                           "error")
                     return redirect(url_for("profile_page", user=user.username))
+            else:
+                db.update_user_info(user.id_number, user)
 
             if user_name is not None:
                 flash("You changed your username. You have to reloggin to your account.","info")
                 return redirect(url_for('auth_page'))
+
+
+            flash("You successfully changed your profile informations","info")
+            return redirect(url_for("profile_page",user=current_user.username))
 
     return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department).department_name, most_viewed_video=most_viewed_video)
 

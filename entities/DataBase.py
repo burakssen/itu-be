@@ -45,6 +45,7 @@ class DataBase():
                 WHERE user_id = %s
             """
             try:
+                
                 cursor.execute(query,(
                     user_data.id_number,
                     user_data.username,
@@ -58,6 +59,7 @@ class DataBase():
                     id_number,
                 ))
                 connection.commit()
+                print("Hello")
                 return True
             except dbapi2.Error as e:
                 print(e.pgerror)
