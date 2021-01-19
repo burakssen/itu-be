@@ -57,7 +57,7 @@ class ProfileUpdateForm(FlaskForm):
 
     username = StringField("Username", validators=[Optional()])
 
-    password = PasswordField("Password", validators=[Optional(), Length(min=10,max=20)])
+    password = PasswordField("Password", validators=[Optional()])
 
     id_number = IntegerField("Id Number", validators=[Optional()])
 
