@@ -688,9 +688,10 @@ def update_video_page(class_code, video_code):
         thumbnail_path = ""
         video_path = ""
 
-        if len(video_title) > 200 or len(video_title) < 5:
-            flash("Please use a video title between 5 and 200 characters", "error")
-            return redirect(url_for("upload_video_page", user=current_user.username))
+        if video_title != '':
+            if len(video_title) > 200 or len(video_title) < 5:
+                flash("Please use a video title between 5 and 200 characters", "error")
+                return redirect(url_for("update_video_page", user=current_user.username))
 
         if thumbnail == '':
             thumbnail = None
