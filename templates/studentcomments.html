@@ -27,7 +27,7 @@
             {% endif %}
             {% for video in video_list%}
                 <div class="columns">
-                    <div class="card column" style="flex: 0 0 40%; padding:10px;margin: 6px;">
+                    <div class="card column" style="max-height: 40%; flex: 0 0 40%; padding:10px;margin: 6px;">
                         <a class="play card-image" href="/classes/{{ video.class_code }}/video/{{video.video_code}}">
                             <figure class="video-image">
                             <img src="../../.{{video.thumbnail_path}}" alt="Placeholder image">
