@@ -33,6 +33,7 @@
                     <b>Department</b> : {{ nclass.department }}
                 </div>
                   <hr>
+                  {% if user.account_type == "Tutor" %}
                   <div>
                       <b><a class="button" href="{{ url_for('student_add_page', class_code=nclass.class_code) }}">Add Students To Class</a></b>
                   </div>
@@ -40,6 +41,7 @@
                   <div>
                       <b><a class="button" href="{{ url_for('update_class_page', class_code=nclass.class_code) }}">Update Class</a></b>
                   </div>
+                  {% endif %}
               </div>
         </div>
       </div>
