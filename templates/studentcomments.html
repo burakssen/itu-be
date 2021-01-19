@@ -26,7 +26,7 @@
                 </div>
             {% endif %}
             {% for video in video_list%}
-                <div class="columns">
+                <div class="columns" style="overflow-y: scroll">
                     <div class="card column" style="flex: 0 0 40%; padding:10px;margin: 6px;">
                         <a class="play card-image" href="/classes/{{ video.class_code }}/video/{{video.video_code}}">
                             <figure class="video-image">

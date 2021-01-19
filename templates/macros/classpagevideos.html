@@ -24,10 +24,12 @@
                                 <script>
                                     setStars({{ video.review_points }},"{{ video.video_code }}")
                                 </script>
-                                {% if user.account_type != "Student" %}
+                                {% if user.account_type == "Tutor" %}
                                 <hr>
                                 <a class="button" href="{{ url_for('update_video_page', class_code=nclass.class_code, video_code=video.video_code) }}" >Update Video</a>
                                 <a class="button" href="{{ url_for('delete_video', class_code=nclass.class_code, video_code=video.video_code) }}" style="color:red">Delete Video</a>
+                                {% elif user.account_type != "Student" %}
+                                    <a class="button" href="{{ url_for('delete_video', class_code=nclass.class_code, video_code=video.video_code) }}" style="color:red">Delete Video</a>
                                 {% endif %}
                             </div>
                         </div>

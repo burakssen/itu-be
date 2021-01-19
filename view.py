@@ -672,7 +672,7 @@ def update_video_page(class_code, video_code):
     form = VideoUpdateForm()
 
     if current_user.account_type != "Tutor":
-        return redirect(url_for("profile_page", user=current_user.user_name))
+        return redirect(url_for("profile_page", user=current_user.username))
 
     db = current_app.config["db"]
 
