@@ -224,8 +224,8 @@ def profile_page(user):
                     current_user.profileimage = user.profileimage
 
                 db.update_user_info(user.id_number, user)
-                flash("You updated some of your informations","info")
                 if user_name is None and image_file.content_type.split('/')[0] != "image":
+                    flash("You updated some of your informations", "info")
                     flash(f"Please Upload an Image instead of a {image_file.content_type.split('/')[1]} file!",
                           "error")
                     return redirect(url_for("profile_page", user=user.username))
