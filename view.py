@@ -222,8 +222,6 @@ def profile_page(user):
                     user.profileimage = uploadImage(image_file.stream, user.id_number)
                     user.convert_image_path()
                     current_user.profileimage = user.profileimage
-                else:
-                    image_file = None
 
                 db.update_user_info(user.id_number, user)
 
