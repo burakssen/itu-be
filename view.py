@@ -518,7 +518,15 @@ def department_page():
     form = DepartmentCreateForm()
     if form.validate_on_submit():
         department_name = request.form.get("department_name")
-        department_code = request.form.get("department_code")
+        department_code = request.form.get("department_code").capitalize()
+
+        if len(department_name) > 50 and len(department_name) < 5:
+            flash("Please use a department name that is more than 5 characters and less then 50 characters", "error")
+            return redirect(url_for("department_page"))
+
+        if len(department_code) > 10 and len(department_code) < 2:
+            flash("Please use a department code that is more than 2 characters and less then 10 characters", "error")
+            return redirect(url_for("department_page"))
 
         department = Department(department_code, department_name)
         db.create_department(department)
