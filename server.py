@@ -1,7 +1,8 @@
 from flask import Flask, render_template
 from flask_wtf.csrf import CSRFProtect
-import view
 import os
+import view
+
 
 from flask_login import LoginManager
 from entities.DataBase import DataBase
