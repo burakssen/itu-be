@@ -1,7 +1,7 @@
 from flask_wtf import FlaskForm
-from flask_wtf.file import FileAllowed, FileField
+from flask_wtf.file import FileAllowed, FileField, FileRequired
 from wtforms import StringField, PasswordField, SelectMultipleField, SelectField, SubmitField, BooleanField, \
-    TextAreaField, RadioField, ValidationError
+    TextAreaField, RadioField
 from wtforms.validators import DataRequired, NumberRange, Optional, Length
 from wtforms_components import IntegerField, EmailField
 from flask import current_app
@@ -84,9 +84,9 @@ class VideoUploadForm(FlaskForm):
 
 
     video_thumbnail = FileField("image",
-                                validators=[FileAllowed(['jpg', 'jpeg', 'png'], 'Only PNG, JPG and JPEG Allowed!'), DataRequired()])
+                                validators=[FileRequired()])
 
-    video = FileField("video", validators=[FileAllowed(['mp4', '3gp', 'mkv'], 'Only mp4, 3gp and mkv Allowed!'), DataRequired()])
+    video = FileField("video", validators=[FileRequired()])
 
     video_title = StringField("Video Title", validators=[DataRequired()])
 
@@ -95,6 +95,7 @@ class VideoUploadForm(FlaskForm):
     video_comments_available = BooleanField("Available")
 
     video_descriptions = TextAreaField("Descriptions", render_kw={"rows": 12, "cols": 50}, validators=[Optional()])
+
 
 class VideoUpdateForm(FlaskForm):
     def __init__(self, *args, **kwargs):

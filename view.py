@@ -322,17 +322,23 @@ def upload_video_page(user):
         video_class = request.form.get("video_class")
         video_comments_available = request.form.get("video_comments_available")
         video_descriptions = request.form.get("video_descriptions")
-
+        print("burak")
         if len(video_title) > 200 or len(video_title) < 5:
+            print("len")
             flash("Please use a video title between 5 and 200 characters", "error")
             return redirect(url_for("upload_video_page", user=user.username))
 
         if video.filename != '' and thumbnail != '':
+            print("hELLO")
             if video.content_type.split('/')[0] != "video":
+                print("hELLO video")
+
                 flash("Please add a proper file to video section","error")
                 return redirect(url_for("upload_video_page", user=user.username))
 
-            if thumbnail.content_type.spliy('/')[0] != "image":
+            if thumbnail.content_type.split('/')[0] != "image":
+                print("hELLO image")
+
                 flash("Please add a proper file to image section", "error")
                 return redirect(url_for("upload_video_page", user=user.username))
 
