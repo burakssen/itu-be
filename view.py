@@ -41,19 +41,19 @@ def auth_page(info=False):
     if form.validate_on_submit():
         if request.method == "GET":
             if info == "/SignUpSuccess":
-                flash("Your account created successfully!","info")
-            elif info=="/AccountCreateFailed":
-                flash("Account Create Failed","error")
+                flash("Your account created successfully!", "info")
+            elif info == "/AccountCreateFailed":
+                flash("Account Create Failed", "error")
 
-            return render_template("auth.html",form=form)
+            return render_template("auth.html", form=form)
         else:
             username = request.form.get("username")
             password = request.form.get("password")
 
             if username == "" or password == "":
-                flash("You can not leave blank space.","error")
-                return render_template("auth.html",form=form)
-         
+                flash("You can not leave blank space.", "error")
+                return render_template("auth.html", form=form)
+
             user = get_User(username)
             if user is not None:
                 if hasher.verify(password, user.password):
@@ -61,15 +61,15 @@ def auth_page(info=False):
 
                         user.logged_in = True
                         login_user(user)
-                        next_page = request.args.get("next", url_for("profile_page",user=user.username))
+                        next_page = request.args.get("next", url_for("profile_page", user=user.username))
                         return redirect(next_page)
                     else:
-                        flash("Wait For Admin to Activate Your Account!!","error")
+                        flash("Wait For Admin to Activate Your Account!!", "error")
                         return redirect(url_for("auth_page"))
 
-        flash("Your Log In informations are incorrect","error")
-        return render_template("auth.html",form=form)
-    
+        flash("Your Log In informations are incorrect", "error")
+        return render_template("auth.html", form=form)
+
     return render_template("auth.html", form=form)
 
 
@@ -77,7 +77,7 @@ def auth_page(info=False):
 def log_out():
     current_user.logged_in = False
     logout_user()
-    flash("You have logged out.","info")
+    flash("You have logged out.", "info")
     return redirect(url_for("auth_page"))
 
 
@@ -88,38 +88,38 @@ def account_create_page():
     if form.validate_on_submit():
         username = form.data["username"]
 
-        if db.CheckIfDataExists(username,"User"):
-            flash("Username is already taken","error")
+        if db.CheckIfDataExists(username, "User"):
+            flash("Username is already taken", "error")
             return redirect(url_for("account_create_page"))
 
         password = form.data["password"]
 
         if len(password) < 3:
-            flash("Please Use a password that is 10 or more than 10 characters","error")
+            flash("Please Use a password that is 10 or more than 10 characters", "error")
             return redirect(url_for("account_create_page"))
 
         if len(password) > 20:
-            flash("Please do not use any password that is more than 20 characters","error")
+            flash("Please do not use any password that is more than 20 characters", "error")
             return redirect(url_for("account_create_page"))
 
         if len(username) < 3:
-            flash("Please Use a password that is 5 or more than 5 characters","error")
+            flash("Please Use a password that is 5 or more than 5 characters", "error")
             return redirect(url_for("account_create_page"))
 
         if len(username) > 20:
-            flash("Please do not use any password that is more than 20 characters","error")
+            flash("Please do not use any password that is more than 20 characters", "error")
             return redirect(url_for("account_create_page"))
 
         password = hasher.hash(password)
         id_number = form.data["id_number"]
 
-        if db.CheckIfDataExists(id_number,"User_id"):
+        if db.CheckIfDataExists(id_number, "User_id"):
             flash("Id number in use by one user", "error")
             return redirect(url_for("account_create_page"))
 
         mail = form.data["mail"]
 
-        if db.CheckIfDataExists(mail,"mail"):
+        if db.CheckIfDataExists(mail, "mail"):
             flash("Email is already taken", "error")
             return redirect(url_for("account_create_page"))
 
@@ -139,7 +139,7 @@ def account_create_page():
             )
             db.create_user(user)
             if user.account_type == "Tutor":
-                flash("Your account is created, wait for the admin, admin will activate your account.","info")
+                flash("Your account is created, wait for the admin, admin will activate your account.", "info")
             return redirect(url_for("auth_page"))
         except:
             return render_template("accountcreate.html", form=form)
@@ -212,8 +212,8 @@ def profile_page(user):
             if image_file.read() != b'':
                 if image_file.content_type.split('/')[0] == "image":
                     temp = current_user.profileimage
-                    temp = temp.replace("../static/profile_images/","")
-                    prev_image = str(get_project_root())+"\\static\\profile_images\\"+temp
+                    temp = temp.replace("../static/profile_images/", "")
+                    prev_image = str(get_project_root()) + "\\static\\profile_images\\" + temp
 
                     if temp != "boy.png" and temp != "girl.png":
                         if path.exists(prev_image):
@@ -225,7 +225,12 @@ def profile_page(user):
 
                 db.update_user_info(user.id_number, user)
                 if user_name is None and image_file.content_type.split('/')[0] != "image":
-                    flash("You updated some of your informations", "info")
+                    if (gender is not None) or \
+                            (password is not None) or \
+                            (department is not None) or \
+                            (mail is not None) or \
+                            (title is not None):
+                        flash("You updated some of your informations", "info")
                     flash(f"Please Upload an Image instead of a {image_file.content_type.split('/')[1]} file!",
                           "error")
                     return redirect(url_for("profile_page", user=user.username))
@@ -233,14 +238,15 @@ def profile_page(user):
                 db.update_user_info(user.id_number, user)
 
             if user_name is not None:
-                flash("You changed your username. You have to reloggin to your account.","info")
+                flash("You changed your username. You have to reloggin to your account.", "info")
                 return redirect(url_for('auth_page'))
 
+            flash("You successfully changed your profile informations", "info")
+            return redirect(url_for("profile_page", user=current_user.username))
 
-            flash("You successfully changed your profile informations","info")
-            return redirect(url_for("profile_page",user=current_user.username))
-
-    return render_template("profile.html", user=user, form=form, update=False, department_name=current_app.config['db'].get_departments(user.department).department_name, most_viewed_video=most_viewed_video)
+    return render_template("profile.html", user=user, form=form, update=False,
+                           department_name=current_app.config['db'].get_departments(user.department).department_name,
+                           most_viewed_video=most_viewed_video)
 
 
 @login_required
@@ -255,9 +261,10 @@ def personal_classes_page(user):
     elif user.account_type == "Student":
         tutor_list, class_list = db.get_students_classes(user.id_number)
     else:
-        return redirect(url_for("profile_page",user=user.username))
+        return redirect(url_for("profile_page", user=user.username))
 
-    return render_template("classes.html", user=user, personal=True, tutor=tutor, tutor_list=tutor_list, db=db, class_list=class_list)
+    return render_template("classes.html", user=user, personal=True, tutor=tutor, tutor_list=tutor_list, db=db,
+                           class_list=class_list)
 
 
 def validate_class_code(field):
@@ -274,7 +281,7 @@ def create_class_page():
     user = current_user
 
     if user.account_type != "Tutor":
-        return redirect(url_for("profile_page",user=user.username))
+        return redirect(url_for("profile_page", user=user.username))
 
     db = current_app.config["db"]
     form = ClassCreateForm()
@@ -287,24 +294,25 @@ def create_class_page():
         class_capacity = request.form.get("class_capacity")
 
         if not validate_class_code(class_code):
-            flash("Please Give A proper class code, class code should be in this type ABC-123A-123","error")
+            flash("Please Give A proper class code, class code should be in this type ABC-123A-123", "error")
             return redirect(url_for("create_class_page"))
 
         if class_department == "None":
-            flash("Please Choose a Deparment!","error")
+            flash("Please Choose a Deparment!", "error")
             return redirect(url_for("create_class_page"))
 
         if len(class_name) > 70 or len(class_name) < 3:
             flash("Please Use a Class name that is less than or equal to 70 characters or greater then or equal to 3")
             return redirect(url_for("create_class_page"))
 
-        nclass = Class(class_name, class_code, user.id_number, class_context=class_context, class_capacity=class_capacity,department=class_department)
+        nclass = Class(class_name, class_code, user.id_number, class_context=class_context,
+                       class_capacity=class_capacity, department=class_department)
 
         if db.create_class(nclass) == "Class code exists":
-            flash("Class Code Already Exists!","error")
+            flash("Class Code Already Exists!", "error")
             return redirect(url_for("create_class_page"))
 
-        flash("Class Created Successfully","info")
+        flash("Class Created Successfully", "info")
         return redirect(url_for("create_class_page"))
 
     return render_template("./tutor/classcreatepage.html", user=user, form=form)
@@ -338,7 +346,7 @@ def upload_video_page(user):
             if video.content_type.split('/')[0] != "video":
                 print("hELLO video")
 
-                flash("Please add a proper file to video section","error")
+                flash("Please add a proper file to video section", "error")
                 return redirect(url_for("upload_video_page", user=user.username))
 
             if thumbnail.content_type.split('/')[0] != "image":
@@ -353,18 +361,17 @@ def upload_video_page(user):
             video.save(video_path)
 
             thumbnail_path = "./static/video_thumbnail/" + randomnamegen(100) + "-" + \
-                         video_class + "." + \
-                         thumbnail.content_type.split('/')[1]
+                             video_class + "." + \
+                             thumbnail.content_type.split('/')[1]
             thumbnail.save(thumbnail_path)
 
             nvideo = Video(video_title, randomnamegen(20), user.id_number, video_class, None,
-                          thumbnail_path, video_path, video_descriptions, video_comments_available)
-
+                           thumbnail_path, video_path, video_descriptions, video_comments_available)
 
             db.create_video(nvideo)
 
-            flash("Video Uploaded Successfully","info")
-            return redirect(url_for("upload_video_page",user=user.username))
+            flash("Video Uploaded Successfully", "info")
+            return redirect(url_for("upload_video_page", user=user.username))
 
         flash("Please fill the necessary places!")
         return render_template("videoupload.html", form=form, user=user)
@@ -394,11 +401,13 @@ def all_classes_page():
 
         star = request.form.get("stars")
 
-        tutor_list, class_list = db.search_classes(department,tutor,star)
+        tutor_list, class_list = db.search_classes(department, tutor, star)
 
-        return render_template("classes.html", form=form, user=user, db=db, personal=False,tutor_list=tutor_list, class_list=class_list)
-    
-    return render_template("classes.html", form=form, user=user, db=db, personal=False,tutor_list=tutor_list, class_list=class_list)
+        return render_template("classes.html", form=form, user=user, db=db, personal=False, tutor_list=tutor_list,
+                               class_list=class_list)
+
+    return render_template("classes.html", form=form, user=user, db=db, personal=False, tutor_list=tutor_list,
+                           class_list=class_list)
 
 
 @login_required
@@ -419,6 +428,7 @@ def class_page(class_code):
 
     return render_template("classpage.html", user=user, video_list=video_list, tutor=tutor, nclass=nclass)
 
+
 @login_required
 def delete_class(class_code):
     if current_user.account_type != "admin":
@@ -436,7 +446,7 @@ def video_page(class_code, video_code):
     db = current_app.config["db"]
 
     if db.check_video_reviewed(video_code, user.id_number):
-        form.review_points.render_kw = {'disabled' : 'disabled'}
+        form.review_points.render_kw = {'disabled': 'disabled'}
 
     if user.account_type == "Student":
         if not db.check_student_in_class(user.id_number, class_code):
@@ -475,19 +485,18 @@ def video_page(class_code, video_code):
 
         return redirect(url_for("video_page", class_code=class_code, video_code=video_code))
 
-    return render_template("videopage.html", form=form, tutor=tutor, video=video, user=user, db=db, comment_list=comment_list)
+    return render_template("videopage.html", form=form, tutor=tutor, video=video, user=user, db=db,
+                           comment_list=comment_list)
 
 
 @login_required
 def admin_panel_page():
-
     if current_user.account_type != "admin":
         return redirect(url_for("profile_page", user=current_user.username))
 
     db = current_app.config['db']
 
     return render_template("./admin/adminpage.html", user=current_user, Users=db.get_all_users())
-
 
 
 @login_required
@@ -508,6 +517,7 @@ def user_delete(user_id):
     db = current_app.config["db"]
     db.delete_user(user_id)
     return redirect(url_for("admin_users_page"))
+
 
 @login_required
 def user_activate(user_id):
@@ -545,14 +555,15 @@ def department_page():
         if not code_exist and not name_exist:
             db.create_department(department)
         elif code_exist:
-            flash(f"Department Code {department_code} is already exist!","error")
+            flash(f"Department Code {department_code} is already exist!", "error")
         elif name_exist:
             flash(f"Department Name {department_name} is already exist!", "error")
 
-
         return redirect(url_for("department_page"))
 
-    return render_template("./admin/departmentspage.html", user=current_user, form=form, department_list=department_list)
+    return render_template("./admin/departmentspage.html", user=current_user, form=form,
+                           department_list=department_list)
+
 
 @login_required
 def department_delete(department_code):
@@ -562,6 +573,7 @@ def department_delete(department_code):
     db = current_app.config["db"]
     db.delete_department(department_code)
     return redirect(url_for("department_page"))
+
 
 @login_required
 def student_add_page(class_code):
@@ -579,15 +591,17 @@ def student_add_page(class_code):
 
         capacity = request.form.get("capacity")
         if capacity != "":
-            db.update_capacity_of_a_class(class_code,capacity)
+            db.update_capacity_of_a_class(class_code, capacity)
         if nclass.number_of_students < nclass.class_capacity:
             db.add_student(students, class_code)
         else:
             flash("Class Capacity is Full!", "alert-error")
 
-        return redirect(url_for("student_add_page",class_code=class_code))
+        return redirect(url_for("student_add_page", class_code=class_code))
 
-    return render_template("./tutor/studentadd.html", nclass=nclass, form=form, user=current_user, student_list=student_list)
+    return render_template("./tutor/studentadd.html", nclass=nclass, form=form, user=current_user,
+                           student_list=student_list)
+
 
 @login_required
 def delete_student_from_class(class_code, student_id):
@@ -595,9 +609,10 @@ def delete_student_from_class(class_code, student_id):
         return redirect(url_for("profile_page", user=current_user.username))
 
     db = current_app.config["db"]
-    db.delete_student_from_class(class_code,student_id)
-    flash(f"student with {student_id} id deleted!","info")
-    return redirect(url_for("student_add_page",class_code=class_code))
+    db.delete_student_from_class(class_code, student_id)
+    flash(f"student with {student_id} id deleted!", "info")
+    return redirect(url_for("student_add_page", class_code=class_code))
+
 
 @login_required
 def tutor_list():
@@ -605,19 +620,21 @@ def tutor_list():
 
     return render_template("./admin/adminuserspage.html", user=current_user, Users=db.get_tutors())
 
+
 @login_required
-def delete_video(class_code,video_code):
+def delete_video(class_code, video_code):
     if current_user.account_type == "Student":
-        return redirect(url_for("profile_page",user=current_user.user_name))
+        return redirect(url_for("profile_page", user=current_user.user_name))
 
     db = current_app.config["db"]
     db.delete_video(video_code)
     return redirect(url_for("class_page", class_code=class_code))
 
+
 @login_required
 def update_class_page(class_code):
     if current_user.account_type != "Tutor":
-        return redirect(url_for("profile_page",user=current_user.user_name))
+        return redirect(url_for("profile_page", user=current_user.user_name))
 
     form = ClassUpdateForm()
 
@@ -629,7 +646,7 @@ def update_class_page(class_code):
         class_context = request.form.get("class_context")
 
         if not validate_class_code(nclass_code):
-            flash("Please Give A proper class code, class code should be in this type ABC-123A-123","error")
+            flash("Please Give A proper class code, class code should be in this type ABC-123A-123", "error")
             return redirect(
                 url_for("update_class_page", class_code=nclass_code if nclass_code is not None else class_code))
 
@@ -642,10 +659,10 @@ def update_class_page(class_code):
         if class_context == "":
             class_context = None
 
-        nclass = Class(class_name,nclass_code,None,None,class_context)
-        db.update_class_with_class_code(class_code,nclass)
-        flash("Class Updated","info")
-        return redirect(url_for("update_class_page",class_code=nclass_code if nclass_code is not None else class_code ))
+        nclass = Class(class_name, nclass_code, None, None, class_context)
+        db.update_class_with_class_code(class_code, nclass)
+        flash("Class Updated", "info")
+        return redirect(url_for("update_class_page", class_code=nclass_code if nclass_code is not None else class_code))
 
     return render_template("./tutor/classupdatepage.html", user=current_user, form=form)
 
@@ -655,7 +672,7 @@ def update_video_page(class_code, video_code):
     form = VideoUpdateForm()
 
     if current_user.account_type != "Tutor":
-        return redirect(url_for("profile_page",user=current_user.user_name))
+        return redirect(url_for("profile_page", user=current_user.user_name))
 
     db = current_app.config["db"]
 
@@ -695,7 +712,7 @@ def update_video_page(class_code, video_code):
         if video_descriptions == '':
             video_descriptions = None
 
-        if video.filename is not None :
+        if video.filename is not None:
             video_path = "./static/videos/" + randomnamegen(100) + "-" + \
                          video_class + "." + \
                          video.content_type.split('/')[1]
@@ -714,10 +731,11 @@ def update_video_page(class_code, video_code):
 
         db.update_video_with_video_code(video_code, nvideo)
 
-        flash("Video Updated","info")
-        return redirect(url_for("update_video_page", user=current_user.username, video_code=video_code,class_code=class_code))
+        flash("Video Updated", "info")
+        return redirect(
+            url_for("update_video_page", user=current_user.username, video_code=video_code, class_code=class_code))
 
-    return render_template("./tutor/videoupdate.html",user=current_user, form=form, video_name=t_video.video_name)
+    return render_template("./tutor/videoupdate.html", user=current_user, form=form, video_name=t_video.video_name)
 
 
 @login_required
@@ -725,4 +743,4 @@ def student_comments_page(user):
     user = current_user
     db = current_app.config["db"]
     video_list = db.get_student_comments(user.id_number)
-    return render_template("studentcomments.html",user=user, video_list=video_list)
+    return render_template("studentcomments.html", user=user, video_list=video_list)
