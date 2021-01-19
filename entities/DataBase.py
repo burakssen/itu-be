@@ -8,8 +8,6 @@ from entities.Class import Class
 from entities.Video import Video
 from entities.Comment import Comment
 
-import time
-
 class DataBase():
 
     def __init__(self):
@@ -18,8 +16,8 @@ class DataBase():
     def CheckIfDataExists(self, data, check):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM USERS WHERE ({check} = '{data}' )"""
-            cursor.execute(query)
+            query = f"""SELECT * FROM USERS WHERE ({check} = %s )"""
+            cursor.execute(query,(data,))
             try:
                 User = cursor.fetchone()
                 if data == User[6] or data == User[0] or data == User[1]:
@@ -67,8 +65,8 @@ class DataBase():
     def get_user_with_id(self, id_number):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM USERS WHERE (user_id = '{id_number}' )"""
-            cursor.execute(query)
+            query = f"""SELECT * FROM USERS WHERE (user_id = %s )"""
+            cursor.execute(query,(id_number,))
             try:
                 User = cursor.fetchone()
                 User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7],activated=User[9])
@@ -80,8 +78,8 @@ class DataBase():
     def get_user(self, user_name):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
-            query = f"""SELECT * FROM USERS WHERE (user_name = '{user_name}' )"""
-            cursor.execute(query)
+            query = f"""SELECT * FROM USERS WHERE (user_name = %s )"""
+            cursor.execute(query,(user_name,))
             try:
                 User = cursor.fetchone()
                 User = Person(User[0], User[1], User[2], User[3], User[4], User[5], User[6], User[8], User[7], activated=User[9], most_viewed_video=User[10])
@@ -740,8 +738,9 @@ class DataBase():
     def delete_video(self, video_code):
         with dbapi2.connect(self.url) as connection:
             cursor = connection.cursor()
+            query = """DELETE FROM video WHERE video_code = %s"""
             try:
-                cursor.execute("""DELETE FROM video WHERE video_code = %s""", (video_code,))
+                cursor.execute(query, (video_code,))
                 connection.commit()
             except dbapi2.Error as e:
                 print(e.pgerror)

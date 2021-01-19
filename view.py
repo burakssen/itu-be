@@ -59,7 +59,6 @@ def auth_page(info=False):
                 if hasher.verify(password, user.password):
                     if (user.account_type == "Tutor" and user.activated is True) or user.account_type != "Tutor":
 
-
                         user.logged_in = True
                         login_user(user)
                         next_page = request.args.get("next", url_for("profile_page",user=user.username))
