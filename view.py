@@ -209,26 +209,28 @@ def profile_page(user):
                 title=title
             )
 
-            if image_file.read() != b'' and image_file.content_type.split('/')[0] == "image":
-                temp = current_user.profileimage
-                temp = temp.replace("../static/profile_images/","")
-                prev_image = str(get_project_root())+"\\static\\profile_images\\"+temp
+            if image_file.read() != b'':
+                if image_file.content_type.split('/')[0] == "image":
+                    temp = current_user.profileimage
+                    temp = temp.replace("../static/profile_images/","")
+                    prev_image = str(get_project_root())+"\\static\\profile_images\\"+temp
 
-                if temp != "boy.png" and temp != "girl.png":
-                    if path.exists(prev_image):
-                        os.remove(prev_image)
+                    if temp != "boy.png" and temp != "girl.png":
+                        if path.exists(prev_image):
+                            os.remove(prev_image)
 
-                user.profileimage = uploadImage(image_file.stream, user.id_number)
-                user.convert_image_path()
-                current_user.profileimage = user.profileimage
-            else:
-                image_file = None
+                    user.profileimage = uploadImage(image_file.stream, user.id_number)
+                    user.convert_image_path()
+                    current_user.profileimage = user.profileimage
+                else:
+                    image_file = None
 
-            db.update_user_info(user.id_number, user)
+                db.update_user_info(user.id_number, user)
 
-            if user_name is None and image_file.content_type.split('/')[0] != "image":
-                flash(f"Please Upload an Image instead of an {image_file.content_type.split('/')[1]} file!","error")
-                return redirect(url_for("profile_page",user=user.username))
+                if user_name is None and image_file.content_type.split('/')[0] != "image":
+                    flash(f"Please Upload an Image instead of an {image_file.content_type.split('/')[1]} file!",
+                          "error")
+                    return redirect(url_for("profile_page", user=user.username))
 
             if user_name is not None:
                 flash("You changed your username. You have to reloggin to your account.","info")
