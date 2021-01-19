@@ -688,6 +688,8 @@ def update_video_page(class_code, video_code):
         thumbnail_path = ""
         video_path = ""
 
+        print(thumbnail)
+
         if video_title != '':
             if len(video_title) > 200 or len(video_title) < 5:
                 flash("Please use a video title between 5 and 200 characters", "error")

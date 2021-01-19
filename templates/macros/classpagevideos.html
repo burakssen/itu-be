@@ -4,13 +4,13 @@
     <div class="tile is-ancestor">
         <div class="tile is-parent is-11 card" style="height: 600px;">
             <div class="tile is-vertical notification " style="border: 1px solid black; overflow-y: scroll;">
-                <div class="tile columns is-vertical is-12" style="display: flex; flex-wrap: wrap; padding:10px">
+                <div class="tile columns is-vertical is-12" style="padding:10px">
                     <div class="tile column" style="justify-content: center; border: 1px solid black; border-radius: 10px; padding:10px;margin: 10px;">
                         <b><p>{{ nclass.class_context }}</p></b>
                     </div>
-                    <div class="tile column">
+                    <div class="tile column" style="display: flex; flex-wrap: wrap;">
                     {% for video in video_list%}
-                        <div class="card" style="flex: 0 0 50%; padding:10px;margin: 6px;">
+                        <div class="card" style="flex: 0 0 48%; padding:10px;margin: 6px;">
                             <a class="play card-image" href="/classes/{{ nclass.class_code }}/video/{{video.video_code}}">
                                 <figure class="video-image">
                                   <img src="../../{{video.thumbnail_path}}" alt="Placeholder image">
